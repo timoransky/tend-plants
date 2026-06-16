@@ -1,12 +1,12 @@
 import Link from "next/link";
-import { and, eq } from "drizzle-orm";
-
-import { db } from "@/db";
-import { plants } from "@/db/schema";
-import { findHousehold } from "@/lib/api";
 import { notFound } from "next/navigation";
 
-// Placeholder — the full care sheet + Mark watered/fed actions land in step 4.
+import { PlantDetail, type PlantDetailData } from "@/components/PlantDetail";
+import { StatusDot } from "@/components/StatusDot";
+import { findHousehold } from "@/lib/api";
+import { getPlantWithStatus } from "@/lib/plants";
+
+// Live tracker — always read fresh from the DB, never cache.
 export const dynamic = "force-dynamic";
 
 type Props = { params: Promise<{ token: string; id: string }> };
@@ -16,32 +16,66 @@ export default async function PlantDetailPage({ params }: Props) {
   const household = await findHousehold(token);
   if (!household) notFound();
 
-  const [plant] = await db
-    .select()
-    .from(plants)
-    .where(and(eq(plants.id, id), eq(plants.householdId, household.id)))
-    .limit(1);
+  const plant = await getPlantWithStatus(household.id, id);
   if (!plant) notFound();
 
+  const data: PlantDetailData = {
+    id: plant.id,
+    name: plant.name,
+    room: plant.room,
+    avatar: plant.avatar,
+    commonName: plant.commonName,
+    notes: plant.notes,
+    waterNote: plant.waterNote,
+    lightNote: plant.lightNote,
+    feedNote: plant.feedNote,
+    water: plant.water,
+    feed: plant.feed,
+  };
+
   return (
-    <main className="mx-auto flex h-dvh w-full max-w-2xl flex-col items-center justify-center gap-4 px-6 text-center">
-      <span className="text-5xl" aria-hidden>
-        {plant.avatar ?? "🪴"}
-      </span>
-      <h1 className="text-xl font-semibold text-cream">{plant.name}</h1>
-      {plant.room ? (
-        <p className="text-sm text-cream-soft">{plant.room}</p>
-      ) : null}
-      <p className="max-w-xs text-sm text-cream-soft">
-        The care sheet with Mark watered / Mark fed arrives in the next build
-        step.
-      </p>
-      <Link
-        href={`/h/${token}`}
-        className="rounded-full bg-canvas-soft px-5 py-2.5 text-sm font-medium text-cream transition-colors hover:bg-canvas-soft/70"
-      >
-        ← Back home
-      </Link>
+    <main className="mx-auto flex min-h-dvh w-full max-w-2xl flex-col px-4 pb-10">
+      <div className="flex items-center justify-between pt-5">
+        <Link
+          href={`/h/${token}`}
+          aria-label="Back home"
+          className="flex size-9 items-center justify-center rounded-full bg-canvas-soft text-cream transition-colors hover:bg-canvas-soft/70"
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
+            <path
+              d="M15 6l-6 6 6 6"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </Link>
+      </div>
+
+      <header className="flex flex-col items-center gap-3 py-6 text-center">
+        <span className="relative">
+          <span className="flex size-24 items-center justify-center rounded-full bg-surface text-5xl shadow-sm">
+            <span aria-hidden>{plant.avatar ?? "🪴"}</span>
+          </span>
+          <StatusDot
+            water={plant.water}
+            feed={plant.feed}
+            className="absolute bottom-1 right-1 size-5"
+          />
+        </span>
+        <div>
+          <h1 className="text-2xl font-semibold tracking-tight text-cream">
+            {plant.name}
+          </h1>
+          <p className="text-sm text-cream-soft">
+            {[plant.room, plant.commonName].filter(Boolean).join(" · ") ||
+              "Houseplant"}
+          </p>
+        </div>
+      </header>
+
+      <PlantDetail token={token} initial={data} />
     </main>
   );
 }

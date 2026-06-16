@@ -1,4 +1,4 @@
-import { asc, eq } from "drizzle-orm";
+import { and, asc, eq } from "drizzle-orm";
 
 import { db } from "@/db";
 import { plants, type Plant } from "@/db/schema";
@@ -50,4 +50,18 @@ export async function listPlantsWithStatus(
     .orderBy(asc(plants.createdAt));
 
   return rows.map((p) => withStatus(p, now)).sort(byUrgency);
+}
+
+/** Load a single plant (scoped to its household) with computed status. */
+export async function getPlantWithStatus(
+  householdId: string,
+  id: string,
+  now: Date = new Date(),
+): Promise<PlantWithStatus | null> {
+  const rows = await db
+    .select()
+    .from(plants)
+    .where(and(eq(plants.id, id), eq(plants.householdId, householdId)))
+    .limit(1);
+  return rows[0] ? withStatus(rows[0], now) : null;
 }
