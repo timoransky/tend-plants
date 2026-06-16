@@ -16,7 +16,7 @@ A web app to track which houseplants need watering/feeding, shared across a hous
 - **Neon** Postgres as the single source of truth. Always fetch from the DB — no localStorage, no offline mode.
 - **Drizzle ORM** over Neon's **pooled connection string** (PgBouncer-based) using the **Neon serverless driver**, so serverless functions don't exhaust connections.
 - **Tailwind** + **Framer Motion** for UI and animation.
-- `DATABASE_URL` (pooled) and `PERENUAL_API_KEY` are server-side only (Vercel env vars). The browser never sees either; the Perenual key is always proxied through a server route.
+- `DATABASE_URL` (pooled) is server-side only (Vercel env var). The browser never sees it. No external care API and no API keys — care data ships as a local dataset (see "Care data" below).
 - Cold-start note: Neon free tier scales to zero; first request after idle adds ~300–500ms. Acceptable.
 
 ## Data model — two tables; the household token is the access key for everything
@@ -31,11 +31,11 @@ A web app to track which houseplants need watering/feeding, shared across a hous
 - `household_id` — FK → households.id.
 - `name` — e.g. "Monstera".
 - `room` — e.g. "Living Room".
-- `species_id` — Perenual species id this was created from (nullable; null for manual entries).
+- `species_id` — legacy provenance column; now always null (local species keys are strings), safe to drop later.
 - `common_name` — species common name, snapshotted at add time.
 - `avatar` — emoji or stock image key (no uploads in v1).
 - `last_watered` — timestamp, nullable.
-- `water_interval_days` — int, snapshotted from Perenual at add time, **editable**.
+- `water_interval_days` — int, snapshotted from the local dataset at add time, **editable**.
 - `water_note` — short watering description, snapshotted.
 - `light_note` — short light description, snapshotted.
 - `last_fed` — timestamp, nullable.
@@ -65,8 +65,8 @@ Routes:
 - `PATCH /api/h/[token]/plants/[id]` → edit (name, room, intervals, notes).
 - `POST /api/h/[token]/plants/[id]/water` → set `last_watered = now()`.
 - `POST /api/h/[token]/plants/[id]/feed` → set `last_fed = now()`.
-- `GET /api/species?q=<name>` → proxy Perenual species search server-side (key hidden). Empty `q` returns a "common species" first page.
-- `GET /api/species/[id]` → proxy a single species' care detail.
+- `GET /api/species?q=<name>` → search the local species dataset (substring match on common name). Empty `q` returns the full list.
+- `GET /api/species/[id]` → a single species' care detail by its kebab-case key; unknown key is a 404.
 
 Sharing = copy the URL. No invites, no roles. Tradeoff (acceptable for a trusted household): anyone with the link has full edit access forever; revoking means rotating the token.
 
@@ -74,27 +74,21 @@ Sharing = copy the URL. No invites, no roles. Tradeoff (acceptable for a trusted
 
 1. **Home** — header (logo left, `+` add right); plant grid of circular avatars with name, room, and a **status dot** (blue = water, brown = feed, green = fine); paginated/carousel if many. Bottom sheet with **Today / Upcoming** tabs + search; a timeline of care tasks ordered by urgency, completed items checked off and struck through.
 2. **Plant detail / care sheet** — segmented control **Feed / Water / Light** (brown / blue / yellow); three care cards each a short sentence from species data plus personal **notes**; primary actions **Mark watered / Mark fed** that hit the routes and update status immediately with animation.
-3. **Add / edit plant** — browse/search species via Perenual (list of common houseplants, search filters by name); tapping a species shows care detail; on confirm **snapshot** care fields into the new row, then set name, room, avatar, intervals (pre-filled). If Perenual is down / has no data, fall back to manual entry seeded by the local fallback list.
+3. **Add / edit plant** — browse/search the local species dataset (list of common houseplants, search filters by name); tapping a species shows care detail; on confirm **snapshot** care fields into the new row, then set name, room, avatar, intervals (pre-filled). Manual entry is available for anything not in the dataset.
 
-## Perenual API — add-time lookup, snapshotted into DB (never on render path)
+## Care data — local dataset (no external API), snapshotted into DB at add time
 
-1. In add-plant flow, call Perenual server-side to browse common species (`species-list`) or search (`species-list?q=`).
-2. When user picks a species, copy care fields into the new `plants` row (interval, water/light/feed notes, common name).
-3. Plant is then self-contained: home, status logic, care sheet all read from Neon. Perenual never called again for that plant; intervals freely editable.
+There is **no external care API**. Care data ships as a curated local dataset of ~50 common houseplants in `src/data/fallback-species.ts` (exports `type FallbackSpecies` + `const FALLBACK_SPECIES`). It is a plain data file — no imports, no logic, no network. The free-tier care API (Perenual) was dropped in review: its care detail was paywalled and the local list is more complete, works offline, and needs no key.
 
-Why snapshot: free tier capped at **100 req/day** (only hit while adding); status needs interval stored locally; edited intervals make the API value irrelevant; app keeps working if Perenual is down.
+1. In the add-plant flow, browse/search the dataset via `src/lib/species.ts` (`searchSpecies`, `getSpecies`) — proxied through the `/api/species` routes.
+2. When the user picks a species, copy its care fields into the new `plants` row (interval, water/light/feed notes, common name).
+3. The plant is then self-contained: home, status logic, and the care sheet all read from Neon; intervals stay freely editable. Manual entry covers anything not in the dataset.
 
-Endpoints (proxied so key stays server-side):
-- `GET https://perenual.com/api/v2/species-list?key=...&q=<name>&page=<n>` — browse/search.
-- `GET https://perenual.com/api/v2/species-care-guide-list?species_id=<id>&key=...` — richer care detail.
+Why snapshot: status needs the interval stored locally, and edited intervals must override the seed value.
 
-Data-quality handling:
-- Watering is often qualitative ("Frequent" / "Average" / "Minimum") or a range. Map to `water_interval_days` with a small table — e.g. Frequent → 5, Average → 7, Minimum → 14 — and prefer numeric `watering_general_benchmark` when present.
-- Free tier covers species IDs **1–3000**. If a species lacks data, fall back to manual interval entry.
+Data quality / provenance: every entry's water/light/feed values reflect the consensus of 2+ reputable horticultural sources (RHS, Missouri Botanical Garden, university extensions, Gardeners' World, Gardenia.net, Gardener's Supply). The per-species source trail lives in `.context/dataset-sources.md`. Field conventions: water-interval bands (keep-moist 5–6 / average foliage 7–10 / drought-tolerant 14–21); a small light vocabulary (Low / Medium indirect / Bright indirect / Direct sun); feed bands (foliage 30 / lighter 45 / low-need 60 / orchids & African violets 14).
 
-**Local fallback list:** tiny hardcoded JSON (~8 plants: Monstera, Calathea, Aloe, Fiddle Leaf Fig, Pothos, Snake Plant, ZZ Plant, Peace Lily) for dev/offline and when Perenual returns nothing. Same shape as a snapshotted row.
-
-*Optional (not v1):* cache fetched species in a `species_cache` table.
+*Optional (not v1):* cache species in a `species_cache` table.
 
 ## Design direction
 
@@ -102,13 +96,13 @@ Warm off-white/cream surfaces on a soft dark background; generously rounded card
 
 ## Build order (one slice per step; review between each)
 
-1. Scaffold Next.js + Tailwind; wire Neon (pooled driver) + Drizzle; define schema + run migration; add the local fallback species list.
-2. Server routes: create household, get plants (computed status), water, feed, add, edit, plus Perenual search/detail proxies.
+1. Scaffold Next.js + Tailwind; wire Neon (pooled driver) + Drizzle; define schema + run migration; add the local species dataset.
+2. Server routes: create household, get plants (computed status), water, feed, add, edit, plus the local species search/detail routes.
 3. Home screen reading **real** data from a freshly created household. (After this: usable, shareable app.)
 4. Plant detail + working Mark watered / Mark fed.
-5. Add-plant flow: Perenual browse/search → care detail → snapshot into a new plant.
+5. Add-plant flow: local-dataset browse/search → care detail → snapshot into a new plant.
 6. Animation + polish pass.
-7. Deploy to Vercel; set `DATABASE_URL` and `PERENUAL_API_KEY`.
+7. Deploy to Vercel; set `DATABASE_URL`.
 
 ## Out of scope for v1 (do not build)
 

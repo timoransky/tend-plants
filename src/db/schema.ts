@@ -23,8 +23,8 @@ export const households = pgTable("households", {
 
 /**
  * A plant belongs to exactly one household. Care fields (intervals + notes +
- * common name) are snapshotted from Perenual at add time and are thereafter
- * self-contained and editable; Perenual is never on the render path.
+ * common name) are snapshotted from the local species dataset at add time and
+ * are thereafter self-contained and editable.
  */
 export const plants = pgTable("plants", {
   id: uuid("id")
@@ -35,7 +35,8 @@ export const plants = pgTable("plants", {
     .references(() => households.id, { onDelete: "cascade" }),
   name: text("name").notNull(),
   room: text("room"),
-  // Perenual species id this plant was created from; null for manual entries.
+  // Legacy provenance column, now always null (local species keys are strings,
+  // not integers); safe to drop later.
   speciesId: integer("species_id"),
   commonName: text("common_name"),
   // Emoji or stock image key — no uploads in v1.

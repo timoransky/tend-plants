@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-// Placeholder — the Perenual/local-list browse + snapshot flow lands in step 5.
+// Placeholder — the species browse + snapshot flow lands in step 5.
 type Props = { params: Promise<{ token: string }> };
 
 export default async function AddPlantPage({ params }: Props) {

@@ -46,8 +46,8 @@ function optInt(v: unknown): number | null {
 
 /**
  * POST /api/h/[token]/plants — add a plant. The client sends the care fields
- * already snapshotted from Perenual (or the fallback list / manual entry);
- * from here the plant is self-contained and never re-hits Perenual.
+ * already snapshotted from the local species dataset (or manual entry); from
+ * here the plant is self-contained.
  */
 export async function POST(request: Request, { params }: Params) {
   const { token } = await params;
