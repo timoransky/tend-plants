@@ -1,11 +1,17 @@
 /**
- * Local fallback species list. Used for dev/offline and whenever Perenual is
- * down or has no data for a chosen species. Each entry has the same care shape
- * we snapshot into a `plants` row, so the add-plant flow can seed a new plant
- * from one of these without any API call.
+ * Curated local species dataset — the single source of care data for the
+ * add-plant flow. Each entry has the same care shape we snapshot into a
+ * `plants` row, so a new plant is seeded from one of these with no API call.
+ *
+ * Values are approximate (the user edits them after add, and the real status
+ * signal is `last_watered`/`last_fed`) but every entry's water/light/feed
+ * figures reflect the consensus of 2+ reputable horticultural sources. The
+ * `sources`/`disagreement` fields keep that audit trail inline so any value can
+ * be traced back and double-checked; the same trail is mirrored in
+ * `.context/dataset-sources.md`.
  */
 export type FallbackSpecies = {
-  /** Stable key for this fallback entry (not a Perenual species id). */
+  /** Unique, stable, kebab-case key (used in /api/species/<key>). */
   key: string;
   commonName: string;
   /** Default emoji avatar; the user can change it. */
@@ -15,6 +21,10 @@ export type FallbackSpecies = {
   lightNote: string;
   feedIntervalDays: number;
   feedNote: string;
+  /** Reputable sources the care values were cross-checked against. */
+  sources: string[];
+  /** Where sources genuinely disagreed and how it was resolved; null if not. */
+  disagreement: string | null;
 };
 
 export const FALLBACK_SPECIES: FallbackSpecies[] = [
@@ -27,6 +37,11 @@ export const FALLBACK_SPECIES: FallbackSpecies[] = [
     lightNote: "Bright, indirect light. Avoid harsh direct sun.",
     feedIntervalDays: 30,
     feedNote: "Feed monthly with balanced fertilizer in spring and summer.",
+    sources: [
+      "https://www.epicgardening.com/monstera-deliciosa/",
+      "https://www.bobvila.com/articles/monstera-care/",
+    ],
+    disagreement: null,
   },
   {
     key: "calathea",
@@ -37,6 +52,11 @@ export const FALLBACK_SPECIES: FallbackSpecies[] = [
     lightNote: "Medium, indirect light. Direct sun fades the leaves.",
     feedIntervalDays: 30,
     feedNote: "Feed monthly with diluted fertilizer during growth.",
+    sources: [
+      "https://www.gardeners.com/how-to/calathea-care/9748.html",
+      "https://bloomscape.com/plant-care-guide/calathea/",
+    ],
+    disagreement: null,
   },
   {
     key: "aloe",
@@ -47,6 +67,12 @@ export const FALLBACK_SPECIES: FallbackSpecies[] = [
     lightNote: "Bright light, including some direct sun.",
     feedIntervalDays: 60,
     feedNote: "Feed sparingly, every couple of months in growing season.",
+    sources: [
+      "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?kempercode=b628",
+      "https://www.almanac.com/plant/aloe-vera",
+    ],
+    disagreement:
+      "Some sources suggest watering closer to every 2–3 weeks; 14 days is on the frequent end but fine for bright, sunny spots.",
   },
   {
     key: "fiddle-leaf-fig",
@@ -57,6 +83,11 @@ export const FALLBACK_SPECIES: FallbackSpecies[] = [
     lightNote: "Bright, indirect light near a window.",
     feedIntervalDays: 30,
     feedNote: "Feed monthly in spring and summer.",
+    sources: [
+      "https://help.costafarms.com/en/knowledge/plant-care-fiddle-leaf-fig-ficus-lyrata",
+      "https://libguides.nybg.org/fiddleleaffig",
+    ],
+    disagreement: null,
   },
   {
     key: "pothos",
@@ -67,6 +98,11 @@ export const FALLBACK_SPECIES: FallbackSpecies[] = [
     lightNote: "Tolerates low to bright indirect light.",
     feedIntervalDays: 60,
     feedNote: "Feed every couple of months; not a heavy feeder.",
+    sources: [
+      "https://www.thesill.com/blogs/plants-101/how-to-care-for-golden-pothos-epipremnum-aureum",
+      "https://www.livelyroot.com/blogs/plant-care/pothos-water-requirements",
+    ],
+    disagreement: null,
   },
   {
     key: "snake-plant",
@@ -77,6 +113,11 @@ export const FALLBACK_SPECIES: FallbackSpecies[] = [
     lightNote: "Anything from low light to bright indirect.",
     feedIntervalDays: 60,
     feedNote: "Feed sparingly during the growing season.",
+    sources: [
+      "https://www.gardeningknowhow.com/houseplants/snake-plant/snake-plant-care.htm",
+      "https://soltech.com/products/snake-plant-care",
+    ],
+    disagreement: null,
   },
   {
     key: "zz-plant",
@@ -87,6 +128,11 @@ export const FALLBACK_SPECIES: FallbackSpecies[] = [
     lightNote: "Low to bright indirect light.",
     feedIntervalDays: 60,
     feedNote: "Feed lightly once or twice in the growing season.",
+    sources: [
+      "https://hgic.clemson.edu/factsheet/zz-plant-zamioculcas-zamiifolia-indoor-care-growing-tips-plant-guide/",
+      "https://www.thesill.com/blogs/plants-101/how-to-care-for-zz-zamioculcas-zamiifolia",
+    ],
+    disagreement: null,
   },
   {
     key: "peace-lily",
@@ -97,5 +143,657 @@ export const FALLBACK_SPECIES: FallbackSpecies[] = [
     lightNote: "Medium to low indirect light.",
     feedIntervalDays: 45,
     feedNote: "Feed every 6 weeks or so during growth.",
+    sources: [
+      "https://www.almanac.com/plant/peace-lilies",
+      "https://foliage-factory.com/blogs/plant-care/peace-lily-care-guide",
+    ],
+    disagreement: null,
+  },
+  {
+    key: "spider-plant",
+    commonName: "Spider Plant",
+    avatar: "🌿",
+    waterIntervalDays: 7,
+    waterNote: "Water when the top inch of soil dries out, easing off in winter.",
+    lightNote: "Bright, indirect light; tolerates lower light but avoid direct sun.",
+    feedIntervalDays: 30,
+    feedNote: "Feed monthly with a balanced liquid fertilizer through spring and summer.",
+    sources: [
+      "https://www.rhs.org.uk/plants/3761/chlorophytum-comosum/details",
+      "https://www.healthyhouseplants.com/indoor-houseplants/spider-plant-chlorophytum-comosum-care-guide/",
+    ],
+    disagreement:
+      "Watering guidance spans every 1–2 weeks across sources; settled on ~7 days as the average-foliage midpoint.",
+  },
+  {
+    key: "rubber-plant",
+    commonName: "Rubber Plant",
+    avatar: "🪴",
+    waterIntervalDays: 9,
+    waterNote: "Let the top inch or two dry before watering, then soak thoroughly.",
+    lightNote: "Bright, indirect light; filtered sun keeps leaves from scorching.",
+    feedIntervalDays: 30,
+    feedNote: "Feed monthly during active growth and skip feeding in winter.",
+    sources: [
+      "https://www.rhs.org.uk/plants/95720/ficus-elastica/details",
+      "https://www.almanac.com/plant/rubber-tree-plant-ficus-elastica-care-guide",
+    ],
+    disagreement:
+      "RHS suggests monthly high-nitrogen feed; some sources stretch to every 2 months. Watering ranges 7–10 days in summer to 2–3 weeks in winter.",
+  },
+  {
+    key: "heartleaf-philodendron",
+    commonName: "Heartleaf Philodendron",
+    avatar: "🍃",
+    waterIntervalDays: 8,
+    waterNote: "Water once the top inch feels dry, keeping it lightly moist in growth.",
+    lightNote: "Medium, indirect light; tolerates low light but no direct sun.",
+    feedIntervalDays: 30,
+    feedNote: "Feed monthly spring through fall with diluted balanced fertilizer.",
+    sources: [
+      "https://soltech.com/products/heartleaf-philodendron-care",
+      "https://www.epicgardening.com/heartleaf-philodendron/",
+    ],
+    disagreement: null,
+  },
+  {
+    key: "phalaenopsis-orchid",
+    commonName: "Phalaenopsis Orchid",
+    avatar: "🌸",
+    waterIntervalDays: 7,
+    waterNote: "Soak weekly; let it drain fully.",
+    lightNote: "Medium, indirect light from an east or west window.",
+    feedIntervalDays: 14,
+    feedNote: "Feed weakly every couple of weeks, flushing the pot monthly to clear salts.",
+    sources: [
+      "https://www.missouribotanicalgarden.org/Portals/0/Kemper%20Gardens/Fact%20Sheets/Orchids%20-%20Phalaenopsis%20(2020).pdf",
+      "https://extension.umd.edu/resource/care-phalaenopsis-orchids-moth-orchids",
+    ],
+    disagreement:
+      "MoBot classes Phalaenopsis as low-light; UMD frames it as indirect medium light. Used medium, indirect as the practical consensus.",
+  },
+  {
+    key: "boston-fern",
+    commonName: "Boston Fern",
+    avatar: "🌿",
+    waterIntervalDays: 5,
+    waterNote: "Keep the soil consistently moist and never let it dry out, easing off slightly in winter.",
+    lightNote: "Bright, indirect light with no direct sun.",
+    feedIntervalDays: 30,
+    feedNote: "Feed monthly with a diluted balanced fertilizer during the growing season.",
+    sources: [
+      "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?kempercode=c548",
+      "https://www.rhs.org.uk/plants/58296/nephrolepis-exaltata-bostoniensis/details",
+    ],
+    disagreement: null,
+  },
+  {
+    key: "english-ivy",
+    commonName: "English Ivy",
+    avatar: "🍃",
+    waterIntervalDays: 7,
+    waterNote: "Keep soil evenly moist spring through fall, watering when the surface begins to dry.",
+    lightNote: "Bright, indirect light; bright filtered light is preferred with no direct sun.",
+    feedIntervalDays: 30,
+    feedNote: "Feed monthly from spring through fall with a high-nitrogen fertilizer.",
+    sources: [
+      "https://hgic.clemson.edu/factsheet/growing-english-ivy-indoors/",
+      "https://www.guide-to-houseplants.com/english-ivy.html",
+    ],
+    disagreement: null,
+  },
+  {
+    key: "jade-plant",
+    commonName: "Jade Plant",
+    avatar: "🪴",
+    waterIntervalDays: 14,
+    waterNote: "Let the soil dry out fully between drinks, watering sparingly in winter.",
+    lightNote: "Direct sun, with a little shelter from harsh midday rays.",
+    feedIntervalDays: 60,
+    feedNote: "Feed lightly only a few times across spring and summer.",
+    sources: [
+      "https://www.rhs.org.uk/plants/4739/crassula-ovata/details",
+      "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=279445",
+    ],
+    disagreement: null,
+  },
+  {
+    key: "chinese-money-plant",
+    commonName: "Chinese Money Plant",
+    avatar: "🪴",
+    waterIntervalDays: 8,
+    waterNote: "Let the top inch dry between waterings; it is forgiving but dislikes soggy soil.",
+    lightNote: "Bright, indirect light; rotate often and shield from direct sun.",
+    feedIntervalDays: 30,
+    feedNote: "Feed monthly during active growth with a half-strength liquid fertilizer.",
+    sources: [
+      "https://www.gardenersworld.com/house-plants/how-to-grow-pilea-peperomioides/",
+      "https://savvygardening.com/pilea-peperomioides-care/",
+    ],
+    disagreement: null,
+  },
+  {
+    key: "chinese-evergreen",
+    commonName: "Chinese Evergreen",
+    avatar: "🌿",
+    waterIntervalDays: 9,
+    waterNote: "Keep lightly moist, watering when the top inch or two dries out.",
+    lightNote: "Low light for green types; medium, indirect light for variegated.",
+    feedIntervalDays: 30,
+    feedNote: "Feed monthly in spring and summer, then stop in fall and winter.",
+    sources: [
+      "https://hgic.clemson.edu/factsheet/chinese-evergreen-aglaonema-care-cultivation-growing-guide/",
+      "https://www.gardenia.net/genus/aglaonema-chinese-evergreen-grow-care-best-varieties",
+    ],
+    disagreement:
+      "Clemson cautions against over-feeding (leaf-edge burn) and gives no schedule; Gardenia recommends monthly. Watering spread 7–10 days.",
+  },
+  {
+    key: "dracaena-marginata",
+    commonName: "Dracaena Marginata",
+    avatar: "🌴",
+    waterIntervalDays: 12,
+    waterNote: "Water sparingly once the top half of the soil has dried out.",
+    lightNote: "Bright, indirect light; tolerates medium light, avoid direct sun.",
+    feedIntervalDays: 45,
+    feedNote: "Feed lightly every month or two during the growing season only.",
+    sources: [
+      "https://www.gardenia.net/plant/dracaena-marginata-dragon-tree",
+      "https://www.joyusgarden.com/dracaeana-marginata-care/",
+    ],
+    disagreement:
+      "Watering advice varies widely, from every 5–7 days up to every 3 weeks; chose ~12 days reflecting its drought tolerance and 'let top half dry' guidance.",
+  },
+  {
+    key: "dieffenbachia",
+    commonName: "Dieffenbachia",
+    avatar: "🌿",
+    waterIntervalDays: 7,
+    waterNote: "Keep evenly moist, watering when the top inch or two feels dry.",
+    lightNote: "Medium, indirect light; tolerates lower light, no direct sun.",
+    feedIntervalDays: 30,
+    feedNote: "Feed every 4–6 weeks in spring and summer with diluted fertilizer.",
+    sources: [
+      "https://hgic.clemson.edu/factsheet/dieffenbachia/",
+      "https://www.almanac.com/plant/how-care-dieffenbachia-plants",
+    ],
+    disagreement: "Feed cadence cited as 4–6 weeks; rounded to 30 days as a foliage default.",
+  },
+  {
+    key: "croton",
+    commonName: "Croton (Codiaeum)",
+    avatar: "🍂",
+    waterIntervalDays: 7,
+    waterNote: "Keep evenly moist; water when the top 2–3cm of soil is dry — it drops leaves if it dries out fully.",
+    lightNote: "Bright, indirect light; a little gentle direct sun keeps the colors vivid.",
+    feedIntervalDays: 30,
+    feedNote: "Feed monthly with a balanced fertilizer in spring and summer.",
+    sources: [
+      "https://www.rhs.org.uk/plants/codiaeum/growing-guide",
+      "https://www.gardenersworld.com/house-plants/how-to-grow-croton-codiaeum-variegatum/",
+      "https://www.gardenia.net/plant/codiaeum-variegatum-croton",
+    ],
+    disagreement:
+      "Feed frequency ranges from fortnightly (RHS/Patch) to every 4–6 weeks; monthly (30) chosen as a sensible middle.",
+  },
+  {
+    key: "anthurium",
+    commonName: "Anthurium",
+    avatar: "🌺",
+    waterIntervalDays: 7,
+    waterNote: "Keep consistently moist, letting the top inch dry between waterings.",
+    lightNote: "Bright, indirect light encourages blooms; avoid direct sun.",
+    feedIntervalDays: 30,
+    feedNote: "Feed monthly in spring and summer with a phosphorus-rich fertilizer.",
+    sources: [
+      "https://www.gardenia.net/plant/anthurium-andraeanum",
+      "https://www.almanac.com/plant/anthuriums",
+    ],
+    disagreement:
+      "Feeding ranges from every 2 weeks (high-phosphorus) to monthly (balanced, half-strength); used monthly as the conservative consensus.",
+  },
+  {
+    key: "bird-of-paradise",
+    commonName: "Bird of Paradise",
+    avatar: "🌿",
+    waterIntervalDays: 7,
+    waterNote: "Water freely while growing so the soil stays moist, then ease off in winter.",
+    lightNote: "Bright, indirect light; some screened direct sun is fine, shade from harsh midday sun.",
+    feedIntervalDays: 30,
+    feedNote: "Feed monthly with a balanced liquid fertilizer through spring and summer.",
+    sources: [
+      "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?kempercode=b569",
+      "https://www.rhs.org.uk/plants/strelitzia/how-to-grow-strelitzia",
+    ],
+    disagreement:
+      "RHS leans weekly-summer / fortnightly-winter while MoBot stresses drought tolerance once established; 7 days is a growing-season average.",
+  },
+  {
+    key: "areca-palm",
+    commonName: "Areca Palm",
+    avatar: "🌴",
+    waterIntervalDays: 7,
+    waterNote: "Keep the soil lightly moist, watering when the top layer dries but never waterlogged.",
+    lightNote: "Bright, indirect light; gentle morning sun is fine but avoid harsh direct rays.",
+    feedIntervalDays: 30,
+    feedNote: "Feed monthly in spring and summer with a balanced palm fertilizer.",
+    sources: [
+      "https://www.happyhouseplants.co.uk/blogs/houseplant-blog/the-ultimate-guide-to-areca-palms-everything-you-need-to-know",
+      "https://thestem.co.uk/plant-academy/a-z-of-plants/dypsis-lutescens-plant-care-guide",
+    ],
+    disagreement: "Feeding cadence varies between sources (every 4–6 weeks); used monthly as the midpoint.",
+  },
+  {
+    key: "parlor-palm",
+    commonName: "Parlor Palm",
+    avatar: "🎋",
+    waterIntervalDays: 9,
+    waterNote: "Water once the top inch of soil dries, keeping it lightly moist but never soggy.",
+    lightNote: "Medium, indirect light; tolerates lower light but avoid direct sun on the fronds.",
+    feedIntervalDays: 45,
+    feedNote: "Feed lightly a couple of times across the growing season; it is a modest feeder.",
+    sources: [
+      "https://www.gardenia.net/plant/chamaedorea-elegans-parlor-palm",
+      "https://sugarcreekgardens.com/product/chamaedorea-elegans-parlor-palm-neanthe-bella-palm/",
+    ],
+    disagreement: null,
+  },
+  {
+    key: "majesty-palm",
+    commonName: "Majesty Palm",
+    avatar: "🌴",
+    waterIntervalDays: 6,
+    waterNote: "Keep the mix evenly moist at all times, never letting it dry out fully or sit in water.",
+    lightNote: "Bright, indirect light; filtered sun is ideal and direct rays can scorch the fronds.",
+    feedIntervalDays: 30,
+    feedNote: "Feed in spring and summer with a general houseplant fertilizer that includes iron.",
+    sources: [
+      "https://costafarms.com/blogs/plant-finder/majesty-palm",
+      "https://www.gardenia.net/plant/ravenea-rivularis-majesty-palm",
+    ],
+    disagreement: null,
+  },
+  {
+    key: "ponytail-palm",
+    commonName: "Ponytail Palm",
+    avatar: "🪴",
+    waterIntervalDays: 18,
+    waterNote: "Let the soil dry out well between drinks; its swollen base stores water.",
+    lightNote: "Bright, indirect light; it enjoys plenty of sun and tolerates lower light too.",
+    feedIntervalDays: 60,
+    feedNote: "Feed sparingly once or twice in the growing season; it needs very little.",
+    sources: [
+      "https://libguides.nybg.org/ponytail",
+      "https://www.gardenia.net/plant/beaucarnea-recurvata-pony-tail-palm",
+    ],
+    disagreement: null,
+  },
+  {
+    key: "norfolk-island-pine",
+    commonName: "Norfolk Island Pine",
+    avatar: "🌲",
+    waterIntervalDays: 8,
+    waterNote: "Water when the surface starts to dry, keeping soil consistently moist but never soggy.",
+    lightNote: "Bright, indirect light; filtered sun near a bright window prevents needle scorch.",
+    feedIntervalDays: 30,
+    feedNote: "Feed monthly through spring and summer with a balanced liquid fertilizer.",
+    sources: [
+      "https://sfyl.ifas.ufl.edu/media/sfylifasufledu/santa-rosa/docs/pdfs/demo-garden-5/Norfolk-Island-Pine.pdf",
+      "https://libguides.nybg.org/Norfolkislandpine",
+    ],
+    disagreement: null,
+  },
+  {
+    key: "money-tree",
+    commonName: "Money Tree",
+    avatar: "🪴",
+    waterIntervalDays: 9,
+    waterNote: "Water when the top inch or two of soil dries, then let it drain fully; avoid standing water.",
+    lightNote: "Bright, indirect light; tolerates medium light but keep out of harsh direct sun.",
+    feedIntervalDays: 30,
+    feedNote: "Feed monthly with a balanced water-soluble fertilizer in spring and summer only.",
+    sources: [
+      "https://costafarms.com/blogs/plant-finder/money-tree",
+      "https://www.gardenia.net/plant/pachira-aquatica-money-tree",
+    ],
+    disagreement: null,
+  },
+  {
+    key: "lucky-bamboo",
+    commonName: "Lucky Bamboo",
+    avatar: "🎋",
+    waterIntervalDays: 7,
+    waterNote: "Refresh the water weekly if grown in water, or water when the top inch dries in soil.",
+    lightNote: "Bright, indirect light; tolerates low light but never place in direct sun.",
+    feedIntervalDays: 60,
+    feedNote: "Feed lightly every other month with heavily diluted houseplant fertilizer.",
+    sources: [
+      "https://hgic.clemson.edu/how-to-grow-and-care-for-lucky-bamboo-dracaena-sanderiana/",
+      "https://www.gardenia.net/plant/dracaena-sanderiana-lucky-bamboo",
+    ],
+    disagreement: null,
+  },
+  {
+    key: "schefflera",
+    commonName: "Schefflera (Umbrella Plant)",
+    avatar: "🪴",
+    waterIntervalDays: 9,
+    waterNote: "Water when the top inch or two dries; it dislikes soggy soil.",
+    lightNote: "Bright, indirect light; gets leggy in low light, no harsh sun.",
+    feedIntervalDays: 45,
+    feedNote: "Feed every 4–6 weeks in spring and summer, none in winter.",
+    sources: [
+      "https://www.almanac.com/plant/umbrella-plant-care-guide-schefflera",
+      "https://bloomscape.com/plant-care-guide/schefflera/",
+    ],
+    disagreement: null,
+  },
+  {
+    key: "cast-iron-plant",
+    commonName: "Cast Iron Plant",
+    avatar: "🍃",
+    waterIntervalDays: 14,
+    waterNote: "Let the soil dry out between deep waterings; very forgiving of neglect.",
+    lightNote: "Low light; tolerates shade well, keep out of direct sun.",
+    feedIntervalDays: 60,
+    feedNote: "Feed only occasionally in the growing season; it is a light feeder.",
+    sources: [
+      "https://www.gardenia.net/plant/aspidistra-elatior-cast-iron-plant-grow-and-care-tips",
+      "https://soltech.com/products/cast-iron-care",
+    ],
+    disagreement:
+      "Feeding advice ranges from once a year to a few times in summer; set to 60 days as a low-need compromise.",
+  },
+  {
+    key: "monstera-adansonii",
+    commonName: "Monstera Adansonii",
+    avatar: "🍃",
+    waterIntervalDays: 7,
+    waterNote: "Water about weekly, letting the top of the soil dry first.",
+    lightNote: "Bright, indirect light brings out leaf holes; avoid direct sun.",
+    feedIntervalDays: 30,
+    feedNote: "Feed monthly in spring and summer with diluted balanced fertilizer.",
+    sources: [
+      "https://www.gardenia.net/plant/monstera-adansonii-swiss-cheese-plant",
+      "https://www.livelyroot.com/blogs/plant-care/swiss-cheese-plant-care-and-growing-guide",
+    ],
+    disagreement: "Feed frequency cited as every 2–4 weeks; used the monthly midpoint.",
+  },
+  {
+    key: "philodendron-birkin",
+    commonName: "Philodendron Birkin",
+    avatar: "🌿",
+    waterIntervalDays: 8,
+    waterNote: "Water when the top inch or two dries; avoid soggy soil.",
+    lightNote: "Bright, indirect light keeps the white variegation crisp.",
+    feedIntervalDays: 30,
+    feedNote: "Feed every 4–6 weeks in spring and summer at half strength.",
+    sources: [
+      "https://www.gardenia.net/plant/philodendron-birkin",
+      "https://www.joyusgarden.com/philodendron-birkin-care-growing-guide/",
+    ],
+    disagreement:
+      "Watering cited as every 7–10 days, feed 4–6 weeks; sources agree Birkin needs brighter light than most philodendrons for good variegation.",
+  },
+  {
+    key: "string-of-pearls",
+    commonName: "String of Pearls",
+    avatar: "🌿",
+    waterIntervalDays: 14,
+    waterNote: "Wait until the soil is fully dry, as the beads store their own water.",
+    lightNote: "Bright, indirect light near a sunny window.",
+    feedIntervalDays: 60,
+    feedNote: "A light feed just a couple of times in spring and summer is plenty.",
+    sources: [
+      "https://www.gardenersworld.com/house-plants/how-to-grow-string-of-pearls/",
+      "https://greeneryunlimited.co/pages/string-of-hearts-care",
+    ],
+    disagreement:
+      "Gardeners' World leans toward bright indirect light while some succulent specialists push for direct morning/evening sun; erred toward bright indirect for indoor safety.",
+  },
+  {
+    key: "echeveria",
+    commonName: "Echeveria",
+    avatar: "🌵",
+    waterIntervalDays: 14,
+    waterNote: "Soak well, then let the soil dry out completely before the next watering.",
+    lightNote: "Direct sun for at least six hours keeps the rosette tight.",
+    feedIntervalDays: 60,
+    feedNote: "Feed sparingly with a diluted succulent food only during active growth.",
+    sources: [
+      "https://www.almanac.com/plant/complete-guide-growing-and-caring-echeveria-succulents",
+      "https://worldofsucculents.com/grow-care-echeveria/",
+    ],
+    disagreement: null,
+  },
+  {
+    key: "haworthia",
+    commonName: "Haworthia",
+    avatar: "🌵",
+    waterIntervalDays: 16,
+    waterNote: "Water only once the soil has dried out fully, easing off in winter.",
+    lightNote: "Bright, indirect light, with only gentle morning sun tolerated.",
+    feedIntervalDays: 60,
+    feedNote: "Feed sparingly with a half-strength fertilizer in the growing season.",
+    sources: [
+      "https://www.almanac.com/plant/haworthia-care-how-grow-healthy-succulents",
+      "https://www.joyusgarden.com/zebra-succulent-care-a-beginners-haworthia-growing-guide/",
+    ],
+    disagreement:
+      "Sources differ on light (low-light succulent vs bright indirect with morning sun); settled on bright indirect since deep shade causes etiolation.",
+  },
+  {
+    key: "christmas-cactus",
+    commonName: "Christmas Cactus",
+    avatar: "🌵",
+    waterIntervalDays: 10,
+    waterNote: "Water when the top third of the mix dries; it likes more moisture than a desert cactus.",
+    lightNote: "Bright, indirect light, away from harsh direct sun.",
+    feedIntervalDays: 30,
+    feedNote: "Feed monthly through spring and summer growth.",
+    sources: [
+      "https://www.rhs.org.uk/plants/christmas-cactus/how-to-grow",
+      "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=253152",
+    ],
+    disagreement:
+      "As a forest epiphyte it does not want desert-cactus treatment; RHS and MoBot agree on regular water and indirect light, so it sits below the succulent band.",
+  },
+  {
+    key: "kalanchoe",
+    commonName: "Kalanchoe",
+    avatar: "🌺",
+    waterIntervalDays: 14,
+    waterNote: "Let the soil dry between waterings, since it easily rots if overwatered.",
+    lightNote: "Direct sun to bright light keeps it compact and blooming.",
+    feedIntervalDays: 30,
+    feedNote: "Feed monthly while it is actively growing.",
+    sources: [
+      "https://hgic.clemson.edu/factsheet/kalanchoe/",
+      "https://www.gardeners.com/blogs/houseplant-encyclopedia/kalanchoe-care-9219",
+    ],
+    disagreement: null,
+  },
+  {
+    key: "african-violet",
+    commonName: "African Violet",
+    avatar: "🌺",
+    waterIntervalDays: 6,
+    waterNote: "Water from below to keep soil moist, keeping the leaves dry to avoid spotting and rot.",
+    lightNote: "Bright, indirect light; an east or north window suits it best.",
+    feedIntervalDays: 14,
+    feedNote: "Feed regularly with a dilute fertilizer formulated for African violets.",
+    sources: [
+      "https://hgic.clemson.edu/factsheet/african-violet/",
+      "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?kempercode=b567",
+    ],
+    disagreement: null,
+  },
+  {
+    key: "rex-begonia",
+    commonName: "Rex Begonia",
+    avatar: "🍂",
+    waterIntervalDays: 7,
+    waterNote: "Water when the top inch of soil is dry; it has no tolerance for soggy roots.",
+    lightNote: "Bright, indirect light; never direct sun.",
+    feedIntervalDays: 30,
+    feedNote: "Feed lightly every few weeks in spring and summer at quarter strength, stopping in winter.",
+    sources: [
+      "https://www.gardenia.net/genus/begonia-rex-cultorum-rex-begonia-grow-and-care-tips",
+      "https://anokamastergardeners.org/gardening-articles/rex-begonia-relationship-advice",
+    ],
+    disagreement: null,
+  },
+  {
+    key: "tradescantia-inch-plant",
+    commonName: "Tradescantia (Inch Plant)",
+    avatar: "🪻",
+    waterIntervalDays: 7,
+    waterNote: "Let the top inch of soil dry before watering again, as it rots easily if kept soggy.",
+    lightNote: "Bright, indirect light keeps the stripe coloring vivid.",
+    feedIntervalDays: 30,
+    feedNote: "Feed every few weeks in spring and summer with a half-strength balanced fertilizer.",
+    sources: [
+      "https://www.patchplants.com/pages/plant-care/complete-guide-to-tradescantia-zebrina-care/",
+      "https://houseplantcentral.com/tradescantia-zebrina-care-info/",
+    ],
+    disagreement:
+      "Sources differ on moisture (evenly moist vs let the top inch dry); chose the dry-down approach as the safer consensus against root rot.",
+  },
+  {
+    key: "maidenhair-fern",
+    commonName: "Maidenhair Fern",
+    avatar: "🍃",
+    waterIntervalDays: 5,
+    waterNote: "Keep the soil reliably moist at all times; even a brief dry-out crisps the fronds.",
+    lightNote: "Bright, indirect light with no direct sun.",
+    feedIntervalDays: 30,
+    feedNote: "Apply a diluted balanced feed roughly monthly through spring and summer.",
+    sources: [
+      "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?kempercode=j200",
+      "https://www.gardenersworld.com/house-plants/how-to-grow-maidenhair-fern-adiantum-raddianum/",
+    ],
+    disagreement: null,
+  },
+  {
+    key: "birds-nest-fern",
+    commonName: "Bird's Nest Fern",
+    avatar: "🌿",
+    waterIntervalDays: 6,
+    waterNote: "Keep the soil evenly moist, watering at the pot's edge to avoid wetting the central rosette.",
+    lightNote: "Medium, indirect light; bright filtered light works but avoid direct sun.",
+    feedIntervalDays: 45,
+    feedNote: "Feed lightly with a weak balanced fertilizer every six weeks or so in the growing season.",
+    sources: [
+      "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=285707",
+      "https://hgic.clemson.edu/how-to-grow-and-care-for-birds-nest-fern-asplenium-nidus/",
+    ],
+    disagreement:
+      "Sources agree on consistent moisture but vary on light intensity (forgiving medium/indirect vs brighter filtered light).",
+  },
+  {
+    key: "nerve-plant",
+    commonName: "Nerve Plant (Fittonia)",
+    avatar: "🍃",
+    waterIntervalDays: 5,
+    waterNote: "Water when the top of the soil starts to dry; it wilts dramatically if left to fully dry out.",
+    lightNote: "Medium, indirect light; tolerates lower light but avoid direct sun.",
+    feedIntervalDays: 30,
+    feedNote: "Feed monthly in spring and summer with a balanced fertilizer at half strength.",
+    sources: [
+      "https://www.gardenia.net/plant/fittonia-albivenis-nerve-plant-grow-and-care-tips",
+      "https://www.gardendesign.com/houseplants/nerve-plant.html",
+    ],
+    disagreement: null,
+  },
+  {
+    key: "prayer-plant",
+    commonName: "Prayer Plant (Maranta)",
+    avatar: "🍃",
+    waterIntervalDays: 6,
+    waterNote: "Keep the soil moist with tepid soft water, letting the top dry slightly in winter.",
+    lightNote: "Medium, indirect light; leaf color fades in direct sun.",
+    feedIntervalDays: 30,
+    feedNote: "Feed monthly during active growth with a balanced liquid fertilizer at half strength.",
+    sources: [
+      "https://www.rhs.org.uk/plants/119598/maranta-leuconeura/details",
+      "https://libguides.nybg.org/prayerplant",
+    ],
+    disagreement: null,
+  },
+  {
+    key: "polka-dot-plant",
+    commonName: "Polka Dot Plant (Hypoestes)",
+    avatar: "🌸",
+    waterIntervalDays: 5,
+    waterNote: "Keep the soil evenly moist spring through fall, since it sulks quickly when it dries out.",
+    lightNote: "Bright, indirect light; variegation fades in low light and direct sun scorches it.",
+    feedIntervalDays: 30,
+    feedNote: "Feed every few weeks in the growing season with a balanced fertilizer at half strength.",
+    sources: [
+      "https://hort.extension.wisc.edu/articles/polka-dot-plant-hypoestes-phyllostachya/",
+      "https://www.provenwinners.com/learn/how-plant/polka-dot-plant",
+    ],
+    disagreement: null,
+  },
+  {
+    key: "hoya-wax-plant",
+    commonName: "Hoya (Wax Plant)",
+    avatar: "🍃",
+    waterIntervalDays: 10,
+    waterNote: "Let the top inch or so dry out, then water and let it drain fully.",
+    lightNote: "Bright, indirect light all day encourages blooming.",
+    feedIntervalDays: 30,
+    feedNote: "Feed monthly with a diluted balanced fertilizer in spring and summer.",
+    sources: [
+      "https://www.gardenia.net/plant/hoya-carnosa-wax-plant-all-you-need-to-know",
+      "https://www.espoma.com/gardening/indoor-gardening/hoya-plants-caring-for-hoya/",
+    ],
+    disagreement: null,
+  },
+  {
+    key: "string-of-hearts",
+    commonName: "String of Hearts",
+    avatar: "🍃",
+    waterIntervalDays: 14,
+    waterNote: "Allow the soil to dry out completely before watering again.",
+    lightNote: "Bright, indirect light, out of scorching direct sun.",
+    feedIntervalDays: 60,
+    feedNote: "A light feed twice a year, in spring and summer, is enough.",
+    sources: [
+      "https://www.gardenersworld.com/house-plants/how-to-grow-and-care-for-a-string-of-hearts-house-plant/",
+      "https://greeneryunlimited.co/pages/string-of-hearts-care",
+    ],
+    disagreement: null,
+  },
+  {
+    key: "bromeliad",
+    commonName: "Bromeliad",
+    avatar: "🌺",
+    waterIntervalDays: 7,
+    waterNote: "Keep a little fresh water in the central cup and let the mix dry between waterings.",
+    lightNote: "Bright, indirect light to keep its color from fading.",
+    feedIntervalDays: 45,
+    feedNote: "Feed at half strength every month or two, never into the central cup.",
+    sources: [
+      "https://hgic.clemson.edu/factsheet/bromeliads/",
+      "https://www.almanac.com/plant/how-grow-and-care-bromeliads",
+    ],
+    disagreement: null,
+  },
+  {
+    key: "air-plant-tillandsia",
+    commonName: "Air Plant (Tillandsia)",
+    avatar: "🌿",
+    waterIntervalDays: 7,
+    waterNote: "Soak 20–30 min weekly, then shake dry; no soil needed.",
+    lightNote: "Bright, indirect light from a filtered window.",
+    feedIntervalDays: 30,
+    feedNote: "Add diluted fertilizer to the soak water about once a month.",
+    sources: [
+      "https://savvygardening.com/air-plant-care/",
+      "https://libguides.nybg.org/airplant",
+    ],
+    disagreement:
+      "Watering cadence varies (weekly soak vs 7–10 days vs several mistings a week); used the weekly soak per the special-case rule.",
   },
 ];
