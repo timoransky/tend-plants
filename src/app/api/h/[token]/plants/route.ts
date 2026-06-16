@@ -1,41 +1,9 @@
-import { asc, eq } from "drizzle-orm";
-
 import { db } from "@/db";
-import { plants, type Plant } from "@/db/schema";
+import { plants } from "@/db/schema";
 import { apiError, findHousehold, json, readJson } from "@/lib/api";
-import {
-  CARE_STATUS_RANK,
-  computeCareState,
-  overallStatus,
-  type CareState,
-  type CareStatus,
-} from "@/lib/status";
+import { listPlantsWithStatus, withStatus } from "@/lib/plants";
 
 type Params = { params: Promise<{ token: string }> };
-
-export type PlantWithStatus = Plant & {
-  water: CareState;
-  feed: CareState;
-  status: CareStatus | null;
-};
-
-/** Attach derived water/feed/overall status to a plant row. */
-function withStatus(plant: Plant, now: Date): PlantWithStatus {
-  const water = computeCareState(
-    plant.lastWatered,
-    plant.waterIntervalDays,
-    now,
-  );
-  const feed = computeCareState(plant.lastFed, plant.feedIntervalDays, now);
-  return { ...plant, water, feed, status: overallStatus(water, feed) };
-}
-
-/** Most urgent care need first; nulls (no schedule) last. */
-function byUrgency(a: PlantWithStatus, b: PlantWithStatus): number {
-  const rank = (s: CareStatus | null) =>
-    s == null ? Number.MAX_SAFE_INTEGER : CARE_STATUS_RANK[s];
-  return rank(a.status) - rank(b.status);
-}
 
 /**
  * GET /api/h/[token]/plants — all plants for the household with computed
@@ -46,16 +14,8 @@ export async function GET(_request: Request, { params }: Params) {
   const household = await findHousehold(token);
   if (!household) return apiError(404, "Household not found");
 
-  const rows = await db
-    .select()
-    .from(plants)
-    .where(eq(plants.householdId, household.id))
-    .orderBy(asc(plants.createdAt));
-
-  const now = new Date();
-  const withStatuses = rows.map((p) => withStatus(p, now)).sort(byUrgency);
-
-  return json({ plants: withStatuses });
+  const plantsWithStatus = await listPlantsWithStatus(household.id);
+  return json({ plants: plantsWithStatus });
 }
 
 type AddPlantBody = {

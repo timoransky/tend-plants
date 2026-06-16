@@ -1,0 +1,50 @@
+import type { CareState, CareStatus } from "@/lib/status";
+import { CARE_STATUS_RANK } from "@/lib/status";
+import type { CareKind } from "@/lib/tasks";
+
+export const STATUS_LABEL: Record<CareStatus, string> = {
+  overdue: "Overdue",
+  due_today: "Due today",
+  upcoming: "Upcoming",
+  fine: "Fine",
+};
+
+/** Tailwind background classes for a care kind (the status-dot / task accent). */
+export const KIND_BG: Record<CareKind | "healthy", string> = {
+  water: "bg-water",
+  feed: "bg-feed",
+  healthy: "bg-healthy",
+};
+
+export const KIND_TEXT: Record<CareKind | "healthy", string> = {
+  water: "text-water",
+  feed: "text-feed",
+  healthy: "text-healthy",
+};
+
+/**
+ * Which need drives the plant's status dot. Blue (water) / brown (feed) when
+ * something is due, green (healthy) when nothing is. Water wins ties since it's
+ * the primary urgent color in the spec.
+ */
+export function primaryNeed(
+  water: CareState,
+  feed: CareState,
+): { kind: CareKind | "healthy"; status: CareStatus | null } {
+  const w = water.status;
+  const f = feed.status;
+  const actionable = (s: CareStatus | null) => s != null && s !== "fine";
+
+  if (!actionable(w) && !actionable(f)) {
+    return { kind: "healthy", status: w ?? f };
+  }
+  if (actionable(w) && actionable(f)) {
+    // Both need care — color by the more urgent; tie → water.
+    return CARE_STATUS_RANK[f!] < CARE_STATUS_RANK[w!]
+      ? { kind: "feed", status: f }
+      : { kind: "water", status: w };
+  }
+  return actionable(w)
+    ? { kind: "water", status: w }
+    : { kind: "feed", status: f };
+}
