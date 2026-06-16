@@ -38,6 +38,11 @@ export const plants = pgTable("plants", {
   // Legacy provenance column, now always null (local species keys are strings,
   // not integers); safe to drop later.
   speciesId: integer("species_id"),
+  // The local species this plant was created from (kebab-case key from the
+  // dataset), or null for manual entries. Keeps the link to the species
+  // template so care fields can be reverted to the provided defaults — both in
+  // the add flow and when editing the plant later.
+  speciesKey: text("species_key"),
   commonName: text("common_name"),
   // Emoji or stock image key — no uploads in v1.
   avatar: text("avatar"),
