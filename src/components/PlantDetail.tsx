@@ -1,0 +1,255 @@
+"use client";
+
+import { useRouter } from "next/navigation";
+import { useState, useSyncExternalStore } from "react";
+
+import { STATUS_LABEL } from "@/lib/care-display";
+import type { CareState } from "@/lib/status";
+
+export type PlantDetailData = {
+  id: string;
+  name: string;
+  room: string | null;
+  avatar: string | null;
+  commonName: string | null;
+  notes: string | null;
+  waterNote: string | null;
+  lightNote: string | null;
+  feedNote: string | null;
+  water: CareState;
+  feed: CareState;
+};
+
+type Segment = "feed" | "water" | "light";
+
+const SEGMENTS: { key: Segment; label: string; activeBg: string }[] = [
+  { key: "feed", label: "Feed", activeBg: "bg-feed" },
+  { key: "water", label: "Water", activeBg: "bg-water" },
+  { key: "light", label: "Light", activeBg: "bg-light" },
+];
+
+const DAY_MS = 86_400_000;
+
+/** Relative "last done" label, e.g. "today", "3 days ago". Computed only after
+ * mount to avoid SSR/client hydration mismatches on the current time. */
+function agoLabel(iso: string | null): string | null {
+  if (!iso) return null;
+  const days = Math.round((Date.now() - Date.parse(iso)) / DAY_MS);
+  if (days <= 0) return "today";
+  if (days === 1) return "yesterday";
+  return `${days} days ago`;
+}
+
+function dueLabel(iso: string | null): string | null {
+  if (!iso) return null;
+  const days = Math.round((Date.parse(iso) - Date.now()) / DAY_MS);
+  if (days === 0) return "due today";
+  if (days < 0) return `${Math.abs(days)} day${days === -1 ? "" : "s"} overdue`;
+  return `due in ${days} day${days === 1 ? "" : "s"}`;
+}
+
+export function PlantDetail({
+  token,
+  initial,
+}: {
+  token: string;
+  initial: PlantDetailData;
+}) {
+  const router = useRouter();
+  const [data, setData] = useState(initial);
+  const [tab, setTab] = useState<Segment>("water");
+  const [pending, setPending] = useState<null | "water" | "feed">(null);
+  const [justDid, setJustDid] = useState<null | "water" | "feed">(null);
+  // false during SSR, true once hydrated — gates time-relative labels so the
+  // server and client render the same thing initially.
+  const mounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false,
+  );
+
+  async function mark(kind: "water" | "feed") {
+    setPending(kind);
+    try {
+      const res = await fetch(`/api/h/${token}/plants/${data.id}/${kind}`, {
+        method: "POST",
+      });
+      if (!res.ok) throw new Error();
+      const { plant } = await res.json();
+      // Optimistically reflect the new status immediately.
+      setData((d) => ({ ...d, water: plant.water, feed: plant.feed }));
+      setJustDid(kind);
+      setTimeout(() => setJustDid(null), 2000);
+      // Keep the home screen / server data in sync.
+      router.refresh();
+    } catch {
+      // Leave state unchanged on failure; a toast system arrives in polish.
+    } finally {
+      setPending(null);
+    }
+  }
+
+  return (
+    <div className="flex flex-col gap-5">
+      {/* Segmented control */}
+      <div className="flex gap-1 rounded-full bg-canvas-soft p-1">
+        {SEGMENTS.map((s) => (
+          <button
+            key={s.key}
+            type="button"
+            onClick={() => setTab(s.key)}
+            className={`flex-1 rounded-full px-4 py-2 text-sm font-medium transition-colors ${
+              tab === s.key
+                ? `${s.activeBg} text-canvas`
+                : "text-cream-soft hover:text-cream"
+            }`}
+          >
+            {s.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Active care card */}
+      {tab === "water" ? (
+        <CareCard
+          accent="text-water"
+          title="Water"
+          note={data.waterNote}
+          care={data.water}
+          mounted={mounted}
+          action={{
+            label: "Mark watered",
+            doneLabel: "Watered ✓",
+            bg: "bg-water",
+            pending: pending === "water",
+            done: justDid === "water",
+            onClick: () => mark("water"),
+          }}
+        />
+      ) : null}
+
+      {tab === "feed" ? (
+        <CareCard
+          accent="text-feed"
+          title="Feed"
+          note={data.feedNote}
+          care={data.feed}
+          mounted={mounted}
+          action={{
+            label: "Mark fed",
+            doneLabel: "Fed ✓",
+            bg: "bg-feed",
+            pending: pending === "feed",
+            done: justDid === "feed",
+            onClick: () => mark("feed"),
+          }}
+        />
+      ) : null}
+
+      {tab === "light" ? (
+        <div className="rounded-3xl bg-surface p-5 text-ink">
+          <h2 className="text-sm font-semibold uppercase tracking-wide text-light">
+            Light
+          </h2>
+          <p className="mt-2 text-base leading-relaxed text-ink">
+            {data.lightNote ?? "No light guidance for this plant yet."}
+          </p>
+        </div>
+      ) : null}
+
+      {/* Personal notes */}
+      <div className="rounded-3xl bg-surface/90 p-5 text-ink">
+        <h2 className="text-sm font-semibold uppercase tracking-wide text-ink-soft">
+          Your notes
+        </h2>
+        <p className="mt-2 text-base leading-relaxed text-ink">
+          {data.notes ?? (
+            <span className="text-ink-soft">
+              No personal notes yet. (Editing arrives in a later step.)
+            </span>
+          )}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function CareCard({
+  accent,
+  title,
+  note,
+  care,
+  mounted,
+  action,
+}: {
+  accent: string;
+  title: string;
+  note: string | null;
+  care: CareState;
+  mounted: boolean;
+  action: {
+    label: string;
+    doneLabel: string;
+    bg: string;
+    pending: boolean;
+    done: boolean;
+    onClick: () => void;
+  };
+}) {
+  const last = mounted ? agoLabel(care.lastDoneAt) : null;
+  const due = mounted ? dueLabel(care.dueAt) : null;
+
+  return (
+    <div className="rounded-3xl bg-surface p-5 text-ink">
+      <div className="flex items-center justify-between">
+        <h2
+          className={`text-sm font-semibold uppercase tracking-wide ${accent}`}
+        >
+          {title}
+        </h2>
+        {care.status ? (
+          <span className={`text-xs font-medium ${accent}`}>
+            {STATUS_LABEL[care.status]}
+          </span>
+        ) : null}
+      </div>
+
+      <p className="mt-2 text-base leading-relaxed text-ink">
+        {note ?? "No guidance for this plant yet."}
+      </p>
+
+      <dl className="mt-4 flex flex-wrap gap-x-6 gap-y-1 text-sm text-ink-soft">
+        <div>
+          <dt className="inline">Last: </dt>
+          <dd className="inline font-medium text-ink">
+            {last ?? (care.lastDoneAt ? "—" : "not yet")}
+          </dd>
+        </div>
+        {care.intervalDays ? (
+          <div>
+            <dt className="inline">Every </dt>
+            <dd className="inline font-medium text-ink">
+              {care.intervalDays} days
+            </dd>
+          </div>
+        ) : null}
+        {due ? (
+          <div>
+            <dd className="font-medium text-ink">{due}</dd>
+          </div>
+        ) : null}
+      </dl>
+
+      <button
+        type="button"
+        onClick={action.onClick}
+        disabled={action.pending}
+        className={`mt-5 h-12 w-full rounded-full text-base font-semibold text-canvas transition-all disabled:opacity-70 ${
+          action.done ? "bg-healthy" : action.bg
+        }`}
+      >
+        {action.pending ? "…" : action.done ? action.doneLabel : action.label}
+      </button>
+    </div>
+  );
+}
