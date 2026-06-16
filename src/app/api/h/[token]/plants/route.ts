@@ -21,7 +21,7 @@ export async function GET(_request: Request, { params }: Params) {
 type AddPlantBody = {
   name?: unknown;
   room?: unknown;
-  speciesId?: unknown;
+  speciesKey?: unknown;
   commonName?: unknown;
   avatar?: unknown;
   waterIntervalDays?: unknown;
@@ -60,18 +60,13 @@ export async function POST(request: Request, { params }: Params) {
   const name = optString(body.name);
   if (!name) return apiError(400, "`name` is required");
 
-  const speciesId =
-    typeof body.speciesId === "number" && Number.isInteger(body.speciesId)
-      ? body.speciesId
-      : null;
-
   const [plant] = await db
     .insert(plants)
     .values({
       householdId: household.id,
       name,
       room: optString(body.room),
-      speciesId,
+      speciesKey: optString(body.speciesKey),
       commonName: optString(body.commonName),
       avatar: optString(body.avatar),
       waterIntervalDays: optInt(body.waterIntervalDays),

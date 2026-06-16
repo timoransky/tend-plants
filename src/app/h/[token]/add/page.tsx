@@ -1,25 +1,47 @@
 import Link from "next/link";
+import { notFound } from "next/navigation";
 
-// Placeholder — the species browse + snapshot flow lands in step 5.
+import { AddPlant } from "@/components/AddPlant";
+import { findHousehold } from "@/lib/api";
+
+export const dynamic = "force-dynamic";
+
 type Props = { params: Promise<{ token: string }> };
 
 export default async function AddPlantPage({ params }: Props) {
   const { token } = await params;
+  const household = await findHousehold(token);
+  if (!household) notFound();
+
   return (
-    <main className="mx-auto flex h-dvh w-full max-w-2xl flex-col items-center justify-center gap-4 px-6 text-center">
-      <span className="text-4xl" aria-hidden>
-        🌱
-      </span>
-      <h1 className="text-xl font-semibold text-cream">Add a plant</h1>
-      <p className="max-w-xs text-sm text-cream-soft">
-        The browse-and-add flow arrives in the next build step.
+    <main className="mx-auto flex min-h-dvh w-full max-w-2xl flex-col px-4 pb-10">
+      <div className="flex items-center gap-3 pt-5">
+        <Link
+          href={`/h/${token}`}
+          aria-label="Back home"
+          className="flex size-9 items-center justify-center rounded-full bg-canvas-soft text-cream transition-colors hover:bg-canvas-soft/70"
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
+            <path
+              d="M15 6l-6 6 6 6"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </Link>
+        <h1 className="text-xl font-semibold tracking-tight text-cream">
+          Add a plant
+        </h1>
+      </div>
+
+      <p className="px-1 pb-4 pt-2 text-sm text-cream-soft">
+        Pick a houseplant to start from, then tweak anything. Not listed? Add it
+        manually.
       </p>
-      <Link
-        href={`/h/${token}`}
-        className="rounded-full bg-canvas-soft px-5 py-2.5 text-sm font-medium text-cream transition-colors hover:bg-canvas-soft/70"
-      >
-        ← Back home
-      </Link>
+
+      <AddPlant token={token} />
     </main>
   );
 }

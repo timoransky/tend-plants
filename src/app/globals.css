@@ -37,3 +37,11 @@ body {
   color: var(--color-cream);
   font-family: var(--font-sans), system-ui, sans-serif;
 }
+
+/* Shared form input on cream surfaces (add / edit forms). */
+@layer components {
+  .input {
+    @apply w-full rounded-xl bg-surface-muted px-3 py-2 text-sm text-ink outline-none;
+    @apply placeholder:text-ink-soft focus-visible:ring-2 focus-visible:ring-healthy/50;
+  }
+}

@@ -8,6 +8,13 @@
       "when": 1781599123077,
       "tag": "0000_careful_guardian",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1781613871735,
+      "tag": "0001_quiet_ricochet",
+      "breakpoints": true
     }
   ]
 }
