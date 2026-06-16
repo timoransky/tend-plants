@@ -114,6 +114,16 @@ export function AddPlant({ token }: { token: string }) {
     return (Object.keys(o) as (keyof CareForm)[]).some((k) => o[k] !== form[k]);
   }, [original, form]);
 
+  // Stable avatar palette: the standard choices, plus the species' own emoji if
+  // it isn't already one of them. Depends only on the picked species, so
+  // selecting a different emoji highlights it in place without reordering.
+  const avatarChoices = useMemo(() => {
+    const base = original?.avatar;
+    return base && !AVATAR_CHOICES.includes(base)
+      ? [base, ...AVATAR_CHOICES]
+      : AVATAR_CHOICES;
+  }, [original]);
+
   function resetToOriginal() {
     if (original) setForm(formFromSpecies(original));
   }
@@ -205,7 +215,7 @@ export function AddPlant({ token }: { token: string }) {
 
         <Field label="Avatar">
           <div className="flex flex-wrap gap-1.5">
-            {Array.from(new Set([form.avatar, ...AVATAR_CHOICES])).map((emo) => (
+            {avatarChoices.map((emo) => (
               <button
                 key={emo}
                 type="button"
