@@ -1,11 +1,15 @@
 "use client";
 
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useMemo, useState } from "react";
 
 import { KIND_BG, KIND_TEXT, STATUS_LABEL } from "@/lib/care-display";
 import { isToday, taskTitle, type CareTask } from "@/lib/tasks";
 
 type Tab = "today" | "upcoming";
+
+const COLLAPSED_H = "42dvh";
+const EXPANDED_H = "84dvh";
 
 function KindIcon({ kind }: { kind: CareTask["kind"] }) {
   return (
@@ -53,8 +57,10 @@ function TaskRow({ task }: { task: CareTask }) {
  * later steps; this renders the live, ordered task list.)
  */
 export function BottomSheet({ tasks }: { tasks: CareTask[] }) {
+  const reduce = useReducedMotion();
   const [tab, setTab] = useState<Tab>("today");
   const [query, setQuery] = useState("");
+  const [expanded, setExpanded] = useState(false);
 
   const visible = useMemo(() => {
     const needle = query.trim().toLowerCase();
@@ -70,10 +76,36 @@ export function BottomSheet({ tasks }: { tasks: CareTask[] }) {
   const upcomingCount = tasks.filter((t) => t.status === "upcoming").length;
 
   return (
-    <section className="flex min-h-0 flex-col rounded-t-3xl bg-surface text-ink shadow-2xl shadow-black/30">
-      <div className="mx-auto mt-2 h-1.5 w-10 rounded-full bg-ink/15" />
+    <motion.section
+      initial={false}
+      animate={{ height: expanded ? EXPANDED_H : COLLAPSED_H }}
+      transition={
+        reduce
+          ? { duration: 0 }
+          : { type: "spring", stiffness: 320, damping: 36 }
+      }
+      className="flex min-h-0 shrink-0 flex-col overflow-hidden rounded-t-3xl bg-surface text-ink shadow-2xl shadow-black/30"
+    >
+      {/* Drag handle — drag up/down or tap to expand/collapse */}
+      <motion.button
+        type="button"
+        drag="y"
+        dragConstraints={{ top: 0, bottom: 0 }}
+        dragElastic={0.5}
+        dragMomentum={false}
+        onDragEnd={(_, info) => {
+          if (info.offset.y < -28 || info.velocity.y < -250) setExpanded(true);
+          else if (info.offset.y > 28 || info.velocity.y > 250)
+            setExpanded(false);
+        }}
+        onClick={() => setExpanded((v) => !v)}
+        aria-label={expanded ? "Collapse list" : "Expand list"}
+        className="flex w-full shrink-0 touch-none cursor-grab justify-center py-2.5 active:cursor-grabbing"
+      >
+        <span className="h-1.5 w-10 rounded-full bg-ink/15" />
+      </motion.button>
 
-      <div className="flex items-center gap-2 px-4 pt-3">
+      <div className="flex items-center gap-2 px-4">
         <TabButton active={tab === "today"} onClick={() => setTab("today")}>
           Today
           <Count n={todayCount} active={tab === "today"} />
@@ -97,18 +129,27 @@ export function BottomSheet({ tasks }: { tasks: CareTask[] }) {
         />
       </div>
 
-      <ul className="flex-1 overflow-y-auto px-2 py-2">
-        {visible.length === 0 ? (
-          <li className="px-2 py-10 text-center text-sm text-ink-soft">
-            {tab === "today"
-              ? "Nothing due today — everything's happy. 🌿"
-              : "Nothing coming up in the next couple of days."}
-          </li>
-        ) : (
-          visible.map((task) => <TaskRow key={task.id} task={task} />)
-        )}
-      </ul>
-    </section>
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.ul
+          key={tab}
+          initial={reduce ? false : { opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={reduce ? { opacity: 0 } : { opacity: 0, y: -8 }}
+          transition={{ duration: 0.18, ease: [0.2, 0.7, 0.3, 1] }}
+          className="flex-1 overflow-y-auto px-2 py-2"
+        >
+          {visible.length === 0 ? (
+            <li className="px-2 py-10 text-center text-sm text-ink-soft">
+              {tab === "today"
+                ? "Nothing due today — everything's happy. 🌿"
+                : "Nothing coming up in the next couple of days."}
+            </li>
+          ) : (
+            visible.map((task) => <TaskRow key={task.id} task={task} />)
+          )}
+        </motion.ul>
+      </AnimatePresence>
+    </motion.section>
   );
 }
 

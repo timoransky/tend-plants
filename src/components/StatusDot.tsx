@@ -17,7 +17,7 @@ export function StatusDot({
   const { kind } = primaryNeed(water, feed);
   return (
     <span
-      className={`block size-3.5 rounded-full ring-2 ring-canvas ${KIND_BG[kind]} ${className}`}
+      className={`block size-3.5 rounded-full ring-2 ring-canvas transition-colors duration-500 ${KIND_BG[kind]} ${className}`}
     />
   );
 }

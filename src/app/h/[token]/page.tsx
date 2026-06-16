@@ -52,19 +52,19 @@ export default async function HomePage({ params }: Props) {
         </div>
       </header>
 
-      <main className="flex-1 overflow-y-auto px-4 pb-4">
+      <main className="min-h-0 flex-1 overflow-y-auto px-4 pb-4">
         {plants.length === 0 ? (
           <EmptyState token={token} />
         ) : (
           <div className="grid grid-cols-3 gap-2 pt-2 sm:grid-cols-4">
-            {plants.map((plant) => (
-              <PlantCard key={plant.id} plant={plant} token={token} />
+            {plants.map((plant, i) => (
+              <PlantCard key={plant.id} plant={plant} token={token} index={i} />
             ))}
           </div>
         )}
       </main>
 
-      <div className="flex max-h-[46vh] min-h-[8rem] flex-col px-2 pb-2">
+      <div className="px-2 pb-2">
         <BottomSheet tasks={tasks} />
       </div>
     </div>

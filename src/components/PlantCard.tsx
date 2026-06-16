@@ -4,18 +4,21 @@ import { StatusDot } from "@/components/StatusDot";
 import type { PlantWithStatus } from "@/lib/plants";
 
 /** A circular plant avatar with name, room, and a status dot. Links to the
- * plant detail / care sheet (built in step 4). */
+ * plant detail / care sheet. `index` drives a small staggered entrance. */
 export function PlantCard({
   plant,
   token,
+  index = 0,
 }: {
   plant: PlantWithStatus;
   token: string;
+  index?: number;
 }) {
   return (
     <Link
       href={`/h/${token}/p/${plant.id}`}
-      className="group flex flex-col items-center gap-2 rounded-3xl p-2 text-center outline-none transition-colors hover:bg-canvas-soft focus-visible:bg-canvas-soft"
+      style={{ animationDelay: `${Math.min(index, 12) * 35}ms` }}
+      className="rise group flex flex-col items-center gap-2 rounded-3xl p-2 text-center outline-none transition-colors hover:bg-canvas-soft focus-visible:bg-canvas-soft"
     >
       <span className="relative">
         <span className="flex size-20 items-center justify-center rounded-full bg-surface text-3xl shadow-sm transition-transform group-hover:scale-105 group-focus-visible:scale-105">

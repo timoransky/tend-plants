@@ -1,5 +1,6 @@
 "use client";
 
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useRouter } from "next/navigation";
 import { useState, useSyncExternalStore } from "react";
 
@@ -56,6 +57,7 @@ export function PlantDetail({
   initial: PlantDetailData;
 }) {
   const router = useRouter();
+  const reduce = useReducedMotion();
   const [data, setData] = useState(initial);
   const [tab, setTab] = useState<Segment>("water");
   const [pending, setPending] = useState<null | "water" | "feed">(null);
@@ -91,71 +93,90 @@ export function PlantDetail({
 
   return (
     <div className="flex flex-col gap-5">
-      {/* Segmented control */}
+      {/* Segmented control — the active pill slides between segments */}
       <div className="flex gap-1 rounded-full bg-canvas-soft p-1">
         {SEGMENTS.map((s) => (
           <button
             key={s.key}
             type="button"
             onClick={() => setTab(s.key)}
-            className={`flex-1 rounded-full px-4 py-2 text-sm font-medium transition-colors ${
-              tab === s.key
-                ? `${s.activeBg} text-canvas`
-                : "text-cream-soft hover:text-cream"
-            }`}
+            className="relative flex-1 rounded-full px-4 py-2 text-sm font-medium"
           >
-            {s.label}
+            {tab === s.key ? (
+              <motion.span
+                layoutId="segment-pill"
+                className={`absolute inset-0 rounded-full ${s.activeBg}`}
+                transition={
+                  reduce
+                    ? { duration: 0 }
+                    : { type: "spring", stiffness: 420, damping: 34 }
+                }
+              />
+            ) : null}
+            <span
+              className={`relative z-10 transition-colors ${
+                tab === s.key ? "text-canvas" : "text-cream-soft hover:text-cream"
+              }`}
+            >
+              {s.label}
+            </span>
           </button>
         ))}
       </div>
 
-      {/* Active care card */}
-      {tab === "water" ? (
-        <CareCard
-          accent="text-water"
-          title="Water"
-          note={data.waterNote}
-          care={data.water}
-          mounted={mounted}
-          action={{
-            label: "Mark watered",
-            doneLabel: "Watered ✓",
-            bg: "bg-water",
-            pending: pending === "water",
-            done: justDid === "water",
-            onClick: () => mark("water"),
-          }}
-        />
-      ) : null}
-
-      {tab === "feed" ? (
-        <CareCard
-          accent="text-feed"
-          title="Feed"
-          note={data.feedNote}
-          care={data.feed}
-          mounted={mounted}
-          action={{
-            label: "Mark fed",
-            doneLabel: "Fed ✓",
-            bg: "bg-feed",
-            pending: pending === "feed",
-            done: justDid === "feed",
-            onClick: () => mark("feed"),
-          }}
-        />
-      ) : null}
-
-      {tab === "light" ? (
-        <div className="rounded-3xl bg-surface p-5 text-ink">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-light">
-            Light
-          </h2>
-          <p className="mt-2 text-base leading-relaxed text-ink">
-            {data.lightNote ?? "No light guidance for this plant yet."}
-          </p>
-        </div>
-      ) : null}
+      {/* Active care card — cross-fades on tab change */}
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.div
+          key={tab}
+          initial={reduce ? false : { opacity: 0, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={reduce ? { opacity: 0 } : { opacity: 0, y: -6 }}
+          transition={{ duration: 0.18, ease: [0.2, 0.7, 0.3, 1] }}
+        >
+          {tab === "water" ? (
+            <CareCard
+              accent="text-water"
+              title="Water"
+              note={data.waterNote}
+              care={data.water}
+              mounted={mounted}
+              action={{
+                label: "Mark watered",
+                doneLabel: "Watered",
+                bg: "bg-water",
+                pending: pending === "water",
+                done: justDid === "water",
+                onClick: () => mark("water"),
+              }}
+            />
+          ) : tab === "feed" ? (
+            <CareCard
+              accent="text-feed"
+              title="Feed"
+              note={data.feedNote}
+              care={data.feed}
+              mounted={mounted}
+              action={{
+                label: "Mark fed",
+                doneLabel: "Fed",
+                bg: "bg-feed",
+                pending: pending === "feed",
+                done: justDid === "feed",
+                onClick: () => mark("feed"),
+              }}
+            />
+          ) : (
+            <div className="rounded-3xl bg-surface p-5 text-ink">
+              <h2 className="text-sm font-semibold uppercase tracking-wide text-light">
+                Light
+              </h2>
+              <p className="mt-2 text-base leading-relaxed text-ink">
+                {data.lightNote ?? "No light guidance for this plant yet."}
+              </p>
+            </div>
+          )}
+        </motion.div>
+      </AnimatePresence>
 
       {/* Personal notes */}
       <div className="rounded-3xl bg-surface/90 p-5 text-ink">
@@ -196,6 +217,7 @@ function CareCard({
     onClick: () => void;
   };
 }) {
+  const reduce = useReducedMotion();
   const last = mounted ? agoLabel(care.lastDoneAt) : null;
   const due = mounted ? dueLabel(care.dueAt) : null;
 
@@ -240,16 +262,53 @@ function CareCard({
         ) : null}
       </dl>
 
-      <button
+      <motion.button
         type="button"
         onClick={action.onClick}
-        disabled={action.pending}
-        className={`mt-5 h-12 w-full rounded-full text-base font-semibold text-canvas transition-all disabled:opacity-70 ${
+        disabled={action.pending || action.done}
+        whileTap={reduce ? undefined : { scale: 0.97 }}
+        className={`mt-5 flex h-12 w-full items-center justify-center gap-2 rounded-full text-base font-semibold text-canvas transition-colors duration-500 disabled:opacity-90 ${
           action.done ? "bg-healthy" : action.bg
         }`}
       >
-        {action.pending ? "…" : action.done ? action.doneLabel : action.label}
-      </button>
+        <AnimatePresence mode="wait" initial={false}>
+          {action.pending ? (
+            <motion.span key="pending" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+              …
+            </motion.span>
+          ) : action.done ? (
+            <motion.span
+              key="done"
+              className="flex items-center gap-2"
+              initial={reduce ? false : { opacity: 0 }}
+              animate={{ opacity: 1 }}
+            >
+              <motion.svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                initial={reduce ? false : { scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ type: "spring", stiffness: 500, damping: 16 }}
+              >
+                <path
+                  d="M5 12.5l4 4 10-10"
+                  stroke="currentColor"
+                  strokeWidth="2.4"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </motion.svg>
+              {action.doneLabel}
+            </motion.span>
+          ) : (
+            <motion.span key="label" initial={reduce ? false : { opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+              {action.label}
+            </motion.span>
+          )}
+        </AnimatePresence>
+      </motion.button>
     </div>
   );
 }
