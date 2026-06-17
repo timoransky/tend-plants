@@ -1,18 +1,15 @@
 /**
- * Deterministic, SSR-stable "scatter" for the home garden.
+ * Deterministic, SSR-stable per-plant variation for the home garden.
  *
- * Every value is derived purely from a plant's id (a UUID string) via a small
- * hash, so the server and client render identical transforms (no hydration
- * mismatch) and a bubble keeps its spot even when the urgency sort reorders the
- * list. No `Math.random`, no `Date.now` — both would break SSR and stability.
- *
- * Ranges are bounded and the garden layout keeps its row-gap larger than the
- * vertical spread, so bubbles never overlap illegibly.
+ * Values are derived purely from a plant's id (a UUID string) via a small hash,
+ * so the server and client render identically (no hydration mismatch) and a
+ * bubble keeps its look even when the urgency sort reorders the list. No
+ * `Math.random`, no `Date.now` — both would break SSR and stability. (Bubble
+ * positions come from the packing in `cluster.ts`; this only adds a little tilt
+ * and desyncs the breathing pulse.)
  */
 
 export type Scatter = {
-  dx: number; // px, horizontal nudge ~[-6, 6]
-  dy: number; // px, vertical nudge ~[-14, 14]
   rotate: number; // deg, avatar tilt ~[-5, 5]
   breatheDelay: number; // s, desyncs the breathing pulse, [0, 1.2)
 };
@@ -36,8 +33,6 @@ function rand01(seed: number, salt: number): number {
 export function scatterFor(id: string): Scatter {
   const s = hash32(id);
   return {
-    dx: Math.round((rand01(s, 1) - 0.5) * 12),
-    dy: Math.round((rand01(s, 2) - 0.5) * 28),
     rotate: (rand01(s, 3) - 0.5) * 10,
     breatheDelay: rand01(s, 4) * 1.2,
   };
