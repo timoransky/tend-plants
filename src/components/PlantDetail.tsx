@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState, useSyncExternalStore } from "react";
 
 import { STATUS_LABEL } from "@/lib/care-display";
+import { SHOW_FEED } from "@/lib/features";
 import type { CareState } from "@/lib/status";
 
 export type PlantDetailData = {
@@ -23,11 +24,14 @@ export type PlantDetailData = {
 
 type Segment = "feed" | "water" | "light";
 
-const SEGMENTS: { key: Segment; label: string; activeBg: string }[] = [
+const ALL_SEGMENTS: { key: Segment; label: string; activeBg: string }[] = [
   { key: "feed", label: "Feed", activeBg: "bg-feed" },
   { key: "water", label: "Water", activeBg: "bg-water" },
   { key: "light", label: "Light", activeBg: "bg-light" },
 ];
+
+// Feeding is hidden for now — drop the Feed segment unless SHOW_FEED is on.
+const SEGMENTS = ALL_SEGMENTS.filter((s) => SHOW_FEED || s.key !== "feed");
 
 const DAY_MS = 86_400_000;
 

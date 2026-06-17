@@ -61,4 +61,20 @@ body {
   .rise {
     animation: rise 0.36s cubic-bezier(0.2, 0.7, 0.3, 1) both;
   }
+
+  /* Slow "breathing" that draws a calm eye to plants needing water. Uses the
+   * `scale` property (not `transform`) so it composes cleanly with Framer
+   * Motion's transform-based layout/shared-element animations. */
+  @keyframes breathe {
+    0%,
+    100% {
+      scale: 1;
+    }
+    50% {
+      scale: 1.035;
+    }
+  }
+  .breathe {
+    animation: breathe 3.4s ease-in-out infinite;
+  }
 }

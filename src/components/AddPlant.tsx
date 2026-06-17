@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 
+import { SHOW_FEED } from "@/lib/features";
 import type { SpeciesDetail, SpeciesSummary } from "@/lib/species";
 
 const AVATAR_CHOICES = ["🌿", "🪴", "🌵", "🌱", "🌴", "🍃", "🌸", "🌼", "🌺"];
@@ -277,24 +278,28 @@ export function AddPlant({ token }: { token: string }) {
           />
         </Field>
 
-        <Field label="Feed — every (days)" accent="text-feed">
-          <input
-            type="number"
-            min={1}
-            value={form.feedIntervalDays}
-            onChange={(e) => set({ feedIntervalDays: e.target.value })}
-            className="input"
-          />
-        </Field>
-        <Field label="Feeding note" accent="text-feed">
-          <textarea
-            value={form.feedNote}
-            onChange={(e) => set({ feedNote: e.target.value })}
-            rows={2}
-            placeholder="How to feed…"
-            className="input resize-none"
-          />
-        </Field>
+        {SHOW_FEED ? (
+          <>
+            <Field label="Feed — every (days)" accent="text-feed">
+              <input
+                type="number"
+                min={1}
+                value={form.feedIntervalDays}
+                onChange={(e) => set({ feedIntervalDays: e.target.value })}
+                className="input"
+              />
+            </Field>
+            <Field label="Feeding note" accent="text-feed">
+              <textarea
+                value={form.feedNote}
+                onChange={(e) => set({ feedNote: e.target.value })}
+                rows={2}
+                placeholder="How to feed…"
+                className="input resize-none"
+              />
+            </Field>
+          </>
+        ) : null}
 
         <Field label="Your notes">
           <textarea
