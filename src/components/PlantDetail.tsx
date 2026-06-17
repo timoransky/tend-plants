@@ -200,7 +200,6 @@ function CareCard({
     onClick: () => void;
   };
 }) {
-  const reduce = useReducedMotion();
   const last = mounted ? agoLabel(care.lastDoneAt) : null;
   const due = mounted ? dueLabel(care.dueAt) : null;
 
@@ -228,76 +227,120 @@ function CareCard({
           {note ?? "No guidance for this plant yet."}
         </p>
 
-        <dl className="mt-4 flex flex-wrap gap-x-6 gap-y-1 text-sm text-ink-soft">
-          <div>
-            <dt className="inline">Last: </dt>
-            <dd className="inline font-medium text-ink">
-              {last ?? (care.lastDoneAt ? "—" : "not yet")}
-            </dd>
-          </div>
-          {care.intervalDays ? (
+        <div className="mt-4 flex items-center justify-between gap-4">
+          <dl className="flex min-w-0 flex-wrap gap-x-6 gap-y-1 text-sm text-ink-soft">
             <div>
-              <dt className="inline">Every </dt>
+              <dt className="inline">Last: </dt>
               <dd className="inline font-medium text-ink">
-                {care.intervalDays} days
+                {last ?? (care.lastDoneAt ? "—" : "not yet")}
               </dd>
             </div>
-          ) : null}
-          {due ? (
-            <div>
-              <dd className="font-medium text-ink">{due}</dd>
-            </div>
-          ) : null}
-        </dl>
+            {care.intervalDays ? (
+              <div>
+                <dt className="inline">Every </dt>
+                <dd className="inline font-medium text-ink">
+                  {care.intervalDays} days
+                </dd>
+              </div>
+            ) : null}
+            {due ? (
+              <div>
+                <dd className="font-medium text-ink">{due}</dd>
+              </div>
+            ) : null}
+          </dl>
 
-        <motion.button
-          type="button"
-          onClick={action.onClick}
-          disabled={action.pending || action.done}
-          whileTap={reduce ? undefined : { scale: 0.97 }}
-          className={`mt-4 inline-flex h-11 items-center justify-center gap-2 rounded-full px-5 text-sm font-semibold text-canvas transition-colors duration-500 disabled:opacity-90 ${
-            action.done ? "bg-healthy" : action.bg
-          }`}
-        >
-          <AnimatePresence mode="wait" initial={false}>
-            {action.pending ? (
-              <motion.span key="pending" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                …
-              </motion.span>
-            ) : action.done ? (
-              <motion.span
-                key="done"
-                className="flex items-center gap-2"
-                initial={reduce ? false : { opacity: 0 }}
-                animate={{ opacity: 1 }}
-              >
-                <motion.svg
-                  width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  initial={reduce ? false : { scale: 0 }}
-                  animate={{ scale: 1 }}
-                  transition={{ type: "spring", stiffness: 500, damping: 16 }}
-                >
-                  <path
-                    d="M5 12.5l4 4 10-10"
-                    stroke="currentColor"
-                    strokeWidth="2.4"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </motion.svg>
-                {action.doneLabel}
-              </motion.span>
-            ) : (
-              <motion.span key="label" initial={reduce ? false : { opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                {action.label}
-              </motion.span>
-            )}
-          </AnimatePresence>
-        </motion.button>
+          <CareActionButton icon={icon} {...action} />
+        </div>
       </div>
     </section>
+  );
+}
+
+/**
+ * The pill action that records a care event (Mark watered / Mark fed). Pulled
+ * out of CareCard so the same control can be reused elsewhere, e.g. a
+ * "water all" action per room in the home listing. Sits at h-10 with a leading
+ * icon; swaps to a green check + done label for 2s after a successful tap.
+ */
+function CareActionButton({
+  icon,
+  label,
+  doneLabel,
+  bg,
+  pending,
+  done,
+  onClick,
+}: {
+  icon: typeof DropletIcon;
+  label: string;
+  doneLabel: string;
+  bg: string;
+  pending: boolean;
+  done: boolean;
+  onClick: () => void;
+}) {
+  const reduce = useReducedMotion();
+
+  return (
+    <motion.button
+      type="button"
+      onClick={onClick}
+      disabled={pending || done}
+      whileTap={reduce ? undefined : { scale: 0.97 }}
+      className={`inline-flex h-10 shrink-0 items-center justify-center gap-1.5 rounded-full px-4 text-sm font-semibold text-canvas transition-colors duration-500 disabled:opacity-90 ${
+        done ? "bg-healthy" : bg
+      }`}
+    >
+      <AnimatePresence mode="wait" initial={false}>
+        {pending ? (
+          <motion.span
+            key="pending"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            …
+          </motion.span>
+        ) : done ? (
+          <motion.span
+            key="done"
+            className="flex items-center gap-1.5"
+            initial={reduce ? false : { opacity: 0 }}
+            animate={{ opacity: 1 }}
+          >
+            <motion.svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              initial={reduce ? false : { scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ type: "spring", stiffness: 500, damping: 16 }}
+            >
+              <path
+                d="M5 12.5l4 4 10-10"
+                stroke="currentColor"
+                strokeWidth="2.4"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </motion.svg>
+            {doneLabel}
+          </motion.span>
+        ) : (
+          <motion.span
+            key="label"
+            className="flex items-center gap-1.5"
+            initial={reduce ? false : { opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <HugeiconsIcon icon={icon} size={16} strokeWidth={2} />
+            {label}
+          </motion.span>
+        )}
+      </AnimatePresence>
+    </motion.button>
   );
 }
