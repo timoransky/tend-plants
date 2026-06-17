@@ -123,7 +123,7 @@ export function HouseholdSwitcher({
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={reduce ? { opacity: 0 } : { opacity: 0, y: -6, scale: 0.98 }}
               transition={{ duration: 0.16, ease: [0.2, 0.7, 0.3, 1] }}
-              className="absolute left-0 top-full z-50 mt-2 flex w-72 origin-top-left flex-col gap-1 rounded-2xl bg-surface p-1.5 text-ink shadow-xl shadow-black/30"
+              className="absolute left-0 top-full z-50 mt-2 flex w-72 origin-top-left flex-col gap-1 rounded-2xl bg-surface p-1.5 text-ink shadow-xl shadow-scrim/50"
             >
               {entries.map((h) => {
                 const isCurrent = h.token === token;
@@ -157,7 +157,7 @@ export function HouseholdSwitcher({
                     </button>
 
                     {isDefault ? (
-                      <span className="shrink-0 rounded-full bg-healthy/15 px-2 py-0.5 text-[0.65rem] font-semibold uppercase tracking-wide text-healthy">
+                      <span className="shrink-0 rounded-full bg-healthy/15 px-2 py-0.5 text-[0.65rem] font-semibold uppercase tracking-wide text-healthy-ink">
                         Default
                       </span>
                     ) : (
@@ -197,7 +197,7 @@ export function HouseholdSwitcher({
                 role="menuitem"
                 onClick={createNew}
                 disabled={creating}
-                className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-left text-sm font-medium text-healthy transition-colors hover:bg-healthy/10 disabled:opacity-60"
+                className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-left text-sm font-medium text-healthy-ink transition-colors hover:bg-healthy/10 disabled:opacity-60"
               >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
                   <path

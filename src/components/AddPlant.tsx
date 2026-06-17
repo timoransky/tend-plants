@@ -242,14 +242,14 @@ export function AddPlant({ token }: { token: string }) {
               type="button"
               onClick={resetToOriginal}
               disabled={!isDirty}
-              className="text-xs font-medium text-healthy transition-opacity disabled:opacity-40"
+              className="text-xs font-medium text-healthy-ink transition-opacity disabled:opacity-40"
             >
               ↺ Reset to {original.commonName} defaults
             </button>
           ) : null}
         </div>
 
-        <Field label="Water — every (days)" accent="text-water">
+        <Field label="Water — every (days)" accent="text-water-ink">
           <input
             type="number"
             min={1}
@@ -258,7 +258,7 @@ export function AddPlant({ token }: { token: string }) {
             className="input"
           />
         </Field>
-        <Field label="Watering note" accent="text-water">
+        <Field label="Watering note" accent="text-water-ink">
           <textarea
             value={form.waterNote}
             onChange={(e) => set({ waterNote: e.target.value })}
@@ -268,7 +268,7 @@ export function AddPlant({ token }: { token: string }) {
           />
         </Field>
 
-        <Field label="Light" accent="text-light">
+        <Field label="Light" accent="text-light-ink">
           <textarea
             value={form.lightNote}
             onChange={(e) => set({ lightNote: e.target.value })}
@@ -280,7 +280,7 @@ export function AddPlant({ token }: { token: string }) {
 
         {SHOW_FEED ? (
           <>
-            <Field label="Feed — every (days)" accent="text-feed">
+            <Field label="Feed — every (days)" accent="text-feed-ink">
               <input
                 type="number"
                 min={1}
@@ -289,7 +289,7 @@ export function AddPlant({ token }: { token: string }) {
                 className="input"
               />
             </Field>
-            <Field label="Feeding note" accent="text-feed">
+            <Field label="Feeding note" accent="text-feed-ink">
               <textarea
                 value={form.feedNote}
                 onChange={(e) => set({ feedNote: e.target.value })}

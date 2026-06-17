@@ -48,29 +48,29 @@ export function PlantDrawer({
   return (
     <Drawer.Root open={open} onOpenChange={onOpenChange} shouldScaleBackground>
       <Drawer.Portal>
-        <Drawer.Overlay className="fixed inset-0 z-40 bg-black/60" />
-        <Drawer.Content className="fixed inset-x-0 bottom-0 z-50 mx-auto flex max-h-[92dvh] w-full max-w-2xl flex-col rounded-t-3xl bg-canvas outline-none">
+        <Drawer.Overlay className="fixed inset-0 z-40 bg-scrim/80" />
+        <Drawer.Content className="fixed inset-x-0 bottom-0 z-50 mx-auto flex max-h-[92dvh] w-full max-w-2xl flex-col rounded-t-3xl bg-surface text-ink outline-none">
 
           {plant ? (
             <>
               <div
                 aria-hidden
-                className="mx-auto mt-3 h-1.5 w-10 shrink-0 rounded-full bg-cream-soft/30"
+                className="mx-auto mt-3 h-1.5 w-10 shrink-0 rounded-full bg-ink/15"
               />
-              <div className="min-h-0 flex-1 overflow-y-auto px-4 pb-8 pt-1">
+              <div className="min-h-0 flex-1 overflow-y-auto px-5 pb-8 pt-1">
                 <header className="flex items-center gap-4 pb-5">
-                  <span className="flex size-20 shrink-0 items-center justify-center rounded-full bg-surface text-4xl shadow-sm">
+                  <span className="flex size-20 shrink-0 items-center justify-center rounded-full bg-surface-muted text-4xl">
                     <span aria-hidden>{plant.avatar ?? "🪴"}</span>
                   </span>
                   <div className="min-w-0">
-                    <Drawer.Title className="truncate text-2xl font-semibold tracking-tight text-cream">
+                    <Drawer.Title className="truncate text-2xl font-semibold tracking-tight text-ink">
                       {plant.name}
                     </Drawer.Title>
-                    <Drawer.Description className="truncate text-sm text-cream-soft">
+                    <Drawer.Description className="truncate text-sm text-ink-soft">
                       {plant.room ?? "Houseplant"}
                     </Drawer.Description>
                     {originalName ? (
-                      <p className="truncate text-sm text-cream-soft/70">
+                      <p className="truncate text-sm text-ink-soft/70">
                         {originalName}
                       </p>
                     ) : null}
