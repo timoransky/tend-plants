@@ -105,6 +105,7 @@ export function PlantDetail({
         mounted={mounted}
         action={{
           label: "Mark watered",
+          pendingLabel: "Watering…",
           doneLabel: "Watered",
           bg: "bg-water",
           pending: pending === "water",
@@ -124,6 +125,7 @@ export function PlantDetail({
           mounted={mounted}
           action={{
             label: "Mark fed",
+            pendingLabel: "Feeding…",
             doneLabel: "Fed",
             bg: "bg-feed",
             pending: pending === "feed",
@@ -193,6 +195,7 @@ function CareCard({
   mounted: boolean;
   action: {
     label: string;
+    pendingLabel: string;
     doneLabel: string;
     bg: string;
     pending: boolean;
@@ -200,7 +203,6 @@ function CareCard({
     onClick: () => void;
   };
 }) {
-  const reduce = useReducedMotion();
   const last = mounted ? agoLabel(care.lastDoneAt) : null;
   const due = mounted ? dueLabel(care.dueAt) : null;
 
@@ -228,76 +230,134 @@ function CareCard({
           {note ?? "No guidance for this plant yet."}
         </p>
 
-        <dl className="mt-4 flex flex-wrap gap-x-6 gap-y-1 text-sm text-ink-soft">
-          <div>
-            <dt className="inline">Last: </dt>
-            <dd className="inline font-medium text-ink">
-              {last ?? (care.lastDoneAt ? "—" : "not yet")}
-            </dd>
-          </div>
-          {care.intervalDays ? (
+        <div className="mt-4 flex items-center justify-between gap-4">
+          <dl className="flex min-w-0 flex-wrap gap-x-6 gap-y-1 text-sm text-ink-soft">
             <div>
-              <dt className="inline">Every </dt>
+              <dt className="inline">Last: </dt>
               <dd className="inline font-medium text-ink">
-                {care.intervalDays} days
+                {last ?? (care.lastDoneAt ? "—" : "not yet")}
               </dd>
             </div>
-          ) : null}
-          {due ? (
-            <div>
-              <dd className="font-medium text-ink">{due}</dd>
-            </div>
-          ) : null}
-        </dl>
+            {care.intervalDays ? (
+              <div>
+                <dt className="inline">Every </dt>
+                <dd className="inline font-medium text-ink">
+                  {care.intervalDays} days
+                </dd>
+              </div>
+            ) : null}
+            {due ? (
+              <div>
+                <dd className="font-medium text-ink">{due}</dd>
+              </div>
+            ) : null}
+          </dl>
 
-        <motion.button
-          type="button"
-          onClick={action.onClick}
-          disabled={action.pending || action.done}
-          whileTap={reduce ? undefined : { scale: 0.97 }}
-          className={`mt-5 flex h-12 w-full items-center justify-center gap-2 rounded-full text-base font-semibold text-canvas transition-colors duration-500 disabled:opacity-90 ${
-            action.done ? "bg-healthy" : action.bg
-          }`}
-        >
-          <AnimatePresence mode="wait" initial={false}>
-            {action.pending ? (
-              <motion.span key="pending" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                …
-              </motion.span>
-            ) : action.done ? (
-              <motion.span
-                key="done"
-                className="flex items-center gap-2"
-                initial={reduce ? false : { opacity: 0 }}
-                animate={{ opacity: 1 }}
-              >
-                <motion.svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  initial={reduce ? false : { scale: 0 }}
-                  animate={{ scale: 1 }}
-                  transition={{ type: "spring", stiffness: 500, damping: 16 }}
-                >
-                  <path
-                    d="M5 12.5l4 4 10-10"
-                    stroke="currentColor"
-                    strokeWidth="2.4"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </motion.svg>
-                {action.doneLabel}
-              </motion.span>
-            ) : (
-              <motion.span key="label" initial={reduce ? false : { opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                {action.label}
-              </motion.span>
-            )}
-          </AnimatePresence>
-        </motion.button>
+          <CareActionButton icon={icon} {...action} />
+        </div>
       </div>
     </section>
+  );
+}
+
+/**
+ * The pill action that records a care event (Mark watered / Mark fed). Pulled
+ * out of CareCard so the same control can be reused elsewhere, e.g. a
+ * "water all" action per room in the home listing. Sits at h-10 with a leading
+ * icon; swaps to a pending then green-check done label after a tap.
+ *
+ * Width is pinned by an invisible sizer rendering the (widest) default label,
+ * with the live states stacked over it, so the pill never resizes between
+ * states regardless of which labels it's given.
+ */
+function CareActionButton({
+  icon,
+  label,
+  pendingLabel,
+  doneLabel,
+  bg,
+  pending,
+  done,
+  onClick,
+}: {
+  icon: typeof DropletIcon;
+  label: string;
+  pendingLabel: string;
+  doneLabel: string;
+  bg: string;
+  pending: boolean;
+  done: boolean;
+  onClick: () => void;
+}) {
+  const reduce = useReducedMotion();
+
+  return (
+    <motion.button
+      type="button"
+      onClick={onClick}
+      disabled={pending || done}
+      whileTap={reduce ? undefined : { scale: 0.97 }}
+      className={`relative inline-flex h-10 shrink-0 items-center justify-center rounded-full px-4 text-sm font-semibold text-canvas transition-colors duration-500 disabled:opacity-90 ${
+        done ? "bg-healthy" : bg
+      }`}
+    >
+      {/* Invisible sizer: reserves the width of the widest (default) state. */}
+      <span className="invisible flex items-center gap-1.5" aria-hidden>
+        <HugeiconsIcon icon={icon} size={16} strokeWidth={2} />
+        {label}
+      </span>
+
+      <span className="absolute inset-0 flex items-center justify-center">
+        <AnimatePresence mode="wait" initial={false}>
+          {pending ? (
+            <motion.span
+              key="pending"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            >
+              {pendingLabel}
+            </motion.span>
+          ) : done ? (
+            <motion.span
+              key="done"
+              className="flex items-center gap-1.5"
+              initial={reduce ? false : { opacity: 0 }}
+              animate={{ opacity: 1 }}
+            >
+              <motion.svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                initial={reduce ? false : { scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ type: "spring", stiffness: 500, damping: 16 }}
+              >
+                <path
+                  d="M5 12.5l4 4 10-10"
+                  stroke="currentColor"
+                  strokeWidth="2.4"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </motion.svg>
+              {doneLabel}
+            </motion.span>
+          ) : (
+            <motion.span
+              key="label"
+              className="flex items-center gap-1.5"
+              initial={reduce ? false : { opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            >
+              <HugeiconsIcon icon={icon} size={16} strokeWidth={2} />
+              {label}
+            </motion.span>
+          )}
+        </AnimatePresence>
+      </span>
+    </motion.button>
   );
 }
