@@ -42,8 +42,8 @@
   --color-feed: oklch(0.63 0.135 50);
   --color-feed-ink: oklch(0.47 0.12 50);
 
-  --color-light: oklch(0.66 0.135 80);
-  --color-light-ink: oklch(0.5 0.1 78);
+  --color-light: oklch(0.72 0.155 95);
+  --color-light-ink: oklch(0.52 0.13 95);
 
   --color-healthy: oklch(0.66 0.135 152);
   --color-healthy-ink: oklch(0.475 0.13 152);
