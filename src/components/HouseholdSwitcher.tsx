@@ -16,15 +16,16 @@ import {
   type VisitedHousehold,
 } from "@/lib/household-storage";
 
-/** Label for a household other than the current one. */
-function otherLabel(h: VisitedHousehold): string {
+/** Human label for a household: its name, else a short code from the token. */
+function labelFor(h: { token: string; name: string | null }): string {
   return h.name ?? `Household ·${h.token.slice(-4)}`;
 }
 
 /**
  * Header control that records the visited household and lets you switch between
- * the households this browser has opened. Visiting a shared link never changes
- * your default home — "Set as default" is the only way that happens.
+ * the households this browser has opened. Every household — including the one
+ * you're on and your default — is a clickable row labelled by its code.
+ * Visiting a shared link never changes your default; "Set default" does.
  */
 export function HouseholdSwitcher({
   token,
@@ -73,9 +74,10 @@ export function HouseholdSwitcher({
     }
   }
 
-  const currentLabel = name ?? "My plants";
-  const isDefault = primary === token;
-  const others = visited.filter((h) => h.token !== token);
+  // Always list the current household, even if the visit write hasn't landed.
+  const entries: VisitedHousehold[] = visited.some((h) => h.token === token)
+    ? visited
+    : [{ token, name, lastVisitedAt: 0 }, ...visited];
 
   return (
     <div className="relative">
@@ -86,7 +88,7 @@ export function HouseholdSwitcher({
         aria-expanded={open}
         className="flex items-center gap-1 rounded-full px-2 py-1 text-xs text-cream-soft transition-colors hover:bg-canvas-soft hover:text-cream"
       >
-        <span className="max-w-[9rem] truncate">{currentLabel}</span>
+        <span className="max-w-[9rem] truncate">{labelFor({ token, name })}</span>
         <svg
           width="12"
           height="12"
@@ -121,66 +123,73 @@ export function HouseholdSwitcher({
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={reduce ? { opacity: 0 } : { opacity: 0, y: -6, scale: 0.98 }}
               transition={{ duration: 0.16, ease: [0.2, 0.7, 0.3, 1] }}
-              className="absolute left-0 top-full z-50 mt-2 w-64 origin-top-left rounded-2xl bg-surface p-1.5 text-ink shadow-xl shadow-black/30"
+              className="absolute left-0 top-full z-50 mt-2 w-72 origin-top-left rounded-2xl bg-surface p-1.5 text-ink shadow-xl shadow-black/30"
             >
-              <div className="flex items-center justify-between gap-2 px-3 py-2">
-                <span className="min-w-0 truncate text-sm font-medium text-ink">
-                  {currentLabel}
-                </span>
-                {isDefault ? (
-                  <span className="shrink-0 rounded-full bg-healthy/15 px-2 py-0.5 text-[0.65rem] font-semibold uppercase tracking-wide text-healthy">
-                    Default
-                  </span>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={() => setPrimary(token)}
-                    className="shrink-0 rounded-full bg-healthy/15 px-2 py-0.5 text-[0.7rem] font-medium text-healthy transition-colors hover:bg-healthy/25"
+              {entries.map((h) => {
+                const isCurrent = h.token === token;
+                const isDefault = primary === h.token;
+                return (
+                  <div
+                    key={h.token}
+                    className={`group flex items-center rounded-xl pr-1 ${
+                      isCurrent ? "bg-ink/5" : "hover:bg-ink/5"
+                    }`}
                   >
-                    Set as default
-                  </button>
-                )}
-              </div>
-
-              {others.length ? <div className="my-1 h-px bg-ink/10" /> : null}
-
-              {others.map((h) => (
-                <div
-                  key={h.token}
-                  className="group flex items-center rounded-xl pr-1 hover:bg-ink/5"
-                >
-                  <button
-                    type="button"
-                    role="menuitem"
-                    onClick={() => go(h.token)}
-                    className="flex min-w-0 flex-1 items-center gap-2 px-3 py-2 text-left"
-                  >
-                    <span className="min-w-0 truncate text-sm text-ink">
-                      {otherLabel(h)}
-                    </span>
-                    {primary === h.token ? (
-                      <span className="shrink-0 text-[0.65rem] font-semibold uppercase tracking-wide text-healthy">
-                        default
-                      </span>
-                    ) : null}
-                  </button>
-                  <button
-                    type="button"
-                    aria-label={`Forget ${otherLabel(h)}`}
-                    onClick={() => removeVisited(h.token)}
-                    className="shrink-0 rounded-lg p-1 text-ink-soft opacity-0 transition-opacity hover:bg-ink/10 group-hover:opacity-100 focus-visible:opacity-100"
-                  >
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden>
-                      <path
-                        d="M6 6l12 12M18 6L6 18"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
+                    <button
+                      type="button"
+                      role="menuitem"
+                      onClick={() => go(h.token)}
+                      className="flex min-w-0 flex-1 items-center gap-2 px-3 py-2 text-left"
+                    >
+                      <span
+                        aria-hidden
+                        className={`size-1.5 shrink-0 rounded-full ${
+                          isCurrent ? "bg-healthy" : "bg-transparent"
+                        }`}
                       />
-                    </svg>
-                  </button>
-                </div>
-              ))}
+                      <span
+                        className={`min-w-0 truncate text-sm text-ink ${
+                          isCurrent ? "font-medium" : ""
+                        }`}
+                      >
+                        {labelFor(h)}
+                      </span>
+                    </button>
+
+                    {isDefault ? (
+                      <span className="shrink-0 rounded-full bg-healthy/15 px-2 py-0.5 text-[0.65rem] font-semibold uppercase tracking-wide text-healthy">
+                        Default
+                      </span>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => setPrimary(h.token)}
+                        className="shrink-0 rounded-full px-2 py-0.5 text-[0.7rem] font-medium text-ink-soft transition-colors hover:bg-ink/10 hover:text-ink"
+                      >
+                        Set default
+                      </button>
+                    )}
+
+                    {isCurrent ? null : (
+                      <button
+                        type="button"
+                        aria-label={`Forget ${labelFor(h)}`}
+                        onClick={() => removeVisited(h.token)}
+                        className="shrink-0 rounded-lg p-1 text-ink-soft transition-colors hover:bg-ink/10"
+                      >
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden>
+                          <path
+                            d="M6 6l12 12M18 6L6 18"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                          />
+                        </svg>
+                      </button>
+                    )}
+                  </div>
+                );
+              })}
 
               <div className="my-1 h-px bg-ink/10" />
               <button
