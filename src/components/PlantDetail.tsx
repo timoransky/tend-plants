@@ -96,7 +96,7 @@ export function PlantDetail({
   return (
     <div className="flex flex-col divide-y divide-ink/10">
       <CareCard
-        iconClass="text-water-ink"
+        iconClass="text-water"
         statusClass="text-water-ink"
         icon={DropletIcon}
         title="Water"
@@ -115,7 +115,7 @@ export function PlantDetail({
 
       {SHOW_FEED ? (
         <CareCard
-          iconClass="text-feed-ink"
+          iconClass="text-feed"
           statusClass="text-feed-ink"
           icon={DropletIcon}
           title="Feed"
@@ -135,7 +135,7 @@ export function PlantDetail({
 
       <section className="flex gap-4 py-5">
         <span
-          className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-ink/10 text-light-ink"
+          className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-canvas-soft text-light"
           aria-hidden
         >
           <HugeiconsIcon icon={Sun03Icon} size={22} strokeWidth={1.9} />
@@ -152,7 +152,7 @@ export function PlantDetail({
 
       <section className="flex gap-4 py-5">
         <span
-          className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-ink/10 text-ink-soft"
+          className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-canvas-soft text-cream-soft"
           aria-hidden
         >
           <HugeiconsIcon icon={ClipboardListIcon} size={22} strokeWidth={1.8} />
@@ -207,7 +207,7 @@ function CareCard({
   return (
     <section className="flex gap-4 py-5">
       <span
-        className={`flex size-11 shrink-0 items-center justify-center rounded-2xl bg-ink/10 ${iconClass}`}
+        className={`flex size-11 shrink-0 items-center justify-center rounded-2xl bg-canvas-soft ${iconClass}`}
         aria-hidden
       >
         <HugeiconsIcon icon={icon} size={22} strokeWidth={1.9} />
