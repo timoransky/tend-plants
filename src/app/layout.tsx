@@ -28,7 +28,17 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full">
+        {/* vaul scales this wrapper when the drawer opens (shouldScaleBackground);
+            it needs its own background so it stays cream-on-canvas while the
+            body behind it darkens. */}
+        <div
+          data-vaul-drawer-wrapper=""
+          className="flex min-h-dvh flex-col bg-canvas"
+        >
+          {children}
+        </div>
+      </body>
     </html>
   );
 }

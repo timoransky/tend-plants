@@ -123,7 +123,7 @@ export function HouseholdSwitcher({
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={reduce ? { opacity: 0 } : { opacity: 0, y: -6, scale: 0.98 }}
               transition={{ duration: 0.16, ease: [0.2, 0.7, 0.3, 1] }}
-              className="absolute left-0 top-full z-50 mt-2 w-72 origin-top-left rounded-2xl bg-surface p-1.5 text-ink shadow-xl shadow-black/30"
+              className="absolute left-0 top-full z-50 mt-2 flex w-72 origin-top-left flex-col gap-1 rounded-2xl bg-surface p-1.5 text-ink shadow-xl shadow-black/30"
             >
               {entries.map((h) => {
                 const isCurrent = h.token === token;
@@ -191,7 +191,7 @@ export function HouseholdSwitcher({
                 );
               })}
 
-              <div className="my-1 h-px bg-ink/10" />
+              <div className="mx-1 my-0.5 h-px bg-ink/10" />
               <button
                 type="button"
                 role="menuitem"
