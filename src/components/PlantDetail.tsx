@@ -96,7 +96,7 @@ export function PlantDetail({
   return (
     <div className="flex flex-col divide-y divide-ink/10">
       <CareCard
-        chip="bg-water"
+        iconClass="text-water-ink"
         statusClass="text-water-ink"
         icon={DropletIcon}
         title="Water"
@@ -115,7 +115,7 @@ export function PlantDetail({
 
       {SHOW_FEED ? (
         <CareCard
-          chip="bg-feed"
+          iconClass="text-feed-ink"
           statusClass="text-feed-ink"
           icon={DropletIcon}
           title="Feed"
@@ -135,7 +135,7 @@ export function PlantDetail({
 
       <section className="flex gap-4 py-5">
         <span
-          className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-light text-canvas"
+          className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-ink/10 text-light-ink"
           aria-hidden
         >
           <HugeiconsIcon icon={Sun03Icon} size={22} strokeWidth={1.9} />
@@ -175,7 +175,7 @@ export function PlantDetail({
 }
 
 function CareCard({
-  chip,
+  iconClass,
   statusClass,
   icon,
   title,
@@ -184,7 +184,7 @@ function CareCard({
   mounted,
   action,
 }: {
-  chip: string;
+  iconClass: string;
   statusClass: string;
   icon: typeof DropletIcon;
   title: string;
@@ -207,7 +207,7 @@ function CareCard({
   return (
     <section className="flex gap-4 py-5">
       <span
-        className={`flex size-11 shrink-0 items-center justify-center rounded-2xl text-canvas ${chip}`}
+        className={`flex size-11 shrink-0 items-center justify-center rounded-2xl bg-ink/10 ${iconClass}`}
         aria-hidden
       >
         <HugeiconsIcon icon={icon} size={22} strokeWidth={1.9} />
