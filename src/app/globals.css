@@ -4,8 +4,8 @@
  * Design tokens — OKLCH throughout, so the neutral scale steps look perceptually
  * even and the accents share a common lightness/chroma footing.
  *
- * Direction: warm cream surfaces on a deep espresso-dark canvas (a sunlit
- * windowsill seen at dusk). Every neutral is tinted toward warm amber (hue ~70)
+ * Direction: warm cream surfaces on a soft warm-charcoal canvas (a dim room at
+ * dusk, not a blackout). Every neutral is tinted toward warm amber (hue ~70)
  * rather than pure gray, so cream never reads clinical and the dark never reads
  * as flat black.
  *
@@ -21,8 +21,8 @@
  * Tailwind v4 generates utilities (bg-*, text-*, border-*, ring-*) from each key.
  */
 @theme {
-  --color-canvas: oklch(0.175 0.014 65);
-  --color-canvas-soft: oklch(0.23 0.016 66);
+  --color-canvas: oklch(0.215 0.015 65);
+  --color-canvas-soft: oklch(0.27 0.017 66);
 
   --color-surface: oklch(0.955 0.017 85);
   --color-surface-muted: oklch(0.91 0.023 83);
