@@ -8,6 +8,7 @@ import { ShareButton } from "@/components/ShareButton";
 import { findHousehold } from "@/lib/api";
 import { groupByRoom } from "@/lib/group-rooms";
 import { listPlantsWithStatus } from "@/lib/plants";
+import { seedEnabled } from "@/lib/seed";
 
 // Live tracker — always read fresh from the DB, never cache.
 export const dynamic = "force-dynamic";
@@ -74,6 +75,15 @@ function EmptyState({ token }: { token: string }) {
       >
         Add a plant
       </Link>
+      {seedEnabled() ? (
+        // Plain <a> (not <Link>) so Next never prefetches — that would seed it.
+        <a
+          href={`/api/h/${token}/seed?count=10`}
+          className="text-xs text-cream-soft underline-offset-2 transition-colors hover:text-cream hover:underline"
+        >
+          or seed demo plants
+        </a>
+      ) : null}
     </div>
   );
 }
