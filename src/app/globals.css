@@ -1,23 +1,23 @@
 @import "tailwindcss";
 
 /*
- * Design tokens. Warm cream surfaces on a soft, slightly-warm dark canvas.
- * Color system (spec): water = blue, feed = brown, light = yellow,
- * healthy = green. Tailwind v4 generates utilities (bg-*, text-*, border-*,
- * ring-*) from these custom --color-* keys.
+ * Design tokens. Palette 1: warm Palette-1 cream surfaces on a deep espresso
+ * canvas. Color system (spec, unchanged): water = blue, feed = brown,
+ * light = yellow, healthy = green. Tailwind v4 generates utilities
+ * (bg-*, text-*, border-*, ring-*) from these custom --color-* keys.
  */
 @theme {
-  --color-canvas: #16120e;
-  --color-canvas-soft: #211b14;
+  --color-canvas: #21100a;
+  --color-canvas-soft: #34180d;
 
-  --color-surface: #f7f1e7;
-  --color-surface-muted: #ebe1d2;
+  --color-surface: #f7f1de;
+  --color-surface-muted: #ece3c9;
 
-  --color-ink: #2b2620;
-  --color-ink-soft: #7b6f5d;
+  --color-ink: #3a1b0e;
+  --color-ink-soft: #8a5a33;
 
-  --color-cream: #ece3d5;
-  --color-cream-soft: #b7ab97;
+  --color-cream: #f2ebd6;
+  --color-cream-soft: #bcb398;
 
   --color-water: #4083d4;
   --color-feed: #a76d3b;
