@@ -94,9 +94,10 @@ export function PlantDetail({
   }
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col divide-y divide-ink/10">
       <CareCard
-        accent="text-water-ink"
+        chip="bg-water"
+        statusClass="text-water-ink"
         icon={DropletIcon}
         title="Water"
         note={data.waterNote}
@@ -114,7 +115,8 @@ export function PlantDetail({
 
       {SHOW_FEED ? (
         <CareCard
-          accent="text-feed-ink"
+          chip="bg-feed"
+          statusClass="text-feed-ink"
           icon={DropletIcon}
           title="Feed"
           note={data.feedNote}
@@ -131,22 +133,28 @@ export function PlantDetail({
         />
       ) : null}
 
-      <div className="flex gap-4 rounded-3xl bg-surface p-5 text-ink">
-        <span className="mt-0.5 shrink-0 text-light-ink" aria-hidden>
-          <HugeiconsIcon icon={Sun03Icon} size={22} strokeWidth={1.8} />
+      <section className="flex gap-4 py-5">
+        <span
+          className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-light text-canvas"
+          aria-hidden
+        >
+          <HugeiconsIcon icon={Sun03Icon} size={22} strokeWidth={1.9} />
         </span>
         <div className="min-w-0 flex-1">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-light-ink">
+          <h2 className="text-sm font-semibold uppercase tracking-wide text-ink">
             Light
           </h2>
           <p className="mt-2 text-base leading-relaxed text-ink">
             {data.lightNote ?? "No light guidance for this plant yet."}
           </p>
         </div>
-      </div>
+      </section>
 
-      <div className="flex gap-4 rounded-3xl bg-surface/90 p-5 text-ink">
-        <span className="mt-0.5 shrink-0 text-ink-soft" aria-hidden>
+      <section className="flex gap-4 py-5">
+        <span
+          className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-ink/10 text-ink-soft"
+          aria-hidden
+        >
           <HugeiconsIcon icon={ClipboardListIcon} size={22} strokeWidth={1.8} />
         </span>
         <div className="min-w-0 flex-1">
@@ -161,13 +169,14 @@ export function PlantDetail({
             )}
           </p>
         </div>
-      </div>
+      </section>
     </div>
   );
 }
 
 function CareCard({
-  accent,
+  chip,
+  statusClass,
   icon,
   title,
   note,
@@ -175,7 +184,8 @@ function CareCard({
   mounted,
   action,
 }: {
-  accent: string;
+  chip: string;
+  statusClass: string;
   icon: typeof DropletIcon;
   title: string;
   note: string | null;
@@ -195,19 +205,20 @@ function CareCard({
   const due = mounted ? dueLabel(care.dueAt) : null;
 
   return (
-    <div className="flex gap-4 rounded-3xl bg-surface p-5 text-ink">
-      <span className={`mt-0.5 shrink-0 ${accent}`} aria-hidden>
-        <HugeiconsIcon icon={icon} size={22} strokeWidth={1.8} />
+    <section className="flex gap-4 py-5">
+      <span
+        className={`flex size-11 shrink-0 items-center justify-center rounded-2xl text-canvas ${chip}`}
+        aria-hidden
+      >
+        <HugeiconsIcon icon={icon} size={22} strokeWidth={1.9} />
       </span>
       <div className="min-w-0 flex-1">
         <div className="flex items-center justify-between">
-          <h2
-            className={`text-sm font-semibold uppercase tracking-wide ${accent}`}
-          >
+          <h2 className="text-sm font-semibold uppercase tracking-wide text-ink">
             {title}
           </h2>
           {care.status ? (
-            <span className={`text-xs font-medium ${accent}`}>
+            <span className={`text-xs font-medium ${statusClass}`}>
               {STATUS_LABEL[care.status]}
             </span>
           ) : null}
@@ -287,6 +298,6 @@ function CareCard({
           </AnimatePresence>
         </motion.button>
       </div>
-    </div>
+    </section>
   );
 }

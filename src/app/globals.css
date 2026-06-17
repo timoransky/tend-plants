@@ -36,14 +36,14 @@
   /* Warm near-black for scrims and shadows — tinted, never pure #000. */
   --color-scrim: oklch(0.1 0.012 60);
 
-  --color-water: oklch(0.63 0.135 235);
-  --color-water-ink: oklch(0.5 0.13 240);
+  --color-water: oklch(0.69 0.15 240);
+  --color-water-ink: oklch(0.51 0.145 242);
 
   --color-feed: oklch(0.63 0.135 50);
   --color-feed-ink: oklch(0.47 0.12 50);
 
-  --color-light: oklch(0.72 0.155 95);
-  --color-light-ink: oklch(0.52 0.13 95);
+  --color-light: oklch(0.85 0.155 100);
+  --color-light-ink: oklch(0.53 0.125 96);
 
   --color-healthy: oklch(0.66 0.135 152);
   --color-healthy-ink: oklch(0.475 0.13 152);
