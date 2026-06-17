@@ -57,7 +57,7 @@ export default function Home() {
               started.current = false;
               location.reload();
             }}
-            className="rounded-full bg-healthy px-5 py-2.5 text-sm font-semibold text-canvas transition-colors hover:bg-healthy/90"
+            className="rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-ink transition-colors hover:bg-primary/90"
           >
             Try again
           </button>
