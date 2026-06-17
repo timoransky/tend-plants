@@ -2,14 +2,13 @@
 
 import { motion, useReducedMotion } from "motion/react";
 
-import { StatusDot } from "@/components/StatusDot";
 import type { PlantWithStatus } from "@/lib/plants";
 
 /**
  * A plant in the grid: a uniform circular avatar with its name, that opens the
- * detail drawer. A status dot in the corner shows water state (blue when due,
- * green when fine) and pulses when the plant needs water. Feeding is hidden, so
- * the dot is water-only (see StatusDot).
+ * detail drawer. A small water-blue dot sits in the corner when the plant needs
+ * water — it pings when due now (overdue / due today) and is static when due
+ * soon. Healthy plants show no dot. Feeding is hidden, so this is water-only.
  */
 export function PlantBubble({
   plant,
@@ -24,6 +23,7 @@ export function PlantBubble({
   const status = plant.water.status;
   const thirsty = status === "overdue" || status === "due_today";
   const soon = status === "upcoming";
+  const needsWater = thirsty || soon;
   const stateLabel = thirsty ? "needs water" : soon ? "water soon" : "healthy";
 
   return (
@@ -42,13 +42,14 @@ export function PlantBubble({
         >
           <span aria-hidden>{plant.avatar ?? "🪴"}</span>
         </motion.span>
-        <StatusDot
-          water={plant.water}
-          feed={plant.feed}
-          className={`absolute bottom-0.5 right-0.5 size-4 ${
-            thirsty && !reduce ? "animate-pulse" : ""
-          }`}
-        />
+        {needsWater ? (
+          <span className="absolute bottom-1 right-1 flex size-3">
+            {thirsty && !reduce ? (
+              <span className="absolute inline-flex size-full animate-ping rounded-full bg-water opacity-75" />
+            ) : null}
+            <span className="relative inline-flex size-3 rounded-full bg-water ring-[3px] ring-canvas" />
+          </span>
+        ) : null}
       </span>
       <span className="max-w-[6.5rem] truncate text-xs font-medium text-cream">
         {plant.name}
