@@ -96,7 +96,7 @@ export function PlantDetail({
   return (
     <div className="flex flex-col gap-4">
       <CareCard
-        accent="text-water"
+        accent="text-water-ink"
         icon={DropletIcon}
         title="Water"
         note={data.waterNote}
@@ -114,7 +114,7 @@ export function PlantDetail({
 
       {SHOW_FEED ? (
         <CareCard
-          accent="text-feed"
+          accent="text-feed-ink"
           icon={DropletIcon}
           title="Feed"
           note={data.feedNote}
@@ -132,11 +132,11 @@ export function PlantDetail({
       ) : null}
 
       <div className="flex gap-4 rounded-3xl bg-surface p-5 text-ink">
-        <span className="mt-0.5 shrink-0 text-light" aria-hidden>
+        <span className="mt-0.5 shrink-0 text-light-ink" aria-hidden>
           <HugeiconsIcon icon={Sun03Icon} size={22} strokeWidth={1.8} />
         </span>
         <div className="min-w-0 flex-1">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-light">
+          <h2 className="text-sm font-semibold uppercase tracking-wide text-light-ink">
             Light
           </h2>
           <p className="mt-2 text-base leading-relaxed text-ink">
