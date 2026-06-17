@@ -8,6 +8,12 @@ importers:
 
   .:
     dependencies:
+      '@hugeicons/core-free-icons':
+        specifier: ^4.2.0
+        version: 4.2.0
+      '@hugeicons/react':
+        specifier: ^1.1.7
+        version: 1.1.7(react@19.2.4)
       '@neondatabase/serverless':
         specifier: ^1.1.0
         version: 1.1.0
@@ -641,6 +647,14 @@ packages:
   '@eslint/plugin-kit@0.4.1':
     resolution: {integrity: sha512-43/qtrDUokr7LJqoF2c3+RInu/t4zfrpYdoSDfYyhg52rwLV6TnOvdG4fXm7IkSB3wErkcmJS9iEhjVtOSEjjA==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+
+  '@hugeicons/core-free-icons@4.2.0':
+    resolution: {integrity: sha512-V1G/Ph9TbmEow+pKnupZRWQjdORR/TGGr3JVRZOWkomdJ/5N6GgLuKPgBDs7G0kZ0//9LL34AGOUzWe3K+umNA==}
+
+  '@hugeicons/react@1.1.7':
+    resolution: {integrity: sha512-0q1gekPJvNtIsfqi6alVdKfqsLz0PGiZWOzxJDxOd55UpFwcgohBFU4CwTcJ7kg4hO3kwXuzxrn/JEj280GX3g==}
+    peerDependencies:
+      react: '>=16.0.0'
 
   '@humanfs/core@0.19.2':
     resolution: {integrity: sha512-UhXNm+CFMWcbChXywFwkmhqjs3PRCmcSa/hfBgLIb7oQ5HNb1wS0icWsGtSAUNgefHeI+eBrA8I1fxmbHsGdvA==}
@@ -3244,6 +3258,12 @@ snapshots:
     dependencies:
       '@eslint/core': 0.17.0
       levn: 0.4.1
+
+  '@hugeicons/core-free-icons@4.2.0': {}
+
+  '@hugeicons/react@1.1.7(react@19.2.4)':
+    dependencies:
+      react: 19.2.4
 
   '@humanfs/core@0.19.2':
     dependencies:

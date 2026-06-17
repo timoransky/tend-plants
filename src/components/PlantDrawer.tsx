@@ -38,16 +38,18 @@ export function PlantDrawer({
   token: string;
   onOpenChange: (open: boolean) => void;
 }) {
+  // The species' original common name — shown only when the plant was renamed
+  // (i.e. its name no longer matches the snapshotted common name).
+  const originalName =
+    plant?.commonName && plant.commonName !== plant.name
+      ? plant.commonName
+      : null;
+
   return (
-    <Drawer.Root
-      open={open}
-      onOpenChange={onOpenChange}
-      shouldScaleBackground
-      snapPoints={[0.6, 0.96]}
-    >
+    <Drawer.Root open={open} onOpenChange={onOpenChange} shouldScaleBackground>
       <Drawer.Portal>
         <Drawer.Overlay className="fixed inset-0 z-40 bg-black/60" />
-        <Drawer.Content className="fixed inset-x-0 bottom-0 z-50 mx-auto flex h-[96dvh] w-full max-w-2xl flex-col rounded-t-3xl bg-canvas outline-none">
+        <Drawer.Content className="fixed inset-x-0 bottom-0 z-50 mx-auto flex max-h-[92dvh] w-full max-w-2xl flex-col rounded-t-3xl bg-canvas outline-none">
 
           {plant ? (
             <>
@@ -56,18 +58,22 @@ export function PlantDrawer({
                 className="mx-auto mt-3 h-1.5 w-10 shrink-0 rounded-full bg-cream-soft/30"
               />
               <div className="min-h-0 flex-1 overflow-y-auto px-4 pb-8 pt-1">
-                <header className="flex flex-col items-center gap-3 pb-5 text-center">
-                  <span className="flex size-24 items-center justify-center rounded-full bg-surface text-5xl shadow-sm">
+                <header className="flex items-center gap-4 pb-5">
+                  <span className="flex size-20 shrink-0 items-center justify-center rounded-full bg-surface text-4xl shadow-sm">
                     <span aria-hidden>{plant.avatar ?? "🪴"}</span>
                   </span>
-                  <div>
-                    <Drawer.Title className="text-2xl font-semibold tracking-tight text-cream">
+                  <div className="min-w-0">
+                    <Drawer.Title className="truncate text-2xl font-semibold tracking-tight text-cream">
                       {plant.name}
                     </Drawer.Title>
-                    <Drawer.Description className="text-sm text-cream-soft">
-                      {[plant.room, plant.commonName].filter(Boolean).join(" · ") ||
-                        "Houseplant"}
+                    <Drawer.Description className="truncate text-sm text-cream-soft">
+                      {plant.room ?? "Houseplant"}
                     </Drawer.Description>
+                    {originalName ? (
+                      <p className="truncate text-sm text-cream-soft/70">
+                        {originalName}
+                      </p>
+                    ) : null}
                   </div>
                 </header>
 
