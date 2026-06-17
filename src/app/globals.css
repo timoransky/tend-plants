@@ -21,8 +21,8 @@
  * Tailwind v4 generates utilities (bg-*, text-*, border-*, ring-*) from each key.
  */
 @theme {
-  --color-canvas: oklch(0.215 0.015 65);
-  --color-canvas-soft: oklch(0.27 0.017 66);
+  --color-canvas: oklch(0.25 0.016 65);
+  --color-canvas-soft: oklch(0.305 0.018 66);
 
   --color-surface: oklch(0.955 0.017 85);
   --color-surface-muted: oklch(0.91 0.023 83);
