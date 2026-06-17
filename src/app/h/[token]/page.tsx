@@ -1,13 +1,14 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { BottomSheet } from "@/components/BottomSheet";
+import { HouseholdSwitcher } from "@/components/HouseholdSwitcher";
 import { Logo } from "@/components/Logo";
-import { PlantCard } from "@/components/PlantCard";
+import { PlantGarden } from "@/components/PlantGarden";
 import { ShareButton } from "@/components/ShareButton";
 import { findHousehold } from "@/lib/api";
+import { groupByRoom } from "@/lib/group-rooms";
 import { listPlantsWithStatus } from "@/lib/plants";
-import { buildTasks } from "@/lib/tasks";
+import { seedEnabled } from "@/lib/seed";
 
 // Live tracker — always read fresh from the DB, never cache.
 export const dynamic = "force-dynamic";
@@ -20,18 +21,14 @@ export default async function HomePage({ params }: Props) {
   if (!household) notFound();
 
   const plants = await listPlantsWithStatus(household.id);
-  const tasks = buildTasks(plants);
+  const groups = groupByRoom(plants);
 
   return (
-    <div className="mx-auto flex h-dvh w-full max-w-2xl flex-col">
+    <div className="mx-auto flex min-h-dvh w-full max-w-2xl flex-col">
       <header className="flex items-center justify-between px-5 pb-3 pt-5">
-        <div className="flex flex-col gap-0.5">
+        <div className="flex items-center gap-2">
           <Logo />
-          {household.name ? (
-            <span className="pl-7 text-xs text-cream-soft">
-              {household.name}
-            </span>
-          ) : null}
+          <HouseholdSwitcher token={token} name={household.name} />
         </div>
         <div className="flex items-center gap-2">
           <ShareButton />
@@ -52,21 +49,13 @@ export default async function HomePage({ params }: Props) {
         </div>
       </header>
 
-      <main className="min-h-0 flex-1 overflow-y-auto px-4 pb-4">
+      <main className="flex-1 px-4 pb-4">
         {plants.length === 0 ? (
           <EmptyState token={token} />
         ) : (
-          <div className="grid grid-cols-3 gap-2 pt-2 sm:grid-cols-4">
-            {plants.map((plant, i) => (
-              <PlantCard key={plant.id} plant={plant} token={token} index={i} />
-            ))}
-          </div>
+          <PlantGarden groups={groups} token={token} />
         )}
       </main>
-
-      <div className="px-2 pb-2">
-        <BottomSheet tasks={tasks} />
-      </div>
     </div>
   );
 }
@@ -78,8 +67,7 @@ function EmptyState({ token }: { token: string }) {
         🪴
       </span>
       <p className="max-w-xs text-cream-soft">
-        No plants yet. Add your first one to start tracking watering and
-        feeding.
+        No plants yet. Add your first one to start tracking watering.
       </p>
       <Link
         href={`/h/${token}/add`}
@@ -87,6 +75,15 @@ function EmptyState({ token }: { token: string }) {
       >
         Add a plant
       </Link>
+      {seedEnabled() ? (
+        // Plain <a> (not <Link>) so Next never prefetches — that would seed it.
+        <a
+          href={`/api/h/${token}/seed?count=10`}
+          className="text-xs text-cream-soft underline-offset-2 transition-colors hover:text-cream hover:underline"
+        >
+          or seed demo plants
+        </a>
+      ) : null}
     </div>
   );
 }
