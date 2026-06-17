@@ -4,10 +4,6 @@ import { motion, useReducedMotion } from "motion/react";
 
 import type { PlantWithStatus } from "@/lib/plants";
 
-// Uniform size; plants that need water get one step bigger.
-const BASE = "size-20 text-3xl";
-const THIRSTY = "size-24 text-4xl";
-
 /** Deterministic [0, 1.2)s delay so breathing pulses desync (FNV-1a of id). */
 function breatheDelay(id: string): number {
   let h = 2166136261;
@@ -19,10 +15,10 @@ function breatheDelay(id: string): number {
 }
 
 /**
- * A plant in the grid: a circular avatar with its name, that opens the detail
- * drawer. Urgency is water-only (feeding is hidden) — a water-blue ring plus a
- * gentle breathing pulse mark plants that need water; healthy plants are
- * unmarked. The avatar carries a `layoutId` so it flies into the drawer header.
+ * A plant in the grid: a uniform circular avatar with its name, that opens the
+ * detail drawer. Urgency is water-only (feeding is hidden) — a water-blue ring
+ * plus a gentle breathing pulse mark plants that need water; healthy plants are
+ * unmarked.
  */
 export function PlantBubble({
   plant,
@@ -50,11 +46,10 @@ export function PlantBubble({
       className="rise group flex flex-col items-center gap-1.5 rounded-3xl p-1.5 text-center outline-none transition-colors hover:bg-canvas-soft focus-visible:bg-canvas-soft"
     >
       <motion.span
-        layoutId={`plant-avatar-${plant.id}`}
         whileHover={reduce ? undefined : { scale: 1.06 }}
         whileTap={reduce ? undefined : { scale: 0.94 }}
         style={{ animationDelay: `${breatheDelay(plant.id)}s` }}
-        className={`flex ${thirsty ? THIRSTY : BASE} items-center justify-center rounded-full bg-surface shadow-sm transition-shadow duration-500 ${ring} ${thirsty ? "breathe" : ""}`}
+        className={`flex size-20 items-center justify-center rounded-full bg-surface text-3xl shadow-sm transition-shadow duration-500 ${ring} ${thirsty ? "breathe" : ""}`}
       >
         <span aria-hidden>{plant.avatar ?? "🪴"}</span>
       </motion.span>

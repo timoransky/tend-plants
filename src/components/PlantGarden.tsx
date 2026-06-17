@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 
 import { PlantBubble } from "@/components/PlantBubble";
 import { PlantDrawer } from "@/components/PlantDrawer";
@@ -17,9 +17,9 @@ function thirstyCount(plants: PlantWithStatus[]): number {
 
 /**
  * The home screen: each room is a collapsible accordion section holding a grid
- * of plant avatars, with a tap-to-open detail drawer. Bubbles persist while the
- * drawer mounts inside an <AnimatePresence>, so the shared `layoutId` avatar
- * flies between them.
+ * of plant avatars; tapping one opens its care detail in a bottom-sheet drawer.
+ * The selected plant is held in state so it persists through the drawer's close
+ * animation.
  */
 export function PlantGarden({
   groups,
@@ -29,15 +29,9 @@ export function PlantGarden({
   token: string;
 }) {
   const reduce = useReducedMotion();
-  const [selectedId, setSelectedId] = useState<string | null>(null);
   const [collapsed, setCollapsed] = useState<Set<string>>(() => new Set());
-
-  // Derive the open plant from the latest groups so a router.refresh after
-  // "Mark watered" feeds fresh status into the drawer.
-  const allPlants = useMemo(() => groups.flatMap((g) => g.plants), [groups]);
-  const selected = selectedId
-    ? (allPlants.find((p) => p.id === selectedId) ?? null)
-    : null;
+  const [drawerPlant, setDrawerPlant] = useState<PlantWithStatus | null>(null);
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   function toggle(key: string) {
     setCollapsed((prev) => {
@@ -115,7 +109,10 @@ export function PlantGarden({
                           key={plant.id}
                           plant={plant}
                           delayMs={Math.min(i, 12) * 35}
-                          onSelect={(p) => setSelectedId(p.id)}
+                          onSelect={(p) => {
+                            setDrawerPlant(p);
+                            setDrawerOpen(true);
+                          }}
                         />
                       ))}
                     </div>
@@ -127,16 +124,12 @@ export function PlantGarden({
         })}
       </div>
 
-      <AnimatePresence>
-        {selected ? (
-          <PlantDrawer
-            key={selected.id}
-            plant={selected}
-            token={token}
-            onClose={() => setSelectedId(null)}
-          />
-        ) : null}
-      </AnimatePresence>
+      <PlantDrawer
+        plant={drawerPlant}
+        open={drawerOpen}
+        token={token}
+        onOpenChange={setDrawerOpen}
+      />
     </>
   );
 }

@@ -22,17 +22,6 @@ export type PlantDetailData = {
   feed: CareState;
 };
 
-type Segment = "feed" | "water" | "light";
-
-const ALL_SEGMENTS: { key: Segment; label: string; activeBg: string }[] = [
-  { key: "feed", label: "Feed", activeBg: "bg-feed" },
-  { key: "water", label: "Water", activeBg: "bg-water" },
-  { key: "light", label: "Light", activeBg: "bg-light" },
-];
-
-// Feeding is hidden for now — drop the Feed segment unless SHOW_FEED is on.
-const SEGMENTS = ALL_SEGMENTS.filter((s) => SHOW_FEED || s.key !== "feed");
-
 const DAY_MS = 86_400_000;
 
 /** Relative "last done" label, e.g. "today", "3 days ago". Computed only after
@@ -53,6 +42,11 @@ function dueLabel(iso: string | null): string | null {
   return `due in ${days} day${days === 1 ? "" : "s"}`;
 }
 
+/**
+ * The care detail for one plant, shown all on one screen (no tabs): the water
+ * card with its Mark-watered action, the light guidance, and personal notes.
+ * (Feed is hidden behind SHOW_FEED.)
+ */
 export function PlantDetail({
   token,
   initial,
@@ -61,9 +55,7 @@ export function PlantDetail({
   initial: PlantDetailData;
 }) {
   const router = useRouter();
-  const reduce = useReducedMotion();
   const [data, setData] = useState(initial);
-  const [tab, setTab] = useState<Segment>("water");
   const [pending, setPending] = useState<null | "water" | "feed">(null);
   const [justDid, setJustDid] = useState<null | "water" | "feed">(null);
   // false during SSR, true once hydrated — gates time-relative labels so the
@@ -96,93 +88,50 @@ export function PlantDetail({
   }
 
   return (
-    <div className="flex flex-col gap-5">
-      {/* Segmented control — the active pill slides between segments */}
-      <div className="flex gap-1 rounded-full bg-canvas-soft p-1">
-        {SEGMENTS.map((s) => (
-          <button
-            key={s.key}
-            type="button"
-            onClick={() => setTab(s.key)}
-            className="relative flex-1 rounded-full px-4 py-2 text-sm font-medium"
-          >
-            {tab === s.key ? (
-              <motion.span
-                layoutId="segment-pill"
-                className={`absolute inset-0 rounded-full ${s.activeBg}`}
-                transition={
-                  reduce
-                    ? { duration: 0 }
-                    : { type: "spring", stiffness: 420, damping: 34 }
-                }
-              />
-            ) : null}
-            <span
-              className={`relative z-10 transition-colors ${
-                tab === s.key ? "text-canvas" : "text-cream-soft hover:text-cream"
-              }`}
-            >
-              {s.label}
-            </span>
-          </button>
-        ))}
+    <div className="flex flex-col gap-4">
+      <CareCard
+        accent="text-water"
+        title="Water"
+        note={data.waterNote}
+        care={data.water}
+        mounted={mounted}
+        action={{
+          label: "Mark watered",
+          doneLabel: "Watered",
+          bg: "bg-water",
+          pending: pending === "water",
+          done: justDid === "water",
+          onClick: () => mark("water"),
+        }}
+      />
+
+      {SHOW_FEED ? (
+        <CareCard
+          accent="text-feed"
+          title="Feed"
+          note={data.feedNote}
+          care={data.feed}
+          mounted={mounted}
+          action={{
+            label: "Mark fed",
+            doneLabel: "Fed",
+            bg: "bg-feed",
+            pending: pending === "feed",
+            done: justDid === "feed",
+            onClick: () => mark("feed"),
+          }}
+        />
+      ) : null}
+
+      <div className="rounded-3xl bg-surface p-5 text-ink">
+        <h2 className="text-sm font-semibold uppercase tracking-wide text-light">
+          Light
+        </h2>
+        <p className="mt-2 text-base leading-relaxed text-ink">
+          {data.lightNote ?? "No light guidance for this plant yet."}
+        </p>
       </div>
 
-      {/* Active care card — cross-fades on tab change */}
-      <AnimatePresence mode="wait" initial={false}>
-        <motion.div
-          key={tab}
-          initial={reduce ? false : { opacity: 0, y: 6 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={reduce ? { opacity: 0 } : { opacity: 0, y: -6 }}
-          transition={{ duration: 0.18, ease: [0.2, 0.7, 0.3, 1] }}
-        >
-          {tab === "water" ? (
-            <CareCard
-              accent="text-water"
-              title="Water"
-              note={data.waterNote}
-              care={data.water}
-              mounted={mounted}
-              action={{
-                label: "Mark watered",
-                doneLabel: "Watered",
-                bg: "bg-water",
-                pending: pending === "water",
-                done: justDid === "water",
-                onClick: () => mark("water"),
-              }}
-            />
-          ) : tab === "feed" ? (
-            <CareCard
-              accent="text-feed"
-              title="Feed"
-              note={data.feedNote}
-              care={data.feed}
-              mounted={mounted}
-              action={{
-                label: "Mark fed",
-                doneLabel: "Fed",
-                bg: "bg-feed",
-                pending: pending === "feed",
-                done: justDid === "feed",
-                onClick: () => mark("feed"),
-              }}
-            />
-          ) : (
-            <div className="rounded-3xl bg-surface p-5 text-ink">
-              <h2 className="text-sm font-semibold uppercase tracking-wide text-light">
-                Light
-              </h2>
-              <p className="mt-2 text-base leading-relaxed text-ink">
-                {data.lightNote ?? "No light guidance for this plant yet."}
-              </p>
-            </div>
-          )}
-        </motion.div>
-      </AnimatePresence>
-
-      {/* Personal notes */}
       <div className="rounded-3xl bg-surface/90 p-5 text-ink">
         <h2 className="text-sm font-semibold uppercase tracking-wide text-ink-soft">
           Your notes
