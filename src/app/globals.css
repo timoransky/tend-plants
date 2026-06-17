@@ -1,23 +1,28 @@
 @import "tailwindcss";
 
 /*
- * Design tokens. Palette 1: warm Palette-1 cream surfaces on a deep espresso
- * canvas. Color system (spec, unchanged): water = blue, feed = brown,
- * light = yellow, healthy = green. Tailwind v4 generates utilities
- * (bg-*, text-*, border-*, ring-*) from these custom --color-* keys.
+ * Design tokens. Light, toned-down theme: a soft tan canvas with lighter cream
+ * elevated surfaces (cards, drawer) and a sage primary for actions. Elevation
+ * ramp goes canvas (darkest) → canvas-soft → surface (lightest). The "cream"
+ * tokens are page text *on* the canvas — dark now that the canvas is light.
+ * Color system (spec, unchanged): water = blue, feed = brown, light = yellow,
+ * healthy = green. Tailwind v4 generates utilities (bg-*, text-*, border-*,
+ * ring-*) from these custom --color-* keys.
  */
 @theme {
-  --color-canvas: #21100a;
-  --color-canvas-soft: #34180d;
+  --color-canvas: #bfa28c;
+  --color-canvas-soft: #cdb49c;
 
-  --color-surface: #f7f1de;
-  --color-surface-muted: #ece3c9;
+  --color-surface: #f3e4c9;
+  --color-surface-muted: #e8d5b5;
 
-  --color-ink: #3a1b0e;
-  --color-ink-soft: #8a5a33;
+  --color-ink: #43301e;
+  --color-ink-soft: #7b6450;
 
-  --color-cream: #f2ebd6;
-  --color-cream-soft: #bcb398;
+  --color-cream: #43301e;
+  --color-cream-soft: #5c4632;
+
+  --color-primary: #babf94;
 
   --color-water: #4083d4;
   --color-feed: #a76d3b;

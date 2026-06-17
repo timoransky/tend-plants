@@ -35,7 +35,7 @@ export default async function HomePage({ params }: Props) {
           <Link
             href={`/h/${token}/add`}
             aria-label="Add a plant"
-            className="flex size-9 items-center justify-center rounded-full bg-healthy text-canvas transition-colors hover:bg-healthy/90"
+            className="flex size-9 items-center justify-center rounded-full bg-primary text-ink transition-colors hover:bg-primary/90"
           >
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
               <path
@@ -71,7 +71,7 @@ function EmptyState({ token }: { token: string }) {
       </p>
       <Link
         href={`/h/${token}/add`}
-        className="rounded-full bg-healthy px-5 py-2.5 text-sm font-semibold text-canvas transition-colors hover:bg-healthy/90"
+        className="rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-ink transition-colors hover:bg-primary/90"
       >
         Add a plant
       </Link>

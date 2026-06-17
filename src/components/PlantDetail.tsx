@@ -220,7 +220,7 @@ function CareCard({
         onClick={action.onClick}
         disabled={action.pending || action.done}
         whileTap={reduce ? undefined : { scale: 0.97 }}
-        className={`mt-5 flex h-12 w-full items-center justify-center gap-2 rounded-full text-base font-semibold text-canvas transition-colors duration-500 disabled:opacity-90 ${
+        className={`mt-5 flex h-12 w-full items-center justify-center gap-2 rounded-full text-base font-semibold text-ink transition-colors duration-500 disabled:opacity-90 ${
           action.done ? "bg-healthy" : action.bg
         }`}
       >

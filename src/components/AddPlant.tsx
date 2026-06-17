@@ -318,7 +318,7 @@ export function AddPlant({ token }: { token: string }) {
         type="button"
         onClick={submit}
         disabled={submitting || !form.name.trim()}
-        className="h-12 rounded-full bg-healthy text-base font-semibold text-canvas transition-colors hover:bg-healthy/90 disabled:opacity-60"
+        className="h-12 rounded-full bg-primary text-base font-semibold text-ink transition-colors hover:bg-primary/90 disabled:opacity-60"
       >
         {submitting ? "Adding…" : "Add plant"}
       </button>
