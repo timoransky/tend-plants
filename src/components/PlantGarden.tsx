@@ -1,30 +1,25 @@
 "use client";
 
-import { AnimatePresence } from "motion/react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useMemo, useState } from "react";
 
 import { PlantBubble } from "@/components/PlantBubble";
 import { PlantDrawer } from "@/components/PlantDrawer";
-import { clusterLayout } from "@/lib/cluster";
 import type { RoomGroup } from "@/lib/group-rooms";
 import type { PlantWithStatus } from "@/lib/plants";
-import { scatterFor } from "@/lib/scatter";
 
-// Design-space bubble sizes (px); the cluster width maps these to cqw so they
-// scale with the container. Plants needing water are one step bigger.
-const BASE = 80;
-const THIRSTY = 88;
-
-function isThirsty(p: PlantWithStatus): boolean {
-  return p.water.status === "overdue" || p.water.status === "due_today";
+/** Plants needing water now — the calm count shown on each room header. */
+function thirstyCount(plants: PlantWithStatus[]): number {
+  return plants.filter(
+    (p) => p.water.status === "overdue" || p.water.status === "due_today",
+  ).length;
 }
 
 /**
- * The home "garden": plants packed into one organic cluster (rooms as offset
- * sub-clusters) with a tap-to-open detail drawer. Bubbles persist while the
+ * The home screen: each room is a collapsible accordion section holding a grid
+ * of plant avatars, with a tap-to-open detail drawer. Bubbles persist while the
  * drawer mounts inside an <AnimatePresence>, so the shared `layoutId` avatar
- * flies between them. The cluster is sized in container-query units, so the
- * whole blob scales with the viewport without overlap drift.
+ * flies between them.
  */
 export function PlantGarden({
   groups,
@@ -33,56 +28,103 @@ export function PlantGarden({
   groups: RoomGroup[];
   token: string;
 }) {
+  const reduce = useReducedMotion();
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [collapsed, setCollapsed] = useState<Set<string>>(() => new Set());
 
-  // Flat list in packing order; derive the open plant from latest groups so a
-  // router.refresh after "Mark watered" feeds fresh status into the drawer.
+  // Derive the open plant from the latest groups so a router.refresh after
+  // "Mark watered" feeds fresh status into the drawer.
   const allPlants = useMemo(() => groups.flatMap((g) => g.plants), [groups]);
-  const layout = useMemo(() => clusterLayout(groups), [groups]);
   const selected = selectedId
     ? (allPlants.find((p) => p.id === selectedId) ?? null)
     : null;
 
+  function toggle(key: string) {
+    setCollapsed((prev) => {
+      const next = new Set(prev);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
+      return next;
+    });
+  }
+
   return (
     <>
-      <div
-        className="mx-auto w-full py-4"
-        style={{ maxWidth: layout.width, containerType: "inline-size" }}
-      >
-        <div
-          className="relative w-full"
-          style={{ aspectRatio: `${layout.width} / ${layout.height}` }}
-        >
-          {allPlants.map((plant, i) => {
-            const pos = layout.pos.get(plant.id);
-            if (!pos) return null;
-            const sc = scatterFor(plant.id);
-            const sizeCqw = ((isThirsty(plant) ? THIRSTY : BASE) / layout.width) * 100;
-            return (
-              <div
-                key={plant.id}
-                className={`absolute -translate-x-1/2 -translate-y-1/2 hover:z-20 focus-within:z-20 ${
-                  isThirsty(plant) ? "z-10" : ""
-                }`}
-                style={{
-                  left: `${pos.xPct}%`,
-                  top: `${pos.yPct}%`,
-                  width: `${sizeCqw}cqw`,
-                  height: `${sizeCqw}cqw`,
-                  fontSize: `${sizeCqw * 0.42}cqw`,
-                }}
+      <div className="flex flex-col gap-1 pt-1">
+        {groups.map((group) => {
+          const isOpen = !collapsed.has(group.key);
+          const thirsty = thirstyCount(group.plants);
+          const label = group.room ?? "Everywhere else";
+          const panelId = `room-panel-${group.key}`;
+          return (
+            <section key={group.key}>
+              <button
+                type="button"
+                onClick={() => toggle(group.key)}
+                aria-expanded={isOpen}
+                aria-controls={panelId}
+                className="flex w-full items-center gap-2 rounded-2xl px-3 py-2.5 text-left outline-none transition-colors hover:bg-canvas-soft focus-visible:bg-canvas-soft"
               >
-                <PlantBubble
-                  plant={plant}
-                  rotate={sc.rotate}
-                  breatheDelay={sc.breatheDelay}
-                  delayMs={Math.min(i * 30, 500)}
-                  onSelect={(p) => setSelectedId(p.id)}
-                />
-              </div>
-            );
-          })}
-        </div>
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  aria-hidden
+                  className={`shrink-0 text-cream-soft transition-transform ${
+                    isOpen ? "" : "-rotate-90"
+                  }`}
+                >
+                  <path
+                    d="M6 9l6 6 6-6"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+                <span className="text-sm font-medium text-cream">{label}</span>
+                <span className="text-xs text-cream-soft">
+                  {group.plants.length}
+                </span>
+                {thirsty > 0 ? (
+                  <span className="ml-auto rounded-full bg-water/15 px-2 py-0.5 text-[0.7rem] font-medium text-water">
+                    {thirsty} thirsty
+                  </span>
+                ) : null}
+              </button>
+
+              <AnimatePresence initial={false}>
+                {isOpen ? (
+                  <motion.div
+                    id={panelId}
+                    key="panel"
+                    initial={reduce ? false : { height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={reduce ? { opacity: 0 } : { height: 0, opacity: 0 }}
+                    transition={
+                      reduce
+                        ? { duration: 0 }
+                        : { duration: 0.26, ease: [0.2, 0.7, 0.3, 1] }
+                    }
+                    className="overflow-hidden"
+                  >
+                    <div className="grid grid-cols-3 gap-2 px-1 pb-3 pt-2 sm:grid-cols-4">
+                      {group.plants.map((plant, i) => (
+                        <PlantBubble
+                          key={plant.id}
+                          plant={plant}
+                          delayMs={Math.min(i, 12) * 35}
+                          onSelect={(p) => setSelectedId(p.id)}
+                        />
+                      ))}
+                    </div>
+                  </motion.div>
+                ) : null}
+              </AnimatePresence>
+            </section>
+          );
+        })}
       </div>
 
       <AnimatePresence>

@@ -4,24 +4,32 @@ import { motion, useReducedMotion } from "motion/react";
 
 import type { PlantWithStatus } from "@/lib/plants";
 
+// Uniform size; plants that need water get one step bigger.
+const BASE = "size-20 text-3xl";
+const THIRSTY = "size-24 text-4xl";
+
+/** Deterministic [0, 1.2)s delay so breathing pulses desync (FNV-1a of id). */
+function breatheDelay(id: string): number {
+  let h = 2166136261;
+  for (let i = 0; i < id.length; i++) {
+    h ^= id.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  return ((Math.imul((h >>> 0) ^ 0x9e3779b1, 0x85ebca6b) >>> 0) / 0xffffffff) * 1.2;
+}
+
 /**
- * One plant in the packed garden: a tappable circular avatar that fills the slot
- * the garden positions it in, and opens the detail drawer. Urgency is water-only
- * (feeding is hidden) — a water-blue ring plus a gentle breathing pulse mark
- * plants that need water; healthy plants are unmarked. The name shows on
- * hover/focus to keep the cluster clean, and the avatar carries a `layoutId` so
- * it flies into the drawer header. Sizing/position is set by the parent.
+ * A plant in the grid: a circular avatar with its name, that opens the detail
+ * drawer. Urgency is water-only (feeding is hidden) — a water-blue ring plus a
+ * gentle breathing pulse mark plants that need water; healthy plants are
+ * unmarked. The avatar carries a `layoutId` so it flies into the drawer header.
  */
 export function PlantBubble({
   plant,
-  rotate,
-  breatheDelay,
   delayMs,
   onSelect,
 }: {
   plant: PlantWithStatus;
-  rotate: number;
-  breatheDelay: number;
   delayMs: number;
   onSelect: (plant: PlantWithStatus) => void;
 }) {
@@ -39,22 +47,18 @@ export function PlantBubble({
       onClick={() => onSelect(plant)}
       style={{ animationDelay: `${delayMs}ms` }}
       aria-label={`${plant.name}${plant.room ? `, ${plant.room}` : ""}, ${stateLabel}`}
-      className="rise group relative size-full rounded-full outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-healthy"
+      className="rise group flex flex-col items-center gap-1.5 rounded-3xl p-1.5 text-center outline-none transition-colors hover:bg-canvas-soft focus-visible:bg-canvas-soft"
     >
       <motion.span
         layoutId={`plant-avatar-${plant.id}`}
-        whileHover={reduce ? undefined : { scale: 1.08 }}
+        whileHover={reduce ? undefined : { scale: 1.06 }}
         whileTap={reduce ? undefined : { scale: 0.94 }}
-        style={{ animationDelay: `${breatheDelay}s` }}
-        className={`flex size-full items-center justify-center rounded-full bg-surface shadow-sm transition-shadow duration-500 ${ring} ${thirsty ? "breathe" : ""}`}
+        style={{ animationDelay: `${breatheDelay(plant.id)}s` }}
+        className={`flex ${thirsty ? THIRSTY : BASE} items-center justify-center rounded-full bg-surface shadow-sm transition-shadow duration-500 ${ring} ${thirsty ? "breathe" : ""}`}
       >
-        <span aria-hidden style={{ transform: `rotate(${rotate}deg)` }}>
-          {plant.avatar ?? "🪴"}
-        </span>
+        <span aria-hidden>{plant.avatar ?? "🪴"}</span>
       </motion.span>
-
-      {/* Name reveals on hover/focus so the packed cluster stays calm. */}
-      <span className="pointer-events-none absolute left-1/2 top-full z-30 mt-1 -translate-x-1/2 whitespace-nowrap rounded-md bg-canvas-soft px-1.5 py-0.5 text-[0.7rem] font-medium text-cream opacity-0 shadow-sm transition-opacity duration-150 group-hover:opacity-100 group-focus-visible:opacity-100">
+      <span className="max-w-[6.5rem] truncate text-xs font-medium text-cream">
         {plant.name}
       </span>
     </button>
