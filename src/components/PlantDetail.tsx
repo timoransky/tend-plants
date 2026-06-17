@@ -255,7 +255,7 @@ function CareCard({
           onClick={action.onClick}
           disabled={action.pending || action.done}
           whileTap={reduce ? undefined : { scale: 0.97 }}
-          className={`mt-5 flex h-12 w-full items-center justify-center gap-2 rounded-full text-base font-semibold text-canvas transition-colors duration-500 disabled:opacity-90 ${
+          className={`mt-4 inline-flex h-11 items-center justify-center gap-2 rounded-full px-5 text-sm font-semibold text-canvas transition-colors duration-500 disabled:opacity-90 ${
             action.done ? "bg-healthy" : action.bg
           }`}
         >
@@ -272,8 +272,8 @@ function CareCard({
                 animate={{ opacity: 1 }}
               >
                 <motion.svg
-                  width="20"
-                  height="20"
+                  width="18"
+                  height="18"
                   viewBox="0 0 24 24"
                   fill="none"
                   initial={reduce ? false : { scale: 0 }}
