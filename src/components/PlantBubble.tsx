@@ -5,11 +5,9 @@ import { motion, useReducedMotion } from "motion/react";
 import type { PlantWithStatus } from "@/lib/plants";
 import type { Scatter } from "@/lib/scatter";
 
-const SIZE_CLASS: Record<Scatter["size"], string> = {
-  sm: "size-16 text-2xl",
-  md: "size-20 text-3xl",
-  lg: "size-24 text-4xl",
-};
+// Every bubble is the same size; plants that need water get one step bigger.
+const BASE_SIZE = "size-20 text-3xl";
+const THIRSTY_SIZE = "size-24 text-4xl";
 
 /**
  * One plant in the scattered garden: a tappable circular avatar that opens the
@@ -34,6 +32,7 @@ export function PlantBubble({
   const soon = status === "upcoming";
 
   const ring = thirsty ? "ring-4 ring-water/80" : soon ? "ring-2 ring-water/30" : "";
+  const sizeClass = thirsty ? THIRSTY_SIZE : BASE_SIZE;
   const stateLabel = thirsty ? "needs water" : soon ? "water soon" : "healthy";
 
   return (
@@ -52,7 +51,7 @@ export function PlantBubble({
           whileHover={reduce ? undefined : { scale: 1.06 }}
           whileTap={reduce ? undefined : { scale: 0.94 }}
           style={{ animationDelay: `${scatter.breatheDelay}s` }}
-          className={`relative flex ${SIZE_CLASS[scatter.size]} items-center justify-center rounded-full bg-surface shadow-sm transition-shadow duration-500 ${ring} ${thirsty ? "breathe" : ""}`}
+          className={`relative flex ${sizeClass} items-center justify-center rounded-full bg-surface shadow-sm transition-shadow duration-500 ${ring} ${thirsty ? "breathe" : ""}`}
         >
           <span aria-hidden style={{ transform: `rotate(${scatter.rotate}deg)` }}>
             {plant.avatar ?? "🪴"}

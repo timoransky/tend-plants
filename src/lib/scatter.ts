@@ -10,13 +10,10 @@
  * vertical spread, so bubbles never overlap illegibly.
  */
 
-export type ScatterSize = "sm" | "md" | "lg";
-
 export type Scatter = {
   dx: number; // px, horizontal nudge ~[-6, 6]
   dy: number; // px, vertical nudge ~[-14, 14]
   rotate: number; // deg, avatar tilt ~[-5, 5]
-  size: ScatterSize;
   breatheDelay: number; // s, desyncs the breathing pulse, [0, 1.2)
 };
 
@@ -38,12 +35,10 @@ function rand01(seed: number, salt: number): number {
 
 export function scatterFor(id: string): Scatter {
   const s = hash32(id);
-  const sizeRoll = rand01(s, 7);
   return {
     dx: Math.round((rand01(s, 1) - 0.5) * 12),
     dy: Math.round((rand01(s, 2) - 0.5) * 28),
     rotate: (rand01(s, 3) - 0.5) * 10,
-    size: sizeRoll < 0.28 ? "sm" : sizeRoll > 0.78 ? "lg" : "md",
     breatheDelay: rand01(s, 4) * 1.2,
   };
 }
