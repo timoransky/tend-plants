@@ -45,7 +45,7 @@ export function PlantBubble({
         {needsWater ? (
           <span className="absolute bottom-1 right-1 flex size-3">
             {thirsty && !reduce ? (
-              <span className="absolute inline-flex size-full animate-ping rounded-full bg-water opacity-75" />
+              <span className="absolute inline-flex size-full animate-ping rounded-full bg-water opacity-75 z-10" />
             ) : null}
             <span className="relative inline-flex size-3 rounded-full bg-water ring-[3px] ring-canvas" />
           </span>
