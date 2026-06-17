@@ -1,26 +1,26 @@
 @import "tailwindcss";
 
 /*
- * Design tokens. Light, toned-down theme: a soft tan canvas with lighter cream
- * elevated surfaces (cards, drawer) and a sage primary for actions. Elevation
- * ramp goes canvas (darkest) → canvas-soft → surface (lightest). The "cream"
- * tokens are page text *on* the canvas — dark now that the canvas is light.
+ * Design tokens. Light theme: a near-white warm canvas shared by the page and
+ * the drawer, with slightly warmer cream surfaces (avatars, cards) layered on
+ * top, near-black text, and a sage primary for actions. The "cream" tokens are
+ * page text *on* the canvas — dark now that the canvas is light.
  * Color system (spec, unchanged): water = blue, feed = brown, light = yellow,
  * healthy = green. Tailwind v4 generates utilities (bg-*, text-*, border-*,
  * ring-*) from these custom --color-* keys.
  */
 @theme {
-  --color-canvas: #bfa28c;
-  --color-canvas-soft: #cdb49c;
+  --color-canvas: #faf7f3;
+  --color-canvas-soft: #f2ebe1;
 
-  --color-surface: #f3e4c9;
-  --color-surface-muted: #e8d5b5;
+  --color-surface: #f0e4d3;
+  --color-surface-muted: #e7d8c2;
 
-  --color-ink: #43301e;
-  --color-ink-soft: #7b6450;
+  --color-ink: #211c16;
+  --color-ink-soft: #6e6457;
 
-  --color-cream: #43301e;
-  --color-cream-soft: #5c4632;
+  --color-cream: #211c16;
+  --color-cream-soft: #6e6457;
 
   --color-primary: #babf94;
 

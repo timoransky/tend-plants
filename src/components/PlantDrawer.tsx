@@ -47,7 +47,7 @@ export function PlantDrawer({
     >
       <Drawer.Portal>
         <Drawer.Overlay className="fixed inset-0 z-40 bg-black/60" />
-        <Drawer.Content className="fixed inset-x-0 bottom-0 z-50 mx-auto flex h-[96dvh] w-full max-w-2xl flex-col rounded-t-3xl bg-surface outline-none">
+        <Drawer.Content className="fixed inset-x-0 bottom-0 z-50 mx-auto flex h-[96dvh] w-full max-w-2xl flex-col rounded-t-3xl bg-canvas outline-none">
 
           {plant ? (
             <>
