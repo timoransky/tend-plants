@@ -62,11 +62,11 @@ export default async function HomePage({ params }: Props) {
 
 function EmptyState({ token }: { token: string }) {
   return (
-    <div className="flex flex-col items-center gap-4 px-6 py-16 text-center">
+    <div className="flex h-full flex-col items-center justify-center gap-4 px-6 py-16 text-center">
       <span className="text-5xl" aria-hidden>
         🪴
       </span>
-      <p className="max-w-xs text-cream-soft">
+      <p className="max-w-xs text-balance text-cream-soft">
         No plants yet. Add your first one to start tracking watering.
       </p>
       <Link
