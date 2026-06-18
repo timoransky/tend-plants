@@ -1,5 +1,7 @@
 "use client";
 
+import { HouseHeartIcon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, useSyncExternalStore } from "react";
@@ -67,7 +69,8 @@ export function HouseholdSwitcher({
       const res = await fetch("/api/household", { method: "POST" });
       if (!res.ok) throw new Error();
       const { household } = await res.json();
-      setPrimary(household.id);
+      // Creating a household does NOT adopt it as your default — that's an
+      // explicit choice via "Set default". We just open the new home.
       router.push(`/h/${household.id}`);
     } catch {
       setCreating(false);
@@ -123,7 +126,7 @@ export function HouseholdSwitcher({
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={reduce ? { opacity: 0 } : { opacity: 0, y: -6, scale: 0.98 }}
               transition={{ duration: 0.16, ease: [0.2, 0.7, 0.3, 1] }}
-              className="absolute left-0 top-full z-50 mt-2 flex w-72 origin-top-left flex-col gap-1 rounded-2xl bg-surface p-1.5 text-ink shadow-xl shadow-scrim/50"
+              className="absolute left-0 top-full z-50 mt-2 flex w-64 origin-top-left flex-col gap-1 rounded-2xl bg-surface p-1.5 text-ink shadow-xl shadow-scrim/50"
             >
               {entries.map((h) => {
                 const isCurrent = h.token === token;
@@ -157,16 +160,22 @@ export function HouseholdSwitcher({
                     </button>
 
                     {isDefault ? (
-                      <span className="shrink-0 rounded-full bg-healthy/15 px-2 py-0.5 text-[0.65rem] font-semibold uppercase tracking-wide text-healthy-ink">
-                        Default
+                      <span
+                        title="Your default home"
+                        aria-label="Your default home"
+                        className="flex shrink-0 items-center justify-center p-1 text-healthy"
+                      >
+                        <HugeiconsIcon icon={HouseHeartIcon} size={16} strokeWidth={2} aria-hidden />
                       </span>
                     ) : (
                       <button
                         type="button"
+                        aria-label="Set as default home"
+                        title="Set as default home"
                         onClick={() => setPrimary(h.token)}
-                        className="shrink-0 rounded-full px-2 py-0.5 text-[0.7rem] font-medium text-ink-soft transition-colors hover:bg-ink/10 hover:text-ink"
+                        className="flex shrink-0 items-center justify-center rounded-lg p-1 text-ink-soft transition-colors hover:bg-ink/10 hover:text-ink"
                       >
-                        Set default
+                        <HugeiconsIcon icon={HouseHeartIcon} size={16} strokeWidth={1.7} aria-hidden />
                       </button>
                     )}
 
