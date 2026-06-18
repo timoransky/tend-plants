@@ -5,6 +5,17 @@ import { motion, useReducedMotion } from "motion/react";
 import type { PlantWithStatus } from "@/lib/plants";
 
 /**
+ * Hover/press feedback for the bubble. The whole button is one target: hovering
+ * anywhere (avatar or label) lifts the bubble toward the viewer with a gentle
+ * scale, like picking the pot up off the dim canvas. Calm ease-out, no bounce.
+ */
+const bubbleMotion = {
+  rest: { y: 0, scale: 1 },
+  hover: { y: -5, scale: 1.05 },
+  tap: { y: -1, scale: 0.96 },
+};
+
+/**
  * A plant in the grid: a uniform circular avatar with its name, that opens the
  * detail drawer. A small water-blue dot sits in the corner when the plant needs
  * water — it pings when due now (overdue / due today) and is static when due
@@ -27,21 +38,25 @@ export function PlantBubble({
   const stateLabel = thirsty ? "needs water" : soon ? "water soon" : "healthy";
 
   return (
-    <button
+    <motion.button
       type="button"
       onClick={() => onSelect(plant)}
       style={{ animationDelay: `${delayMs}ms` }}
       aria-label={`${plant.name}${plant.room ? `, ${plant.room}` : ""}, ${stateLabel}`}
-      className="rise group flex flex-col items-center gap-1.5 rounded-3xl p-1.5 text-center outline-none transition-colors hover:bg-canvas-soft focus-visible:bg-canvas-soft"
+      initial="rest"
+      animate="rest"
+      whileHover={reduce ? undefined : "hover"}
+      whileTap={reduce ? undefined : "tap"}
+      className="rise group flex flex-col items-center gap-1.5 rounded-3xl p-1.5 text-center outline-none transition-colors focus-visible:bg-canvas-soft"
     >
-      <span className="relative">
-        <motion.span
-          whileHover={reduce ? undefined : { scale: 1.06 }}
-          whileTap={reduce ? undefined : { scale: 0.94 }}
-          className="flex size-20 items-center justify-center rounded-full bg-surface text-3xl shadow-sm"
-        >
+      <motion.span
+        variants={bubbleMotion}
+        transition={{ type: "tween", duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
+        className="relative"
+      >
+        <span className="flex size-20 items-center justify-center rounded-full bg-surface text-3xl shadow-[0_1px_3px_0_rgb(20_16_8_/_0.35)] transition-shadow duration-200 ease-out group-hover:shadow-[0_14px_28px_-4px_rgb(20_16_8_/_0.5)]">
           <span aria-hidden>{plant.avatar ?? "🪴"}</span>
-        </motion.span>
+        </span>
         {needsWater ? (
           <span className="absolute bottom-1 right-1 flex size-3">
             {thirsty && !reduce ? (
@@ -50,10 +65,10 @@ export function PlantBubble({
             <span className="relative inline-flex size-3 rounded-full bg-water ring-[3px] ring-canvas" />
           </span>
         ) : null}
-      </span>
+      </motion.span>
       <span className="max-w-[6.5rem] truncate text-xs font-medium text-cream">
         {plant.name}
       </span>
-    </button>
+    </motion.button>
   );
 }
