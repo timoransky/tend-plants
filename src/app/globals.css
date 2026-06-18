@@ -38,14 +38,22 @@
 
   --color-water: oklch(0.69 0.165 244);
   --color-water-ink: oklch(0.51 0.15 244);
+  /* Icon variant: dark enough for graphical 3:1 on cream, but higher chroma than
+     -ink (which is tuned for 4.5:1 text) so the mark stays vivid, not muddy. */
+  --color-water-icon: oklch(0.54 0.185 244);
 
   --color-feed: oklch(0.66 0.15 50);
   --color-feed-ink: oklch(0.47 0.12 50);
+  --color-feed-icon: oklch(0.52 0.16 50);
 
   /* The exact gold the user chose; #ffc227 ≈ oklch(0.847 0.166 84). Water above
      is tuned to its chroma and a complementary azure so the two read as a pair. */
   --color-light: #ffc227;
   --color-light-ink: oklch(0.53 0.125 84);
+  /* Intentionally bright gold: amber is luminous, so at L0.7 this lands ~2.4:1 on
+     cream, below the 3:1 graphical floor. A deliberate call to keep the icon
+     reading as true gold rather than a darker ochre. Do not "fix" for contrast. */
+  --color-light-icon: oklch(0.7 0.17 84);
 
   --color-healthy: oklch(0.66 0.135 152);
   --color-healthy-ink: oklch(0.475 0.13 152);
