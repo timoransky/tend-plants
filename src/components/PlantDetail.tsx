@@ -96,7 +96,7 @@ export function PlantDetail({
   return (
     <div className="flex flex-col divide-y divide-ink/10">
       <CareCard
-        iconClass="text-water"
+        iconClass="text-water-icon"
         statusClass="text-water-ink"
         icon={DropletIcon}
         title="Water"
@@ -116,7 +116,7 @@ export function PlantDetail({
 
       {SHOW_FEED ? (
         <CareCard
-          iconClass="text-feed"
+          iconClass="text-feed-icon"
           statusClass="text-feed-ink"
           icon={DropletIcon}
           title="Feed"
@@ -135,42 +135,40 @@ export function PlantDetail({
         />
       ) : null}
 
-      <section className="flex gap-4 py-5">
-        <span
-          className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-canvas-soft text-light"
-          aria-hidden
-        >
-          <HugeiconsIcon icon={Sun03Icon} size={22} strokeWidth={1.9} />
-        </span>
-        <div className="min-w-0 flex-1">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-ink">
-            Light
-          </h2>
-          <p className="mt-2 text-base leading-relaxed text-ink">
-            {data.lightNote ?? "No light guidance for this plant yet."}
-          </p>
-        </div>
+      <section className="py-5">
+        <h2 className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-ink">
+          <HugeiconsIcon
+            icon={Sun03Icon}
+            size={18}
+            strokeWidth={1.9}
+            className="shrink-0 text-light-icon"
+            aria-hidden
+          />
+          Light
+        </h2>
+        <p className="mt-2 text-base leading-relaxed text-ink">
+          {data.lightNote ?? "No light guidance for this plant yet."}
+        </p>
       </section>
 
-      <section className="flex gap-4 py-5">
-        <span
-          className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-canvas-soft text-cream-soft"
-          aria-hidden
-        >
-          <HugeiconsIcon icon={ClipboardListIcon} size={22} strokeWidth={1.8} />
-        </span>
-        <div className="min-w-0 flex-1">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-ink-soft">
-            Your notes
-          </h2>
-          <p className="mt-2 text-base leading-relaxed text-ink">
-            {data.notes ?? (
-              <span className="text-ink-soft">
-                No personal notes yet. (Editing arrives in a later step.)
-              </span>
-            )}
-          </p>
-        </div>
+      <section className="py-5">
+        <h2 className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-ink-soft">
+          <HugeiconsIcon
+            icon={ClipboardListIcon}
+            size={18}
+            strokeWidth={1.8}
+            className="shrink-0 text-ink-soft"
+            aria-hidden
+          />
+          Your notes
+        </h2>
+        <p className="mt-2 text-base leading-relaxed text-ink">
+          {data.notes ?? (
+            <span className="text-ink-soft">
+              No personal notes yet. (Editing arrives in a later step.)
+            </span>
+          )}
+        </p>
       </section>
     </div>
   );
@@ -207,54 +205,53 @@ function CareCard({
   const due = mounted ? dueLabel(care.dueAt) : null;
 
   return (
-    <section className="flex gap-4 py-5">
-      <span
-        className={`flex size-11 shrink-0 items-center justify-center rounded-2xl bg-canvas-soft ${iconClass}`}
-        aria-hidden
-      >
-        <HugeiconsIcon icon={icon} size={22} strokeWidth={1.9} />
-      </span>
-      <div className="min-w-0 flex-1">
-        <div className="flex items-center justify-between">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-ink">
-            {title}
-          </h2>
-          {care.status ? (
-            <span className={`text-xs font-medium ${statusClass}`}>
-              {STATUS_LABEL[care.status]}
-            </span>
-          ) : null}
-        </div>
+    <section className="py-5">
+      <div className="flex items-center justify-between">
+        <h2 className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-ink">
+          <HugeiconsIcon
+            icon={icon}
+            size={18}
+            strokeWidth={1.9}
+            className={`shrink-0 ${iconClass}`}
+            aria-hidden
+          />
+          {title}
+        </h2>
+        {care.status ? (
+          <span className={`text-xs font-medium ${statusClass}`}>
+            {STATUS_LABEL[care.status]}
+          </span>
+        ) : null}
+      </div>
 
-        <p className="mt-2 text-base leading-relaxed text-ink">
-          {note ?? "No guidance for this plant yet."}
-        </p>
+      <p className="mt-2 text-base leading-relaxed text-ink">
+        {note ?? "No guidance for this plant yet."}
+      </p>
 
-        <div className="mt-4 flex items-center justify-between gap-4">
-          <dl className="flex min-w-0 flex-wrap gap-x-6 gap-y-1 text-sm text-ink-soft">
+      <div className="mt-4 flex items-center justify-between gap-4">
+        <dl className="flex min-w-0 flex-wrap gap-x-6 gap-y-1 text-sm text-ink-soft">
+          <div>
+            <dt className="inline">Last: </dt>
+            <dd className="inline font-medium text-ink">
+              {last ?? (care.lastDoneAt ? "—" : "not yet")}
+            </dd>
+          </div>
+          {care.intervalDays ? (
             <div>
-              <dt className="inline">Last: </dt>
+              <dt className="inline">Every </dt>
               <dd className="inline font-medium text-ink">
-                {last ?? (care.lastDoneAt ? "—" : "not yet")}
+                {care.intervalDays} days
               </dd>
             </div>
-            {care.intervalDays ? (
-              <div>
-                <dt className="inline">Every </dt>
-                <dd className="inline font-medium text-ink">
-                  {care.intervalDays} days
-                </dd>
-              </div>
-            ) : null}
-            {due ? (
-              <div>
-                <dd className="font-medium text-ink">{due}</dd>
-              </div>
-            ) : null}
-          </dl>
+          ) : null}
+          {due ? (
+            <div>
+              <dd className="font-medium text-ink">{due}</dd>
+            </div>
+          ) : null}
+        </dl>
 
-          <CareActionButton icon={icon} {...action} />
-        </div>
+        <CareActionButton icon={icon} {...action} />
       </div>
     </section>
   );
