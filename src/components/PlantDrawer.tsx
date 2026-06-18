@@ -49,7 +49,12 @@ export function PlantDrawer({
     <Drawer.Root open={open} onOpenChange={onOpenChange} shouldScaleBackground>
       <Drawer.Portal>
         <Drawer.Overlay className="fixed inset-0 z-40 bg-scrim/70 backdrop-blur-sm" />
-        <Drawer.Content className="fixed inset-x-0 bottom-0 z-50 mx-auto flex max-h-[92dvh] w-full max-w-2xl flex-col rounded-t-3xl bg-surface text-ink outline-none">
+        <Drawer.Content
+          className="fixed inset-x-2 bottom-2 z-50 mx-auto flex max-h-[92dvh] w-auto max-w-2xl flex-col rounded-3xl bg-surface text-ink outline-none"
+          // The drawer sits 8px above the bottom edge, so push it fully off-screen
+          // by that extra gap when closed (otherwise an 8px sliver stays visible).
+          style={{ "--initial-transform": "calc(100% + 8px)" } as React.CSSProperties}
+        >
 
           {plant ? (
             <>
