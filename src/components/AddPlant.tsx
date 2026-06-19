@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 
+import { Drawer, DrawerDescription, DrawerTitle } from "@/components/Drawer";
 import { SHOW_FEED } from "@/lib/features";
 import type { SpeciesDetail, SpeciesSummary } from "@/lib/species";
 
@@ -42,11 +43,18 @@ function formFromSpecies(s: SpeciesDetail): CareForm {
   };
 }
 
+/**
+ * The add-plant screen: the species picker stays on the page, and tapping a
+ * species (or "add manually") opens its care form in a drawer. Closing the
+ * drawer drops the user straight back on the picker — with their search and
+ * scroll intact — so choosing a different plant is one tap, not a round-trip
+ * home. The picker keeps the page's dark canvas styling; the form lives on the
+ * drawer's cream surface (shared <Drawer> with the plant-detail sheet).
+ */
 export function AddPlant({ token }: { token: string }) {
   const router = useRouter();
-  const [stage, setStage] = useState<"pick" | "form">("pick");
 
-  // --- Stage 1 data ---
+  // --- Picker (page) data ---
   const [list, setList] = useState<SpeciesSummary[] | null>(null);
   const [query, setQuery] = useState("");
 
@@ -71,8 +79,10 @@ export function AddPlant({ token }: { token: string }) {
       : list;
   }, [list, query]);
 
-  // --- Stage 2 data ---
+  // --- Form (drawer) data ---
   // `original` is the species the form was seeded from (null for manual entry).
+  // `formOpen` drives the drawer; `form` persists through the close animation.
+  const [formOpen, setFormOpen] = useState(false);
   const [original, setOriginal] = useState<SpeciesDetail | null>(null);
   const [form, setForm] = useState<CareForm | null>(null);
   const [room, setRoom] = useState("");
@@ -92,7 +102,8 @@ export function AddPlant({ token }: { token: string }) {
       setForm(formFromSpecies(species));
       setRoom("");
       setNotes("");
-      setStage("form");
+      setSubmitting(false);
+      setFormOpen(true);
     } catch {
       setError("Couldn't load that species. Try another, or add manually.");
     } finally {
@@ -102,11 +113,17 @@ export function AddPlant({ token }: { token: string }) {
 
   function startManual() {
     setOriginal(null);
-    setForm({ name: "", ...MANUAL_DEFAULTS, waterIntervalDays: "7", feedIntervalDays: "30" } as CareForm);
+    setForm({
+      name: "",
+      ...MANUAL_DEFAULTS,
+      waterIntervalDays: "7",
+      feedIntervalDays: "30",
+    } as CareForm);
     setRoom("");
     setNotes("");
     setError(null);
-    setStage("form");
+    setSubmitting(false);
+    setFormOpen(true);
   }
 
   const isDirty = useMemo(() => {
@@ -165,8 +182,11 @@ export function AddPlant({ token }: { token: string }) {
     }
   }
 
-  if (stage === "pick") {
-    return (
+  const set = (patch: Partial<CareForm>) =>
+    setForm((f) => (f ? { ...f, ...patch } : f));
+
+  return (
+    <>
       <PickStage
         token={token}
         list={list}
@@ -176,153 +196,161 @@ export function AddPlant({ token }: { token: string }) {
         onPick={pickSpecies}
         picking={picking}
         onManual={startManual}
-        error={error}
+        error={!formOpen ? error : null}
       />
-    );
-  }
 
-  if (!form) return null;
-  const set = (patch: Partial<CareForm>) =>
-    setForm((f) => (f ? { ...f, ...patch } : f));
+      <Drawer open={formOpen} onOpenChange={setFormOpen}>
+        {form ? (
+          <>
+            <header className="flex items-center gap-4 pb-5">
+              <span className="flex size-20 shrink-0 items-center justify-center rounded-full bg-surface-muted text-4xl">
+                <span aria-hidden>{form.avatar || "🪴"}</span>
+              </span>
+              <div className="min-w-0">
+                <DrawerTitle className="truncate text-2xl font-semibold tracking-tight text-ink">
+                  {original ? original.commonName : "New plant"}
+                </DrawerTitle>
+                <DrawerDescription className="truncate text-sm text-ink-soft">
+                  Set the name, room and care details
+                </DrawerDescription>
+              </div>
+            </header>
 
-  return (
-    <div className="flex flex-col gap-4">
-      <button
-        type="button"
-        onClick={() => setStage("pick")}
-        className="self-start text-sm text-cream-soft hover:text-cream"
-      >
-        ← Choose a different plant
-      </button>
+            <div className="flex flex-col gap-4">
+              <Field label="Name">
+                <input
+                  value={form.name}
+                  onChange={(e) => set({ name: e.target.value })}
+                  placeholder="e.g. Monty"
+                  className="input"
+                />
+              </Field>
 
-      <div className="flex flex-col gap-4 rounded-3xl bg-surface p-5 text-ink">
-        <Field label="Name">
-          <input
-            value={form.name}
-            onChange={(e) => set({ name: e.target.value })}
-            placeholder="e.g. Monty"
-            className="input"
-          />
-        </Field>
+              <Field label="Room">
+                <input
+                  value={room}
+                  onChange={(e) => setRoom(e.target.value)}
+                  placeholder="e.g. Living Room"
+                  className="input"
+                />
+              </Field>
 
-        <Field label="Room">
-          <input
-            value={room}
-            onChange={(e) => setRoom(e.target.value)}
-            placeholder="e.g. Living Room"
-            className="input"
-          />
-        </Field>
+              <Field label="Avatar">
+                <div className="flex flex-wrap gap-1.5">
+                  {avatarChoices.map((emo) => (
+                    <button
+                      key={emo}
+                      type="button"
+                      onClick={() => set({ avatar: emo })}
+                      className={`flex size-10 items-center justify-center rounded-xl text-xl transition-colors ${
+                        form.avatar === emo
+                          ? "bg-healthy/20 ring-2 ring-healthy"
+                          : "bg-surface-muted hover:bg-surface-muted/70"
+                      }`}
+                    >
+                      {emo}
+                    </button>
+                  ))}
+                </div>
+              </Field>
 
-        <Field label="Avatar">
-          <div className="flex flex-wrap gap-1.5">
-            {avatarChoices.map((emo) => (
-              <button
-                key={emo}
-                type="button"
-                onClick={() => set({ avatar: emo })}
-                className={`flex size-10 items-center justify-center rounded-xl text-xl transition-colors ${
-                  form.avatar === emo
-                    ? "bg-healthy/20 ring-2 ring-healthy"
-                    : "bg-surface-muted hover:bg-surface-muted/70"
-                }`}
-              >
-                {emo}
-              </button>
-            ))}
-          </div>
-        </Field>
+              <div className="flex items-center justify-between border-t border-ink/10 pt-4">
+                <h2 className="text-sm font-semibold uppercase tracking-wide text-ink-soft">
+                  Care
+                </h2>
+                {original ? (
+                  <button
+                    type="button"
+                    onClick={resetToOriginal}
+                    disabled={!isDirty}
+                    className="text-xs font-medium text-healthy-ink transition-opacity disabled:opacity-40"
+                  >
+                    ↺ Reset to {original.commonName} defaults
+                  </button>
+                ) : null}
+              </div>
 
-        <div className="flex items-center justify-between border-t border-ink/10 pt-4">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-ink-soft">
-            Care
-          </h2>
-          {original ? (
+              <Field label="Water — every (days)" accent="text-water-ink">
+                <input
+                  type="number"
+                  min={1}
+                  value={form.waterIntervalDays}
+                  onChange={(e) => set({ waterIntervalDays: e.target.value })}
+                  className="input"
+                />
+              </Field>
+              <Field label="Watering note" accent="text-water-ink">
+                <textarea
+                  value={form.waterNote}
+                  onChange={(e) => set({ waterNote: e.target.value })}
+                  rows={2}
+                  placeholder="When to water…"
+                  className="input resize-none"
+                />
+              </Field>
+
+              <Field label="Light" accent="text-light-ink">
+                <textarea
+                  value={form.lightNote}
+                  onChange={(e) => set({ lightNote: e.target.value })}
+                  rows={2}
+                  placeholder="Light preference…"
+                  className="input resize-none"
+                />
+              </Field>
+
+              {SHOW_FEED ? (
+                <>
+                  <Field label="Feed — every (days)" accent="text-feed-ink">
+                    <input
+                      type="number"
+                      min={1}
+                      value={form.feedIntervalDays}
+                      onChange={(e) =>
+                        set({ feedIntervalDays: e.target.value })
+                      }
+                      className="input"
+                    />
+                  </Field>
+                  <Field label="Feeding note" accent="text-feed-ink">
+                    <textarea
+                      value={form.feedNote}
+                      onChange={(e) => set({ feedNote: e.target.value })}
+                      rows={2}
+                      placeholder="How to feed…"
+                      className="input resize-none"
+                    />
+                  </Field>
+                </>
+              ) : null}
+
+              <Field label="Your notes">
+                <textarea
+                  value={notes}
+                  onChange={(e) => setNotes(e.target.value)}
+                  rows={2}
+                  placeholder="Anything personal to remember…"
+                  className="input resize-none"
+                />
+              </Field>
+            </div>
+
+            {error ? (
+              <p className="pt-4 text-sm text-water-ink">{error}</p>
+            ) : null}
+
             <button
               type="button"
-              onClick={resetToOriginal}
-              disabled={!isDirty}
-              className="text-xs font-medium text-healthy-ink transition-opacity disabled:opacity-40"
+              onClick={submit}
+              disabled={submitting || !form.name.trim()}
+              className="mt-4 h-12 w-full rounded-full bg-healthy text-base font-semibold text-canvas transition-colors hover:bg-healthy/90 disabled:opacity-60"
             >
-              ↺ Reset to {original.commonName} defaults
+              {submitting ? "Adding…" : "Add plant"}
             </button>
-          ) : null}
-        </div>
-
-        <Field label="Water — every (days)" accent="text-water-ink">
-          <input
-            type="number"
-            min={1}
-            value={form.waterIntervalDays}
-            onChange={(e) => set({ waterIntervalDays: e.target.value })}
-            className="input"
-          />
-        </Field>
-        <Field label="Watering note" accent="text-water-ink">
-          <textarea
-            value={form.waterNote}
-            onChange={(e) => set({ waterNote: e.target.value })}
-            rows={2}
-            placeholder="When to water…"
-            className="input resize-none"
-          />
-        </Field>
-
-        <Field label="Light" accent="text-light-ink">
-          <textarea
-            value={form.lightNote}
-            onChange={(e) => set({ lightNote: e.target.value })}
-            rows={2}
-            placeholder="Light preference…"
-            className="input resize-none"
-          />
-        </Field>
-
-        {SHOW_FEED ? (
-          <>
-            <Field label="Feed — every (days)" accent="text-feed-ink">
-              <input
-                type="number"
-                min={1}
-                value={form.feedIntervalDays}
-                onChange={(e) => set({ feedIntervalDays: e.target.value })}
-                className="input"
-              />
-            </Field>
-            <Field label="Feeding note" accent="text-feed-ink">
-              <textarea
-                value={form.feedNote}
-                onChange={(e) => set({ feedNote: e.target.value })}
-                rows={2}
-                placeholder="How to feed…"
-                className="input resize-none"
-              />
-            </Field>
           </>
         ) : null}
-
-        <Field label="Your notes">
-          <textarea
-            value={notes}
-            onChange={(e) => setNotes(e.target.value)}
-            rows={2}
-            placeholder="Anything personal to remember…"
-            className="input resize-none"
-          />
-        </Field>
-      </div>
-
-      {error ? <p className="text-sm text-water">{error}</p> : null}
-
-      <button
-        type="button"
-        onClick={submit}
-        disabled={submitting || !form.name.trim()}
-        className="h-12 rounded-full bg-healthy text-base font-semibold text-canvas transition-colors hover:bg-healthy/90 disabled:opacity-60"
-      >
-        {submitting ? "Adding…" : "Add plant"}
-      </button>
-    </div>
+      </Drawer>
+    </>
   );
 }
 
@@ -369,63 +397,75 @@ function PickStage({
   error: string | null;
 }) {
   return (
-    <div className="flex flex-col gap-4">
-      <input
-        type="search"
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        placeholder="Search houseplants…"
-        className="w-full rounded-xl bg-canvas-soft px-3 py-2.5 text-sm text-cream placeholder:text-cream-soft outline-none focus-visible:ring-2 focus-visible:ring-healthy/50"
-      />
+    <>
+      {/* The list scrolls; pad the bottom so the last row clears the pinned
+          manual-entry bar instead of hiding under it. */}
+      <div className="flex flex-col gap-4 pb-44">
+        <input
+          type="search"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Search houseplants…"
+          className="w-full rounded-xl bg-canvas-soft px-3 py-2.5 text-sm text-cream placeholder:text-cream-soft outline-none focus-visible:ring-2 focus-visible:ring-healthy/50"
+        />
 
-      {error ? <p className="text-sm text-water">{error}</p> : null}
+        {error ? <p className="text-sm text-water">{error}</p> : null}
 
-      {list === null ? (
-        <p className="py-10 text-center text-sm text-cream-soft">Loading…</p>
-      ) : filtered.length === 0 ? (
-        <p className="py-8 text-center text-sm text-cream-soft">
-          No matches. You can add it manually below.
-        </p>
-      ) : (
-        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-          {filtered.map((s) => (
-            <button
-              key={s.key}
-              type="button"
-              onClick={() => onPick(s.key)}
-              disabled={picking !== null}
-              className="flex items-center gap-3 rounded-2xl bg-canvas-soft p-3 text-left transition-colors hover:bg-canvas-soft/70 disabled:opacity-60"
-            >
-              <span className="text-2xl" aria-hidden>
-                {s.avatar}
-              </span>
-              <span className="flex min-w-0 flex-col">
-                <span className="truncate text-sm font-medium text-cream">
-                  {picking === s.key ? "Loading…" : s.commonName}
+        {list === null ? (
+          <p className="py-10 text-center text-sm text-cream-soft">Loading…</p>
+        ) : filtered.length === 0 ? (
+          <p className="py-8 text-center text-sm text-cream-soft">
+            No matches. You can add it manually below.
+          </p>
+        ) : (
+          <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+            {filtered.map((s) => (
+              <button
+                key={s.key}
+                type="button"
+                onClick={() => onPick(s.key)}
+                disabled={picking !== null}
+                className="flex items-center gap-3 rounded-2xl bg-canvas-soft p-3 text-left transition-colors hover:bg-canvas-soft/70 disabled:opacity-60"
+              >
+                <span className="text-2xl" aria-hidden>
+                  {s.avatar}
                 </span>
-                <span className="text-xs text-cream-soft">
-                  water · every {s.waterIntervalDays}d
+                <span className="flex min-w-0 flex-col">
+                  <span className="truncate text-sm font-medium text-cream">
+                    {picking === s.key ? "Loading…" : s.commonName}
+                  </span>
+                  <span className="text-xs text-cream-soft">
+                    water · every {s.waterIntervalDays}d
+                  </span>
                 </span>
-              </span>
-            </button>
-          ))}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Manual-entry stays reachable, pinned to the bottom; the gradient lets
+          the list dissolve into the canvas behind it as it scrolls under.
+          pointer-events-none on the fade so it never blocks the chips it overlaps;
+          re-enabled on the inner controls. */}
+      <div className="pointer-events-none fixed inset-x-0 bottom-0 z-30 bg-linear-to-t from-canvas via-canvas to-transparent pt-16">
+        <div className="pointer-events-auto mx-auto flex max-w-2xl flex-col gap-3 px-4 pb-6">
+          <button
+            type="button"
+            onClick={onManual}
+            className="rounded-2xl border border-dashed border-cream-soft/40 px-4 py-3 text-sm font-medium text-cream-soft transition-colors hover:border-cream-soft hover:text-cream"
+          >
+            Can&apos;t find it? Add manually
+          </button>
+
+          <Link
+            href={`/h/${token}`}
+            className="self-center text-sm text-cream-soft hover:text-cream"
+          >
+            Cancel
+          </Link>
         </div>
-      )}
-
-      <button
-        type="button"
-        onClick={onManual}
-        className="rounded-2xl border border-dashed border-cream-soft/40 px-4 py-3 text-sm font-medium text-cream-soft transition-colors hover:border-cream-soft hover:text-cream"
-      >
-        Can&apos;t find it? Add manually
-      </button>
-
-      <Link
-        href={`/h/${token}`}
-        className="self-center text-sm text-cream-soft hover:text-cream"
-      >
-        Cancel
-      </Link>
-    </div>
+      </div>
+    </>
   );
 }
