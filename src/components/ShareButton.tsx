@@ -88,7 +88,7 @@ export function ShareButton({ token }: { token: string }) {
             value={shareUrl}
             onFocus={(e) => e.currentTarget.select()}
             aria-label="Shareable link"
-            className="w-full truncate rounded-xl bg-surface-muted px-3.5 py-3 text-sm text-ink outline-none focus-visible:ring-2 focus-visible:ring-healthy/50"
+            className="no-ios-zoom w-full truncate rounded-xl bg-surface-muted px-3.5 py-3 text-sm text-ink outline-none focus-visible:ring-2 focus-visible:ring-healthy/50"
           />
 
           <button

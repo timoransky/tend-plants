@@ -64,6 +64,10 @@
 
 html {
   background: var(--color-canvas);
+  /* Contains the horizontal overflow left by the .no-ios-zoom width bump below
+     (transform doesn't shrink the layout box). `clip` keeps vertical scroll
+     untouched, unlike `hidden`. */
+  overflow-x: clip;
 }
 
 body {
@@ -77,6 +81,32 @@ body {
   .input {
     @apply w-full rounded-xl bg-surface-muted px-3 py-2 text-sm text-ink outline-none;
     @apply placeholder:text-ink-soft focus-visible:ring-2 focus-visible:ring-healthy/50;
+  }
+}
+
+/*
+ * iOS Safari zooms the page when you focus an input whose font-size is < 16px.
+ * Our fields are text-sm (14px) by design, and we want to keep that look — so on
+ * touch devices we render them at 16px (Safari reads the computed size and leaves
+ * the page alone) and scale them straight back to the 14px footprint. The scale
+ * is purely visual, so the zoom never fires while the design size is preserved.
+ *
+ * `transform` doesn't shrink the layout box, so width is bumped by 1/0.875 to
+ * refill the row; the resulting right-side overflow is clipped by `html` and the
+ * Drawer body (both set overflow-x: clip). Any new fixed input added elsewhere
+ * needs its scroll container to clip X too. `.input` covers the add/edit form;
+ * `.no-ios-zoom` is the opt-in for one-off inputs not using `.input`.
+ */
+@media (pointer: coarse) {
+  .input,
+  .no-ios-zoom {
+    font-size: 16px;
+    /* Keep text-sm's 20px line-height after the 0.875 scale (16 × 1.4286 × 0.875
+       ≈ 20px), so multi-line textareas don't lose height. */
+    line-height: 1.4286;
+    width: 114.2857%;
+    transform: scale(0.875);
+    transform-origin: top left;
   }
 }
 
