@@ -38,7 +38,7 @@ export function Drawer({
             aria-hidden
             className="mx-auto mt-3 h-1.5 w-10 shrink-0 rounded-full bg-ink/15"
           />
-          <div className="min-h-0 flex-1 overflow-y-auto px-5 pb-8 pt-1">
+          <div className="min-h-0 flex-1 overflow-x-clip overflow-y-auto px-5 pb-8 pt-1">
             {children}
           </div>
         </Vaul.Content>

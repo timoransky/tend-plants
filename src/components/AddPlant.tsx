@@ -406,7 +406,7 @@ function PickStage({
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search houseplants…"
-          className="w-full rounded-xl bg-canvas-soft px-3 py-2.5 text-sm text-cream placeholder:text-cream-soft outline-none focus-visible:ring-2 focus-visible:ring-healthy/50"
+          className="no-ios-zoom w-full rounded-xl bg-canvas-soft px-3 py-2.5 text-sm text-cream placeholder:text-cream-soft outline-none focus-visible:ring-2 focus-visible:ring-healthy/50"
         />
 
         {error ? <p className="text-sm text-water">{error}</p> : null}
