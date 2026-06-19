@@ -5,44 +5,14 @@ import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 
-import { Drawer, DrawerDescription, DrawerTitle } from "@/components/Drawer";
-import { SHOW_FEED } from "@/lib/features";
+import { Drawer } from "@/components/Drawer";
+import {
+  MANUAL_VALUES,
+  PlantForm,
+  type PlantFormValues,
+  speciesToValues,
+} from "@/components/PlantForm";
 import type { SpeciesDetail } from "@/lib/species";
-
-const AVATAR_CHOICES = ["🌿", "🪴", "🌵", "🌱", "🌴", "🍃", "🌸", "🌼", "🌺"];
-
-const MANUAL_DEFAULTS = {
-  avatar: "🪴",
-  waterIntervalDays: 7,
-  waterNote: "",
-  lightNote: "",
-  feedIntervalDays: 30,
-  feedNote: "",
-};
-
-/** The editable, species-derived part of the form (what "reset to original"
- * restores). Room and personal notes are user-only and excluded. */
-type CareForm = {
-  name: string;
-  avatar: string;
-  waterIntervalDays: string; // kept as string for controlled number inputs
-  waterNote: string;
-  lightNote: string;
-  feedIntervalDays: string;
-  feedNote: string;
-};
-
-function formFromSpecies(s: SpeciesDetail): CareForm {
-  return {
-    name: s.commonName,
-    avatar: s.avatar,
-    waterIntervalDays: String(s.waterIntervalDays),
-    waterNote: s.waterNote,
-    lightNote: s.lightNote,
-    feedIntervalDays: String(s.feedIntervalDays),
-    feedNote: s.feedNote,
-  };
-}
 
 /**
  * The add-plant screen: the species picker stays on the page, and tapping a
@@ -50,7 +20,7 @@ function formFromSpecies(s: SpeciesDetail): CareForm {
  * drawer drops the user straight back on the picker — with their search and
  * scroll intact — so choosing a different plant is one tap, not a round-trip
  * home. The picker keeps the page's dark canvas styling; the form lives on the
- * drawer's cream surface (shared <Drawer> with the plant-detail sheet).
+ * drawer's cream surface (the shared <PlantForm>, also used by the edit sheet).
  */
 export function AddPlant({ token }: { token: string }) {
   const router = useRouter();
@@ -83,101 +53,53 @@ export function AddPlant({ token }: { token: string }) {
   }, [list, query]);
 
   // --- Form (drawer) data ---
-  // `original` is the species the form was seeded from (null for manual entry).
-  // `formOpen` drives the drawer; `form` persists through the close animation.
+  // `original` is the species the form was seeded from (null for manual entry);
+  // `initial` holds the seed values. `formSeed` bumps on every open so the form
+  // remounts fresh — re-picking a species discards any prior edits. `formOpen`
+  // drives the drawer.
   const [formOpen, setFormOpen] = useState(false);
   const [original, setOriginal] = useState<SpeciesDetail | null>(null);
-  const [form, setForm] = useState<CareForm | null>(null);
-  const [room, setRoom] = useState("");
-  const [notes, setNotes] = useState("");
-  const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [initial, setInitial] = useState<PlantFormValues | null>(null);
+  const [formSeed, setFormSeed] = useState(0);
 
   // Synchronous: the picker already holds full care detail, so opening the form
   // is just a state swap — no fetch, no loading flash.
   function pickSpecies(species: SpeciesDetail) {
     setOriginal(species);
-    setForm(formFromSpecies(species));
-    setRoom("");
-    setNotes("");
-    setSubmitting(false);
-    setError(null);
+    setInitial(speciesToValues(species));
+    setFormSeed((s) => s + 1);
     setFormOpen(true);
   }
 
   function startManual() {
     setOriginal(null);
-    setForm({
-      name: "",
-      ...MANUAL_DEFAULTS,
-      waterIntervalDays: "7",
-      feedIntervalDays: "30",
-    } as CareForm);
-    setRoom("");
-    setNotes("");
-    setError(null);
-    setSubmitting(false);
+    setInitial(MANUAL_VALUES);
+    setFormSeed((s) => s + 1);
     setFormOpen(true);
   }
 
-  const isDirty = useMemo(() => {
-    if (!original || !form) return false;
-    const o = formFromSpecies(original);
-    return (Object.keys(o) as (keyof CareForm)[]).some((k) => o[k] !== form[k]);
-  }, [original, form]);
-
-  // Stable avatar palette: the standard choices, plus the species' own emoji if
-  // it isn't already one of them. Depends only on the picked species, so
-  // selecting a different emoji highlights it in place without reordering.
-  const avatarChoices = useMemo(() => {
-    const base = original?.avatar;
-    return base && !AVATAR_CHOICES.includes(base)
-      ? [base, ...AVATAR_CHOICES]
-      : AVATAR_CHOICES;
-  }, [original]);
-
-  function resetToOriginal() {
-    if (original) setForm(formFromSpecies(original));
+  async function addPlant(values: PlantFormValues) {
+    const res = await fetch(`/api/h/${token}/plants`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        name: values.name,
+        room: values.room.trim() || null,
+        avatar: values.avatar,
+        speciesKey: original?.key ?? null,
+        commonName: original?.commonName ?? null,
+        waterIntervalDays: Number(values.waterIntervalDays) || null,
+        waterNote: values.waterNote.trim() || null,
+        lightNote: values.lightNote.trim() || null,
+        feedIntervalDays: Number(values.feedIntervalDays) || null,
+        feedNote: values.feedNote.trim() || null,
+        notes: values.notes.trim() || null,
+      }),
+    });
+    if (!res.ok) throw new Error();
+    router.push(`/h/${token}`);
+    router.refresh();
   }
-
-  async function submit() {
-    if (!form) return;
-    const name = form.name.trim();
-    if (!name) {
-      setError("Please give your plant a name.");
-      return;
-    }
-    setSubmitting(true);
-    setError(null);
-    try {
-      const res = await fetch(`/api/h/${token}/plants`, {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({
-          name,
-          room: room.trim() || null,
-          avatar: form.avatar,
-          speciesKey: original?.key ?? null,
-          commonName: original?.commonName ?? null,
-          waterIntervalDays: Number(form.waterIntervalDays) || null,
-          waterNote: form.waterNote.trim() || null,
-          lightNote: form.lightNote.trim() || null,
-          feedIntervalDays: Number(form.feedIntervalDays) || null,
-          feedNote: form.feedNote.trim() || null,
-          notes: notes.trim() || null,
-        }),
-      });
-      if (!res.ok) throw new Error();
-      router.push(`/h/${token}`);
-      router.refresh();
-    } catch {
-      setError("Couldn't add the plant. Please try again.");
-      setSubmitting(false);
-    }
-  }
-
-  const set = (patch: Partial<CareForm>) =>
-    setForm((f) => (f ? { ...f, ...patch } : f));
 
   return (
     <>
@@ -189,158 +111,20 @@ export function AddPlant({ token }: { token: string }) {
         setQuery={setQuery}
         onPick={pickSpecies}
         onManual={startManual}
-        error={!formOpen ? error : null}
       />
 
       <Drawer open={formOpen} onOpenChange={setFormOpen}>
-        {form ? (
-          <>
-            <header className="flex items-center gap-4 pb-5">
-              <span className="flex size-20 shrink-0 items-center justify-center rounded-full bg-surface-muted text-4xl">
-                <span aria-hidden>{form.avatar || "🪴"}</span>
-              </span>
-              <div className="min-w-0">
-                <DrawerTitle className="truncate text-2xl font-semibold tracking-tight text-ink">
-                  {original ? original.commonName : "New plant"}
-                </DrawerTitle>
-                <DrawerDescription className="truncate text-sm text-ink-soft">
-                  Set the name, room and care details
-                </DrawerDescription>
-              </div>
-            </header>
-
-            <div className="flex flex-col gap-4">
-              <Field label="Name">
-                <input
-                  value={form.name}
-                  onChange={(e) => set({ name: e.target.value })}
-                  placeholder="e.g. Monty"
-                  className="input"
-                />
-              </Field>
-
-              <Field label="Room">
-                <input
-                  value={room}
-                  onChange={(e) => setRoom(e.target.value)}
-                  placeholder="e.g. Living Room"
-                  className="input"
-                />
-              </Field>
-
-              <Field label="Avatar">
-                <div className="flex flex-wrap gap-1.5">
-                  {avatarChoices.map((emo) => (
-                    <button
-                      key={emo}
-                      type="button"
-                      onClick={() => set({ avatar: emo })}
-                      className={`flex size-10 items-center justify-center rounded-xl text-xl transition-colors ${
-                        form.avatar === emo
-                          ? "bg-healthy/20 ring-2 ring-healthy"
-                          : "bg-surface-muted hover:bg-surface-muted/70"
-                      }`}
-                    >
-                      {emo}
-                    </button>
-                  ))}
-                </div>
-              </Field>
-
-              <div className="flex items-center justify-between border-t border-ink/10 pt-4">
-                <h2 className="text-sm font-semibold uppercase tracking-wide text-ink-soft">
-                  Care
-                </h2>
-                {original ? (
-                  <button
-                    type="button"
-                    onClick={resetToOriginal}
-                    disabled={!isDirty}
-                    className="text-xs font-medium text-healthy-ink transition-opacity disabled:opacity-40"
-                  >
-                    ↺ Reset to {original.commonName} defaults
-                  </button>
-                ) : null}
-              </div>
-
-              <Field label="Water — every (days)" accent="text-water-ink">
-                <input
-                  type="number"
-                  min={1}
-                  value={form.waterIntervalDays}
-                  onChange={(e) => set({ waterIntervalDays: e.target.value })}
-                  className="input"
-                />
-              </Field>
-              <Field label="Watering note" accent="text-water-ink">
-                <textarea
-                  value={form.waterNote}
-                  onChange={(e) => set({ waterNote: e.target.value })}
-                  rows={2}
-                  placeholder="When to water…"
-                  className="input resize-none"
-                />
-              </Field>
-
-              <Field label="Light" accent="text-light-ink">
-                <textarea
-                  value={form.lightNote}
-                  onChange={(e) => set({ lightNote: e.target.value })}
-                  rows={2}
-                  placeholder="Light preference…"
-                  className="input resize-none"
-                />
-              </Field>
-
-              {SHOW_FEED ? (
-                <>
-                  <Field label="Feed — every (days)" accent="text-feed-ink">
-                    <input
-                      type="number"
-                      min={1}
-                      value={form.feedIntervalDays}
-                      onChange={(e) =>
-                        set({ feedIntervalDays: e.target.value })
-                      }
-                      className="input"
-                    />
-                  </Field>
-                  <Field label="Feeding note" accent="text-feed-ink">
-                    <textarea
-                      value={form.feedNote}
-                      onChange={(e) => set({ feedNote: e.target.value })}
-                      rows={2}
-                      placeholder="How to feed…"
-                      className="input resize-none"
-                    />
-                  </Field>
-                </>
-              ) : null}
-
-              <Field label="Your notes">
-                <textarea
-                  value={notes}
-                  onChange={(e) => setNotes(e.target.value)}
-                  rows={2}
-                  placeholder="Anything personal to remember…"
-                  className="input resize-none"
-                />
-              </Field>
-            </div>
-
-            {error ? (
-              <p className="pt-4 text-sm text-water-ink">{error}</p>
-            ) : null}
-
-            <button
-              type="button"
-              onClick={submit}
-              disabled={submitting || !form.name.trim()}
-              className="mt-4 h-12 w-full rounded-full bg-healthy text-base font-semibold text-canvas transition-colors hover:bg-healthy/90 disabled:opacity-60"
-            >
-              {submitting ? "Adding…" : "Add plant"}
-            </button>
-          </>
+        {initial ? (
+          <PlantForm
+            key={formSeed}
+            initial={initial}
+            species={original}
+            title={original ? original.commonName : "New plant"}
+            subtitle="Set the name, room and care details"
+            submitLabel="Add plant"
+            submittingLabel="Adding…"
+            onSubmit={addPlant}
+          />
         ) : null}
       </Drawer>
     </>
@@ -376,27 +160,6 @@ function PickSkeleton() {
   );
 }
 
-function Field({
-  label,
-  accent,
-  children,
-}: {
-  label: string;
-  accent?: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <label className="flex flex-col gap-1.5">
-      <span
-        className={`text-xs font-medium uppercase tracking-wide ${accent ?? "text-ink-soft"}`}
-      >
-        {label}
-      </span>
-      {children}
-    </label>
-  );
-}
-
 function PickStage({
   token,
   list,
@@ -405,7 +168,6 @@ function PickStage({
   setQuery,
   onPick,
   onManual,
-  error,
 }: {
   token: string;
   list: SpeciesDetail[] | null;
@@ -414,7 +176,6 @@ function PickStage({
   setQuery: (v: string) => void;
   onPick: (species: SpeciesDetail) => void;
   onManual: () => void;
-  error: string | null;
 }) {
   return (
     <>
@@ -428,8 +189,6 @@ function PickStage({
           placeholder="Search houseplants…"
           className="no-ios-zoom w-full rounded-xl bg-canvas-soft px-3 py-2.5 text-sm text-cream placeholder:text-cream-soft outline-none focus-visible:ring-2 focus-visible:ring-healthy/50"
         />
-
-        {error ? <p className="text-sm text-water">{error}</p> : null}
 
         {list === null ? (
           <PickSkeleton />

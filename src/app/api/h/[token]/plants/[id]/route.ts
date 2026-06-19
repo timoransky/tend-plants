@@ -85,3 +85,21 @@ export async function PATCH(request: Request, { params }: Params) {
     plant: { ...plant, water, feed, status: overallStatus(water, feed) },
   });
 }
+
+/**
+ * DELETE /api/h/[token]/plants/[id] — remove a plant. Scoped by household so a
+ * token can only delete its own plants; a missing/foreign id is a 404.
+ */
+export async function DELETE(_request: Request, { params }: Params) {
+  const { token, id } = await params;
+  const household = await findHousehold(token);
+  if (!household) return apiError(404, "Household not found");
+
+  const [deleted] = await db
+    .delete(plants)
+    .where(and(eq(plants.id, id), eq(plants.householdId, household.id)))
+    .returning({ id: plants.id });
+
+  if (!deleted) return apiError(404, "Plant not found");
+  return json({ ok: true });
+}
