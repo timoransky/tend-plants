@@ -125,4 +125,18 @@ body {
   .rise {
     animation: rise 0.36s cubic-bezier(0.2, 0.7, 0.3, 1) both;
   }
+
+  /* Plain fade for dense lists where a per-item stagger would ripple too long
+     (e.g. the ~50-chip species picker). Opacity only, no transform. */
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  .fade-in {
+    animation: fade-in 0.25s ease-out both;
+  }
 }

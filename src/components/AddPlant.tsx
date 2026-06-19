@@ -6,7 +6,7 @@ import { useEffect, useMemo, useState } from "react";
 
 import { Drawer, DrawerDescription, DrawerTitle } from "@/components/Drawer";
 import { SHOW_FEED } from "@/lib/features";
-import type { SpeciesDetail, SpeciesSummary } from "@/lib/species";
+import type { SpeciesDetail } from "@/lib/species";
 
 const AVATAR_CHOICES = ["🌿", "🪴", "🌵", "🌱", "🌴", "🍃", "🌸", "🌼", "🌺"];
 
@@ -55,7 +55,9 @@ export function AddPlant({ token }: { token: string }) {
   const router = useRouter();
 
   // --- Picker (page) data ---
-  const [list, setList] = useState<SpeciesSummary[] | null>(null);
+  // The list carries full care detail, so picking a species opens its form with
+  // no extra round-trip (the dataset is small and local).
+  const [list, setList] = useState<SpeciesDetail[] | null>(null);
   const [query, setQuery] = useState("");
 
   useEffect(() => {
@@ -87,28 +89,19 @@ export function AddPlant({ token }: { token: string }) {
   const [form, setForm] = useState<CareForm | null>(null);
   const [room, setRoom] = useState("");
   const [notes, setNotes] = useState("");
-  const [picking, setPicking] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  async function pickSpecies(key: string) {
-    setPicking(key);
+  // Synchronous: the picker already holds full care detail, so opening the form
+  // is just a state swap — no fetch, no loading flash.
+  function pickSpecies(species: SpeciesDetail) {
+    setOriginal(species);
+    setForm(formFromSpecies(species));
+    setRoom("");
+    setNotes("");
+    setSubmitting(false);
     setError(null);
-    try {
-      const res = await fetch(`/api/species/${key}`);
-      if (!res.ok) throw new Error();
-      const { species } = (await res.json()) as { species: SpeciesDetail };
-      setOriginal(species);
-      setForm(formFromSpecies(species));
-      setRoom("");
-      setNotes("");
-      setSubmitting(false);
-      setFormOpen(true);
-    } catch {
-      setError("Couldn't load that species. Try another, or add manually.");
-    } finally {
-      setPicking(null);
-    }
+    setFormOpen(true);
   }
 
   function startManual() {
@@ -194,7 +187,6 @@ export function AddPlant({ token }: { token: string }) {
         query={query}
         setQuery={setQuery}
         onPick={pickSpecies}
-        picking={picking}
         onManual={startManual}
         error={!formOpen ? error : null}
       />
@@ -354,6 +346,35 @@ export function AddPlant({ token }: { token: string }) {
   );
 }
 
+/**
+ * Placeholder grid shown while the species list loads. Mirrors the real chip
+ * grid (same columns, gap, chip shape) so the layout doesn't jump when data
+ * arrives — replacing the old centered "Loading…" line.
+ */
+function PickSkeleton() {
+  return (
+    <div
+      className="grid grid-cols-2 gap-2 sm:grid-cols-3"
+      role="status"
+      aria-label="Loading houseplants"
+    >
+      {Array.from({ length: 9 }).map((_, i) => (
+        <div
+          key={i}
+          aria-hidden
+          className="flex h-[60px] animate-pulse items-center gap-3 rounded-2xl bg-canvas-soft p-3"
+        >
+          <span className="size-7 shrink-0 rounded-full bg-cream/10" />
+          <span className="flex min-w-0 flex-1 flex-col gap-1.5">
+            <span className="h-3 w-3/4 rounded bg-cream/10" />
+            <span className="h-2.5 w-1/2 rounded bg-cream/5" />
+          </span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 function Field({
   label,
   accent,
@@ -382,17 +403,15 @@ function PickStage({
   query,
   setQuery,
   onPick,
-  picking,
   onManual,
   error,
 }: {
   token: string;
-  list: SpeciesSummary[] | null;
-  filtered: SpeciesSummary[];
+  list: SpeciesDetail[] | null;
+  filtered: SpeciesDetail[];
   query: string;
   setQuery: (v: string) => void;
-  onPick: (key: string) => void;
-  picking: string | null;
+  onPick: (species: SpeciesDetail) => void;
   onManual: () => void;
   error: string | null;
 }) {
@@ -412,7 +431,7 @@ function PickStage({
         {error ? <p className="text-sm text-water">{error}</p> : null}
 
         {list === null ? (
-          <p className="py-10 text-center text-sm text-cream-soft">Loading…</p>
+          <PickSkeleton />
         ) : filtered.length === 0 ? (
           <p className="py-8 text-center text-sm text-cream-soft">
             No matches. You can add it manually below.
@@ -423,16 +442,15 @@ function PickStage({
               <button
                 key={s.key}
                 type="button"
-                onClick={() => onPick(s.key)}
-                disabled={picking !== null}
-                className="flex items-center gap-3 rounded-2xl bg-canvas-soft p-3 text-left transition-colors hover:bg-canvas-soft/70 disabled:opacity-60"
+                onClick={() => onPick(s)}
+                className="fade-in flex h-[60px] items-center gap-3 rounded-2xl bg-canvas-soft p-3 text-left transition-colors hover:bg-canvas-soft/70"
               >
                 <span className="text-2xl" aria-hidden>
                   {s.avatar}
                 </span>
                 <span className="flex min-w-0 flex-col">
                   <span className="truncate text-sm font-medium text-cream">
-                    {picking === s.key ? "Loading…" : s.commonName}
+                    {s.commonName}
                   </span>
                   <span className="text-xs text-cream-soft">
                     water · every {s.waterIntervalDays}d
