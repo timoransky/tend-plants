@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
+import { createPortal } from "react-dom";
 
 import { Drawer, DrawerDescription, DrawerTitle } from "@/components/Drawer";
 import { SHOW_FEED } from "@/lib/features";
@@ -447,25 +448,46 @@ function PickStage({
       {/* Manual-entry stays reachable, pinned to the bottom; the gradient lets
           the list dissolve into the canvas behind it as it scrolls under.
           pointer-events-none on the fade so it never blocks the chips it overlaps;
-          re-enabled on the inner controls. */}
-      <div className="pointer-events-none fixed inset-x-0 bottom-0 z-30 bg-linear-to-t from-canvas via-canvas to-transparent pt-16">
-        <div className="pointer-events-auto mx-auto flex max-w-2xl flex-col gap-3 px-4 pb-6">
-          <button
-            type="button"
-            onClick={onManual}
-            className="rounded-2xl border border-dashed border-cream-soft/40 px-4 py-3 text-sm font-medium text-cream-soft transition-colors hover:border-cream-soft hover:text-cream"
-          >
-            Can&apos;t find it? Add manually
-          </button>
+          re-enabled on the inner controls.
 
-          <Link
-            href={`/h/${token}`}
-            className="self-center text-sm text-cream-soft hover:text-cream"
-          >
-            Cancel
-          </Link>
+          Portaled to <body> so it escapes the [data-vaul-drawer-wrapper] element,
+          which vaul transforms (scale/translate) while the drawer is open. A
+          transformed ancestor becomes the containing block for position:fixed
+          descendants — left inside the wrapper, this bar would ride the scale
+          animation and slide off-screen. At the body level it stays anchored to
+          the viewport. */}
+      <BodyPortal>
+        <div className="pointer-events-none fixed inset-x-0 bottom-0 z-30 bg-linear-to-t from-canvas via-canvas to-transparent pt-16">
+          <div className="pointer-events-auto mx-auto flex max-w-2xl flex-col gap-3 px-4 pb-6">
+            <button
+              type="button"
+              onClick={onManual}
+              className="rounded-2xl border border-dashed border-cream-soft/40 px-4 py-3 text-sm font-medium text-cream-soft transition-colors hover:border-cream-soft hover:text-cream"
+            >
+              Can&apos;t find it? Add manually
+            </button>
+
+            <Link
+              href={`/h/${token}`}
+              className="self-center text-sm text-cream-soft hover:text-cream"
+            >
+              Cancel
+            </Link>
+          </div>
         </div>
-      </div>
+      </BodyPortal>
     </>
   );
+}
+
+/** Renders children into document.body (after mount, so SSR stays clean). Used
+ * to lift the pinned manual-entry bar out of vaul's scaled drawer wrapper. */
+function BodyPortal({ children }: { children: React.ReactNode }) {
+  // false during SSR, true once hydrated — document.body only exists client-side.
+  const mounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false,
+  );
+  return mounted ? createPortal(children, document.body) : null;
 }
