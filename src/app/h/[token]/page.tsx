@@ -32,7 +32,7 @@ export default async function HomePage({ params }: Props) {
           <HouseholdSwitcher token={token} name={household.name} />
         </div>
         <div className="flex items-center gap-2">
-          <ShareButton />
+          <ShareButton token={token} />
           <Link
             href={`/h/${token}/add`}
             aria-label="Add a plant"
