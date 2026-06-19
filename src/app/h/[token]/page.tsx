@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { FirstRunWelcome } from "@/components/FirstRunWelcome";
 import { HouseholdSwitcher } from "@/components/HouseholdSwitcher";
 import { Logo } from "@/components/Logo";
 import { PlantGarden } from "@/components/PlantGarden";
@@ -50,6 +51,7 @@ export default async function HomePage({ params }: Props) {
       </header>
 
       <main className="flex flex-1 flex-col px-4 pb-4">
+        <FirstRunWelcome />
         {plants.length === 0 ? (
           <EmptyState token={token} />
         ) : (
