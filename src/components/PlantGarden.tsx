@@ -5,6 +5,7 @@ import { useState } from "react";
 
 import { PlantBubble } from "@/components/PlantBubble";
 import { PlantDrawer } from "@/components/PlantDrawer";
+import { WaterDrop } from "@/components/WaterDrop";
 import type { RoomGroup } from "@/lib/group-rooms";
 import type { PlantWithStatus } from "@/lib/plants";
 
@@ -82,7 +83,8 @@ export function PlantGarden({
                   {group.plants.length}
                 </span>
                 {thirsty > 0 ? (
-                  <span className="ml-auto rounded-full bg-water/15 px-2 py-0.5 text-[0.7rem] font-medium text-water">
+                  <span className="ml-auto inline-flex items-center gap-1 rounded-full bg-water/15 px-2 py-0.5 text-[0.7rem] font-medium text-water">
+                    <WaterDrop className="size-3 shrink-0" />
                     {thirsty} thirsty
                   </span>
                 ) : null}

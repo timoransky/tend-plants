@@ -2,6 +2,7 @@
 
 import { motion, useReducedMotion } from "motion/react";
 
+import { WaterDrop } from "@/components/WaterDrop";
 import type { PlantWithStatus } from "@/lib/plants";
 
 /**
@@ -17,9 +18,10 @@ const bubbleMotion = {
 
 /**
  * A plant in the grid: a uniform circular avatar with its name, that opens the
- * detail drawer. A small water-blue dot sits in the corner when the plant needs
- * water — it pings when due now (overdue / due today) and is static when due
- * soon. Healthy plants show no dot. Feeding is hidden, so this is water-only.
+ * detail drawer. A small water-blue droplet badge sits in the corner when the
+ * plant needs water — it pings when due now (overdue / due today) and is static
+ * when due soon. Healthy plants show no badge. Feeding is hidden, so this is
+ * water-only.
  */
 export function PlantBubble({
   plant,
@@ -58,11 +60,11 @@ export function PlantBubble({
           <span aria-hidden>{plant.avatar ?? "🪴"}</span>
         </span>
         {needsWater ? (
-          <span className="absolute bottom-1 right-1 flex size-3">
+          <span className="absolute bottom-0.5 right-0.5 size-[1.15rem] text-water">
             {thirsty && !reduce ? (
-              <span className="absolute inline-flex size-full animate-ping rounded-full bg-water opacity-75 z-10" />
+              <WaterDrop className="absolute inset-0 size-full animate-ping opacity-75 [animation-duration:1.8s]" />
             ) : null}
-            <span className="relative inline-flex size-3 rounded-full bg-water ring-[3px] ring-canvas" />
+            <WaterDrop className="relative size-full" outlined />
           </span>
         ) : null}
       </motion.span>
