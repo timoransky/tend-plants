@@ -82,6 +82,29 @@ export function setPrimary(token: string): void {
   notify();
 }
 
+// --- first-run onboarding --------------------------------------------------
+
+const ONBOARDED_KEY = "tend:onboarded";
+
+/** Whether this browser has seen the first-run welcome. Browser-level (not
+ * per-household): "new to Tend on this device" is the right scope. */
+export function getOnboarded(): boolean {
+  return readString(ONBOARDED_KEY) === "1";
+}
+
+/** On the server (and the initial hydration render) treat the user as already
+ * onboarded, so the welcome never flashes in then vanishes. The real value is
+ * read on the client after mount. */
+export function getOnboardedServerSnapshot(): boolean {
+  return true;
+}
+
+/** Mark the first-run welcome as seen. Permanent for this browser. */
+export function setOnboarded(): void {
+  writeString(ONBOARDED_KEY, "1");
+  notify();
+}
+
 // --- visited households ----------------------------------------------------
 
 const EMPTY_VISITED: VisitedHousehold[] = [];
