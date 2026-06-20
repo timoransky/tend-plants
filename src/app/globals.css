@@ -108,6 +108,16 @@ body {
     transform: scale(0.875);
     transform-origin: top left;
   }
+
+  /* A trailing control absolutely centered (inset-y-0 + my-auto) over a
+     .no-ios-zoom input centers against the unscaled layout box, but the input
+     scales to 0.875 from its top-left, so its visual box only fills the top
+     87.5% of that container — leaving the control sitting too low. Pull the
+     bottom edge up by 12.5% so my-auto recenters it on the input's visual box.
+     Affects placement only; the input's size and scale are untouched. */
+  .no-ios-zoom-trailing-center {
+    bottom: 12.5%;
+  }
 }
 
 /* Calm entrance for plant cards; disabled when the user prefers less motion. */
