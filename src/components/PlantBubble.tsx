@@ -2,7 +2,7 @@
 
 import { motion, useReducedMotion } from "motion/react";
 
-import { WaterDrop } from "@/components/WaterDrop";
+import { WaterDropBadge } from "@/components/WaterDropBadge";
 import type { PlantWithStatus } from "@/lib/plants";
 
 /**
@@ -60,11 +60,14 @@ export function PlantBubble({
           <span aria-hidden>{plant.avatar ?? "🪴"}</span>
         </span>
         {needsWater ? (
-          <span className="absolute bottom-0.5 right-0.5 size-[1.15rem] text-water">
+          <span className="absolute bottom-0.5 right-0.5 size-[1.15rem]">
             {thirsty && !reduce ? (
-              <WaterDrop className="absolute inset-0 size-full animate-ping opacity-75 [animation-duration:1.8s]" />
+              <WaterDropBadge
+                solid
+                className="absolute inset-0 size-full animate-ping opacity-75 [animation-duration:1.8s]"
+              />
             ) : null}
-            <WaterDrop className="relative size-full" outlined />
+            <WaterDropBadge className="relative size-full" />
           </span>
         ) : null}
       </motion.span>
