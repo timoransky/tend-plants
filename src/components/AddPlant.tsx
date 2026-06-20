@@ -293,7 +293,7 @@ function PickStage({
               href={`/h/${token}`}
               className="self-center text-sm text-cream-soft hover:text-cream"
             >
-              Cancel
+              Back to my plants
             </Link>
           </div>
         </div>
