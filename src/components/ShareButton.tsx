@@ -137,7 +137,7 @@ export function ShareButton({ token }: { token: string }) {
               onClick={copy}
               aria-label="Copy link"
               whileTap={reduce ? undefined : { scale: 0.9 }}
-              className="absolute inset-y-0 right-1.5 my-auto flex size-9 items-center justify-center rounded-lg text-ink-soft transition-colors hover:bg-ink/5 hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-healthy/50"
+              className="no-ios-zoom-trailing-center absolute inset-y-0 right-1.5 my-auto flex size-9 items-center justify-center rounded-lg text-ink-soft transition-colors hover:bg-ink/5 hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-healthy/50"
             >
               <CopyMark copied={copied} reduce={!!reduce} />
             </motion.button>
