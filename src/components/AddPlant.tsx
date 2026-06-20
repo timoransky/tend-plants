@@ -134,6 +134,23 @@ export function AddPlant({ token }: { token: string }) {
     setQuery("");
   }
 
+  // "Done": leave the add flow for Home. vaul scales the [data-vaul-drawer-wrapper]
+  // (in the root layout) while a drawer is open and only restores it when the
+  // drawer *closes*. Navigating away tears the sheets down without that close
+  // ever running, so the wrapper would stay shrunk on Home. Dismiss the sheets
+  // first to drop vaul's scale management, then — on the next frame, after its
+  // restore has flushed — clear any transform it left behind before navigating.
+  function finish() {
+    setSuccessOpen(false);
+    setFormOpen(false);
+    requestAnimationFrame(() => {
+      document
+        .querySelector("[data-vaul-drawer-wrapper]")
+        ?.removeAttribute("style");
+      router.push(`/h/${token}`);
+    });
+  }
+
   return (
     <>
       <PickStage
@@ -169,7 +186,7 @@ export function AddPlant({ token }: { token: string }) {
           open={successOpen}
           onOpenChange={(open) => (open ? setSuccessOpen(true) : addAnother())}
           onAddAnother={addAnother}
-          onDone={() => router.push(`/h/${token}`)}
+          onDone={finish}
         />
       </Drawer>
     </>
