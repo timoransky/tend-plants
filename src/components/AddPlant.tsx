@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 
+import { AddedPlantDrawer } from "@/components/AddedPlantDrawer";
 import { Drawer } from "@/components/Drawer";
 import {
   MANUAL_VALUES,
@@ -21,6 +22,10 @@ import type { SpeciesDetail } from "@/lib/species";
  * scroll intact — so choosing a different plant is one tap, not a round-trip
  * home. The picker keeps the page's dark canvas styling; the form lives on the
  * drawer's cream surface (the shared <PlantForm>, also used by the edit sheet).
+ *
+ * Saving doesn't navigate straight home: a nested <AddedPlantDrawer> slides up
+ * over the form to confirm, then offers "Add another plant" (back to the picker)
+ * or "Done" (home) — so adding several plants in a row never round-trips home.
  */
 export function AddPlant({ token }: { token: string }) {
   const router = useRouter();
@@ -62,6 +67,23 @@ export function AddPlant({ token }: { token: string }) {
   const [initial, setInitial] = useState<PlantFormValues | null>(null);
   const [formSeed, setFormSeed] = useState(0);
 
+  // --- Success (nested drawer) ---
+  // After a save, this confirmation sheet stacks over the still-open form; it
+  // holds the saved plant's name/avatar for the "{name} added" header.
+  const [successOpen, setSuccessOpen] = useState(false);
+  const [added, setAdded] = useState<{ name: string; avatar: string } | null>(
+    null,
+  );
+
+  // If the form drawer closes for any reason, drop the nested success sheet with
+  // it (mirrors PlantDrawer's guard). Adjusting state during render is the
+  // supported pattern for reacting to a changed value without an extra paint.
+  const [prevFormOpen, setPrevFormOpen] = useState(formOpen);
+  if (prevFormOpen !== formOpen) {
+    setPrevFormOpen(formOpen);
+    if (!formOpen) setSuccessOpen(false);
+  }
+
   // Synchronous: the picker already holds full care detail, so opening the form
   // is just a state swap — no fetch, no loading flash.
   function pickSpecies(species: SpeciesDetail) {
@@ -97,8 +119,19 @@ export function AddPlant({ token }: { token: string }) {
       }),
     });
     if (!res.ok) throw new Error();
-    router.push(`/h/${token}`);
+    // Keep Home current for whenever they finish, but don't navigate yet: leave
+    // the form open and stack the success sheet over it (which scales it back).
     router.refresh();
+    setAdded({ name: values.name, avatar: values.avatar });
+    setSuccessOpen(true);
+  }
+
+  // "Add another": close both sheets back to the picker, with a clean search for
+  // the next (likely different) plant.
+  function addAnother() {
+    setSuccessOpen(false);
+    setFormOpen(false);
+    setQuery("");
   }
 
   return (
@@ -126,6 +159,18 @@ export function AddPlant({ token }: { token: string }) {
             onSubmit={addPlant}
           />
         ) : null}
+
+        {/* Nested over the form: confirm the save, then add another or finish.
+            Dismissing it (swipe/scrim) takes the "add another" path rather than
+            re-revealing the already-submitted form. */}
+        <AddedPlantDrawer
+          name={added?.name ?? ""}
+          avatar={added?.avatar ?? ""}
+          open={successOpen}
+          onOpenChange={(open) => (open ? setSuccessOpen(true) : addAnother())}
+          onAddAnother={addAnother}
+          onDone={() => router.push(`/h/${token}`)}
+        />
       </Drawer>
     </>
   );
@@ -248,7 +293,7 @@ function PickStage({
               href={`/h/${token}`}
               className="self-center text-sm text-cream-soft hover:text-cream"
             >
-              Cancel
+              Back to my plants
             </Link>
           </div>
         </div>
