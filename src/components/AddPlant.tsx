@@ -181,7 +181,7 @@ function PickStage({
     <>
       {/* The list scrolls; pad the bottom so the last row clears the pinned
           manual-entry bar instead of hiding under it. */}
-      <div className="flex flex-col gap-4 pb-44">
+      <div className="flex flex-col gap-4 pb-36">
         <input
           type="search"
           value={query}
