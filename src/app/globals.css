@@ -2,7 +2,8 @@
 
 /*
  * Design tokens — OKLCH throughout, so the neutral scale steps look perceptually
- * even and the accents share a common lightness/chroma footing.
+ * even and the care accents share a common lightness/chroma footing (danger red
+ * is the deliberate exception: it runs hotter so destructive actions stand out).
  *
  * Direction: warm cream surfaces on a soft warm-charcoal canvas (a dim room at
  * dusk, not a blackout). Every neutral is tinted toward warm amber (hue ~70)
@@ -57,6 +58,17 @@
 
   --color-healthy: oklch(0.66 0.135 152);
   --color-healthy-ink: oklch(0.475 0.13 152);
+
+  /* Destructive red — reserved for delete affordances so the action reads as
+     intentional. Hue 32 is a warm brick red, kin to the terracotta feed (hue 50)
+     rather than a cold primary red, so it belongs to the warm palette while
+     staying unmistakably "alarm". Chroma runs a touch hotter than the calm care
+     accents on purpose: this is the one destructive action, so it earns the loudest
+     accent. Same PAIR + icon footing: vivid fill carries surface (near-white) text
+     ≥ 4.5:1, -ink is red text on cream ≥ 4.5:1, -icon clears the 3:1 graphical floor. */
+  --color-danger: oklch(0.55 0.19 32);
+  --color-danger-ink: oklch(0.5 0.175 32);
+  --color-danger-icon: oklch(0.56 0.2 32);
 
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);

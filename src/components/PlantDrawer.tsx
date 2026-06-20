@@ -123,7 +123,7 @@ export function PlantDrawer({
                 type="button"
                 onClick={() => setDeleteOpen(true)}
                 aria-label="Delete plant"
-                className="flex size-10 items-center justify-center rounded-full bg-surface-muted text-ink-soft transition-colors hover:bg-surface-muted/70 hover:text-ink"
+                className="flex size-10 items-center justify-center rounded-full bg-surface-muted text-danger-icon transition-colors hover:bg-danger/10 hover:text-danger-ink"
               >
                 <HugeiconsIcon
                   icon={Delete02Icon}
