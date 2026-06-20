@@ -9,8 +9,8 @@ import type { PlantWithStatus } from "@/lib/plants";
  * Delete confirmation as a nested drawer over the plant-detail sheet — the same
  * "tap a header icon, a sheet slides up" flow as edit. Keeps the destructive
  * commit on its own focused surface rather than buried in a menu or footer.
- * There's no red in the palette, so the weight comes from the explicit question
- * plus a solid ink confirm button (the heaviest neutral), not colour.
+ * The confirm carries the palette's destructive red (--color-danger) so the
+ * action reads as intentional, reinforced by the explicit question.
  */
 export function DeletePlantDrawer({
   plant,
@@ -71,7 +71,7 @@ export function DeletePlantDrawer({
             type="button"
             onClick={remove}
             disabled={deleting}
-            className="h-12 flex-1 rounded-full bg-ink text-base font-semibold text-surface transition-opacity hover:opacity-90 disabled:opacity-60"
+            className="h-12 flex-1 rounded-full bg-danger text-base font-semibold text-surface transition-opacity hover:opacity-90 disabled:opacity-60"
           >
             {deleting ? "Deleting…" : "Delete"}
           </button>
