@@ -87,21 +87,23 @@ export function PlantDrawer({
       {view ? (
         <>
           <header className="flex items-start gap-4 pb-5">
-            <span className="flex size-20 shrink-0 items-center justify-center rounded-full bg-surface-muted text-4xl">
-              <span aria-hidden>{view.avatar ?? "🪴"}</span>
-            </span>
-            <div className="min-w-0 flex-1">
-              <DrawerTitle className="truncate text-2xl font-semibold tracking-tight text-ink">
-                {view.name}
-              </DrawerTitle>
-              <DrawerDescription className="truncate text-sm text-ink-soft">
-                {view.room ?? "Houseplant"}
-              </DrawerDescription>
-              {originalName ? (
-                <p className="truncate text-sm text-ink-soft/70">
-                  {originalName}
-                </p>
-              ) : null}
+            <div className="flex min-w-0 flex-1 items-center gap-4">
+              <span className="flex size-20 shrink-0 items-center justify-center rounded-full bg-surface-muted text-4xl">
+                <span aria-hidden>{view.avatar ?? "🪴"}</span>
+              </span>
+              <div className="min-w-0 flex-1">
+                <DrawerTitle className="truncate text-2xl font-semibold tracking-tight text-ink">
+                  {view.name}
+                </DrawerTitle>
+                <DrawerDescription className="truncate text-sm text-ink-soft">
+                  {view.room ?? "Houseplant"}
+                </DrawerDescription>
+                {originalName ? (
+                  <p className="truncate text-sm text-ink-soft/70">
+                    {originalName}
+                  </p>
+                ) : null}
+              </div>
             </div>
             <div className="flex shrink-0 items-center gap-1.5">
               <button
