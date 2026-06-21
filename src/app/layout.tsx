@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
+import { ScrollReset } from "@/components/ScrollReset";
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -28,15 +30,23 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full">
-        {/* vaul scales this wrapper when the drawer opens (shouldScaleBackground);
-            it needs its own background so it stays cream-on-canvas while the
-            body behind it darkens. */}
+      <body className="h-full overflow-hidden">
+        {/* The app shell — not the document — is the scroll container. Keeping
+            <html>/<body> unscrolled (scrollTop always 0) is what lets vaul's
+            drag-to-dismiss work: its hit-test climbs from the dragged sheet up
+            to <body>, and bails if it meets a scrollable ancestor that isn't at
+            the top. With the page itself scrollable, dragging a drawer shut
+            silently failed whenever the page behind it was scrolled.
+
+            vaul also scales this wrapper when a drawer opens
+            (shouldScaleBackground); it needs its own background so it stays
+            cream-on-canvas while the body behind it darkens. */}
         <div
           data-vaul-drawer-wrapper=""
-          className="flex min-h-dvh flex-col bg-canvas"
+          className="flex h-dvh flex-col overflow-x-clip overflow-y-auto bg-canvas"
         >
           {children}
+          <ScrollReset />
         </div>
       </body>
     </html>
