@@ -1,6 +1,76 @@
 "use client";
 
+import { useEffect } from "react";
 import { Drawer as Vaul } from "vaul";
+
+// vaul only neutralises the page's scroll position while a drawer is open on
+// Safari (it pins the body with `position: fixed`). Everywhere else the document
+// stays scrolled, and vaul's drag-to-dismiss gives up the moment its hit-test
+// climbs to a scrollable ancestor whose `scrollTop !== 0` — i.e. the scrolled
+// page behind the sheet. The result: after scrolling Home, the opened drawer
+// can't be dragged shut, only dismissed by tapping the scrim. We close that gap
+// by replicating vaul's Safari lock on the browsers it skips.
+const isSafari = () =>
+  typeof navigator !== "undefined" &&
+  /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+
+// Ref-counted so overlapping locks (e.g. React's dev double-invoke, or a stray
+// second non-nested drawer) save/restore the page exactly once.
+let lockCount = 0;
+let saved: {
+  position: string;
+  top: string;
+  left: string;
+  right: string;
+  width: string;
+  paddingRight: string;
+  scrollX: number;
+  scrollY: number;
+} | null = null;
+
+function lockPageScroll(): () => void {
+  if (lockCount++ === 0) {
+    const { body } = document;
+    const html = document.documentElement;
+    const scrollX = window.scrollX;
+    const scrollY = window.scrollY;
+    // Pad the html by the now-vanishing scrollbar so the scaled-back page behind
+    // the scrim doesn't jump sideways when the body leaves the flow.
+    const scrollbar = window.innerWidth - html.clientWidth;
+    saved = {
+      position: body.style.position,
+      top: body.style.top,
+      left: body.style.left,
+      right: body.style.right,
+      width: body.style.width,
+      paddingRight: html.style.paddingRight,
+      scrollX,
+      scrollY,
+    };
+    // Pin the body at its current scroll offset: the page looks unchanged, but
+    // `documentElement.scrollTop` is now 0, so vaul's drag hit-test passes.
+    body.style.position = "fixed";
+    body.style.top = `${-scrollY}px`;
+    body.style.left = `${-scrollX}px`;
+    body.style.right = "0";
+    body.style.width = "100%";
+    if (scrollbar > 0) html.style.paddingRight = `${scrollbar}px`;
+  }
+  return () => {
+    if (--lockCount === 0 && saved) {
+      const { body } = document;
+      const html = document.documentElement;
+      body.style.position = saved.position;
+      body.style.top = saved.top;
+      body.style.left = saved.left;
+      body.style.right = saved.right;
+      body.style.width = saved.width;
+      html.style.paddingRight = saved.paddingRight;
+      window.scrollTo(saved.scrollX, saved.scrollY);
+      saved = null;
+    }
+  };
+}
 
 /**
  * The app's bottom-sheet drawer (vaul). It owns the shared chrome — scrim,
@@ -29,6 +99,12 @@ export function Drawer({
   nested?: boolean;
   children: React.ReactNode;
 }) {
+  // Nested drawers ride their parent's lock; Safari is already handled by vaul.
+  useEffect(() => {
+    if (nested || !open || isSafari()) return;
+    return lockPageScroll();
+  }, [nested, open]);
+
   const Root = nested ? Vaul.NestedRoot : Vaul.Root;
   // A nested drawer must sit entirely above its parent: its scrim has to dim the
   // parent's content (z-50), not slip behind it. So bump the nested layer's
