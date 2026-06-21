@@ -30,9 +30,10 @@ function toDetailData(p: PlantWithStatus): PlantDetailData {
 /**
  * Plant detail in a bottom-sheet drawer (vaul). vaul handles the drag-to-dismiss,
  * scrim, focus trap, scroll lock and accessibility; we render the plant's care
- * detail inside. The header carries the two "manage this plant" actions as
- * twins: edit and delete, each a header icon that opens its own nested drawer
- * (the edit form / the delete confirmation).
+ * detail inside. A footer carries the two "manage this plant" actions as twins
+ * sitting side by side — edit and delete — each opening its own nested drawer
+ * (the edit form / the delete confirmation), echoing the paired buttons in the
+ * delete confirmation itself.
  *
  * A local `view` mirrors the selected `plant` so edits show immediately: saving
  * updates `view` (header + detail) and re-keys <PlantDetail> to reseed its
@@ -86,52 +87,22 @@ export function PlantDrawer({
     <Drawer open={open} onOpenChange={onOpenChange}>
       {view ? (
         <>
-          <header className="flex items-start gap-4 pb-5">
-            <div className="flex min-w-0 flex-1 items-center gap-4">
-              <span className="flex size-20 shrink-0 items-center justify-center rounded-full bg-surface-muted text-4xl">
-                <span aria-hidden>{view.avatar ?? "🪴"}</span>
-              </span>
-              <div className="min-w-0 flex-1">
-                <DrawerTitle className="truncate text-2xl font-semibold tracking-tight text-ink">
-                  {view.name}
-                </DrawerTitle>
-                <DrawerDescription className="truncate text-sm text-ink-soft">
-                  {view.room ?? "Houseplant"}
-                </DrawerDescription>
-                {originalName ? (
-                  <p className="truncate text-sm text-ink-soft/70">
-                    {originalName}
-                  </p>
-                ) : null}
-              </div>
-            </div>
-            <div className="flex shrink-0 items-center gap-1.5">
-              <button
-                type="button"
-                onClick={() => setEditOpen(true)}
-                aria-label="Edit plant"
-                className="flex size-10 items-center justify-center rounded-full bg-surface-muted text-ink-soft transition-colors hover:bg-surface-muted/70 hover:text-ink"
-              >
-                <HugeiconsIcon
-                  icon={PencilEdit02Icon}
-                  size={20}
-                  strokeWidth={1.9}
-                  aria-hidden
-                />
-              </button>
-              <button
-                type="button"
-                onClick={() => setDeleteOpen(true)}
-                aria-label="Delete plant"
-                className="flex size-10 items-center justify-center rounded-full bg-surface-muted text-danger-icon transition-colors hover:bg-danger/10 hover:text-danger-ink"
-              >
-                <HugeiconsIcon
-                  icon={Delete02Icon}
-                  size={20}
-                  strokeWidth={1.9}
-                  aria-hidden
-                />
-              </button>
+          <header className="flex items-center gap-4 pb-5">
+            <span className="flex size-20 shrink-0 items-center justify-center rounded-full bg-surface-muted text-4xl">
+              <span aria-hidden>{view.avatar ?? "🪴"}</span>
+            </span>
+            <div className="min-w-0 flex-1">
+              <DrawerTitle className="truncate text-2xl font-semibold tracking-tight text-ink">
+                {view.name}
+              </DrawerTitle>
+              <DrawerDescription className="truncate text-sm text-ink-soft">
+                {view.room ?? "Houseplant"}
+              </DrawerDescription>
+              {originalName ? (
+                <p className="truncate text-sm text-ink-soft/70">
+                  {originalName}
+                </p>
+              ) : null}
             </div>
           </header>
 
@@ -140,6 +111,35 @@ export function PlantDrawer({
             token={token}
             initial={toDetailData(view)}
           />
+
+          <div className="flex gap-2 pt-6">
+            <button
+              type="button"
+              onClick={() => setEditOpen(true)}
+              className="flex h-12 flex-1 items-center justify-center gap-2 rounded-full bg-surface-muted text-base font-semibold text-ink transition-colors hover:bg-surface-muted/70"
+            >
+              <HugeiconsIcon
+                icon={PencilEdit02Icon}
+                size={20}
+                strokeWidth={1.9}
+                aria-hidden
+              />
+              Edit
+            </button>
+            <button
+              type="button"
+              onClick={() => setDeleteOpen(true)}
+              className="flex h-12 flex-1 items-center justify-center gap-2 rounded-full bg-surface-muted text-base font-semibold text-danger-ink transition-colors hover:bg-danger/10"
+            >
+              <HugeiconsIcon
+                icon={Delete02Icon}
+                size={20}
+                strokeWidth={1.9}
+                aria-hidden
+              />
+              Delete
+            </button>
+          </div>
 
           <EditPlantDrawer
             plant={view}

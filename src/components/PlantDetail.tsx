@@ -40,14 +40,6 @@ function agoLabel(iso: string | null): string | null {
   return `${days} days ago`;
 }
 
-function dueLabel(iso: string | null): string | null {
-  if (!iso) return null;
-  const days = Math.round((Date.parse(iso) - Date.now()) / DAY_MS);
-  if (days === 0) return "due today";
-  if (days < 0) return `${Math.abs(days)} day${days === -1 ? "" : "s"} overdue`;
-  return `due in ${days} day${days === 1 ? "" : "s"}`;
-}
-
 /**
  * The care detail for one plant, shown all on one screen (no tabs): the water
  * card with its Mark-watered action, the light guidance, and personal notes.
@@ -94,7 +86,7 @@ export function PlantDetail({
   }
 
   return (
-    <div className="flex flex-col divide-y divide-ink/10">
+    <div className="flex flex-col divide-y divide-ink/10 [&>section:first-child]:pt-0 [&>section:last-child]:pb-0">
       <CareCard
         iconClass="text-water-icon"
         statusClass="text-water-ink"
@@ -164,9 +156,7 @@ export function PlantDetail({
         </h2>
         <p className="mt-2 text-base leading-relaxed text-ink">
           {data.notes ?? (
-            <span className="text-ink-soft">
-              No personal notes yet. (Editing arrives in a later step.)
-            </span>
+            <span className="text-ink-soft">No personal notes yet.</span>
           )}
         </p>
       </section>
@@ -202,7 +192,6 @@ function CareCard({
   };
 }) {
   const last = mounted ? agoLabel(care.lastDoneAt) : null;
-  const due = mounted ? dueLabel(care.dueAt) : null;
 
   return (
     <section className="py-5">
@@ -229,7 +218,7 @@ function CareCard({
       </p>
 
       <div className="mt-4 flex items-center justify-between gap-4">
-        <dl className="flex min-w-0 flex-wrap gap-x-6 gap-y-1 text-sm text-ink-soft">
+        <dl className="flex min-w-0 flex-col gap-y-1 text-xs text-ink-soft sm:flex-row sm:flex-wrap sm:gap-x-6">
           <div>
             <dt className="inline">Last: </dt>
             <dd className="inline font-medium text-ink">
@@ -242,11 +231,6 @@ function CareCard({
               <dd className="inline font-medium text-ink">
                 {care.intervalDays} days
               </dd>
-            </div>
-          ) : null}
-          {due ? (
-            <div>
-              <dd className="font-medium text-ink">{due}</dd>
             </div>
           ) : null}
         </dl>
