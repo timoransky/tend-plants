@@ -227,7 +227,7 @@ function CareCard({
       </p>
 
       <div className="mt-4 flex items-center justify-between gap-4">
-        <dl className="flex min-w-0 flex-wrap gap-x-6 gap-y-1 text-sm text-ink-soft">
+        <dl className="flex min-w-0 flex-wrap gap-x-6 gap-y-1 text-xs text-ink-soft">
           <div>
             <dt className="inline">Last: </dt>
             <dd className="inline font-medium text-ink">
