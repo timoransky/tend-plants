@@ -94,7 +94,7 @@ export function PlantDetail({
   }
 
   return (
-    <div className="flex flex-col divide-y divide-ink/10">
+    <div className="flex flex-col divide-y divide-ink/10 [&>section:first-child]:pt-0 [&>section:last-child]:pb-0">
       <CareCard
         iconClass="text-water-icon"
         statusClass="text-water-ink"
@@ -164,9 +164,7 @@ export function PlantDetail({
         </h2>
         <p className="mt-2 text-base leading-relaxed text-ink">
           {data.notes ?? (
-            <span className="text-ink-soft">
-              No personal notes yet. (Editing arrives in a later step.)
-            </span>
+            <span className="text-ink-soft">No personal notes yet.</span>
           )}
         </p>
       </section>
