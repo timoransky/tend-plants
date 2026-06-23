@@ -174,7 +174,7 @@ export function HouseholdSwitcher({
                 reduce ? { opacity: 0 } : { opacity: 0, y: -6, scale: 0.98 }
               }
               transition={{ duration: 0.16, ease: [0.2, 0.7, 0.3, 1] }}
-              className="absolute left-0 top-full z-50 mt-2 flex w-64 origin-top-left flex-col gap-1 rounded-2xl bg-surface p-1.5 text-ink shadow-xl shadow-scrim/50"
+              className="absolute left-0 top-full z-50 mt-2 flex w-64 origin-top-left flex-col gap-1 rounded-2xl bg-surface p-1 text-ink shadow-xl shadow-scrim/50"
             >
               {ordered.map((h) => {
                 const isCurrent = h.token === token;
@@ -188,7 +188,7 @@ export function HouseholdSwitcher({
                   >
                     <span
                       title={isDefault ? "Your default home" : undefined}
-                      className="flex size-8 shrink-0 items-center justify-center text-healthy"
+                      className="flex size-7 shrink-0 items-center justify-center text-healthy"
                       aria-hidden
                     >
                       {isDefault ? (
@@ -223,7 +223,7 @@ export function HouseholdSwitcher({
                       aria-label={`Manage ${labelFor(h)}`}
                       title="Manage"
                       onClick={() => manage(h.token)}
-                      className={`flex size-8 shrink-0 items-center justify-center rounded-lg text-ink-soft ${tapScale} hover:bg-ink/10 hover:text-ink`}
+                      className={`flex size-7 shrink-0 items-center justify-center rounded-lg text-ink-soft ${tapScale} hover:bg-ink/10 hover:text-ink`}
                     >
                       <HugeiconsIcon
                         icon={MoreHorizontalIcon}
@@ -244,7 +244,7 @@ export function HouseholdSwitcher({
                 disabled={creating}
                 className={`flex w-full items-center rounded-xl px-1 gap-0.5 text-left text-sm font-medium text-healthy-ink ${tapScale} hover:bg-healthy/10 disabled:opacity-60`}
               >
-                <span className="flex size-8 shrink-0 items-center justify-center">
+                <span className="flex size-7 px-0.5 shrink-0 items-center justify-center">
                   <HugeiconsIcon
                     icon={PlusSignIcon}
                     size={16}
