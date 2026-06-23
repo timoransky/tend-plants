@@ -204,7 +204,7 @@ export function HouseholdSwitcher({
                       type="button"
                       role="menuitem"
                       onClick={() => go(h.token)}
-                      className="flex min-w-0 flex-1 items-center py-1.5 pr-1 text-left"
+                      className="flex min-w-0 flex-1 items-center py-2 pr-1 text-left"
                     >
                       <span
                         className={`min-w-0 truncate text-sm text-ink ${
