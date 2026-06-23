@@ -29,7 +29,12 @@ export default async function HomePage({ params }: Props) {
       <header className="flex items-center justify-between px-5 pb-3 pt-5">
         <div className="flex items-center gap-2">
           <Logo />
-          <HouseholdSwitcher token={token} name={household.name} />
+          <HouseholdSwitcher
+            token={token}
+            name={household.name}
+            code={household.displayCode}
+            avatar={household.avatar}
+          />
         </div>
         <div className="flex items-center gap-2">
           <ShareButton token={token} />

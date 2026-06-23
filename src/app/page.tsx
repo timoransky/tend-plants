@@ -34,7 +34,12 @@ export default function Home() {
         if (!res.ok) throw new Error();
         const { household } = await res.json();
         setPrimary(household.id);
-        recordVisit(household.id, household.name ?? null);
+        recordVisit(
+          household.id,
+          household.name ?? null,
+          household.displayCode ?? null,
+          household.avatar ?? null,
+        );
         router.replace(`/h/${household.id}`);
       } catch {
         started.current = false;

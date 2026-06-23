@@ -19,6 +19,13 @@ const VISITED_KEY = "tend:visited";
 export type VisitedHousehold = {
   token: string;
   name: string | null;
+  // The household's friendly word-pair label, remembered locally so the
+  // switcher can label other households without re-fetching them. Optional for
+  // back-compat with records written before display codes existed.
+  code?: string | null;
+  // The household's chosen emoji, remembered locally for the same reason — so
+  // the switcher can show each home's icon without re-fetching it.
+  avatar?: string | null;
   lastVisitedAt: number;
 };
 
@@ -141,10 +148,29 @@ function writeVisited(list: VisitedHousehold[]): void {
 }
 
 /** Record (or refresh) a visit: move the household to the front and update its
- * remembered name. Does not touch the primary household. */
-export function recordVisit(token: string, name: string | null): void {
+ * remembered name + code + avatar. Does not touch the primary household. */
+export function recordVisit(
+  token: string,
+  name: string | null,
+  code: string | null = null,
+  avatar: string | null = null,
+): void {
   const rest = getVisited().filter((h) => h.token !== token);
-  writeVisited([{ token, name, lastVisitedAt: Date.now() }, ...rest]);
+  writeVisited([
+    { token, name, code, avatar, lastVisitedAt: Date.now() },
+    ...rest,
+  ]);
+}
+
+/** Patch a visited household's remembered fields in place (preserving order),
+ * so an edit reflects instantly in the switcher and other tabs. */
+export function updateVisited(
+  token: string,
+  patch: { name?: string | null; avatar?: string | null },
+): void {
+  writeVisited(
+    getVisited().map((h) => (h.token === token ? { ...h, ...patch } : h)),
+  );
 }
 
 export function removeVisited(token: string): void {
