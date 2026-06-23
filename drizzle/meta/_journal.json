@@ -15,6 +15,20 @@
       "when": 1781613871735,
       "tag": "0001_quiet_ricochet",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1782044637707,
+      "tag": "0002_warm_kitty_pryde",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1782065332570,
+      "tag": "0003_simple_rafael_vega",
+      "breakpoints": true
     }
   ]
 }

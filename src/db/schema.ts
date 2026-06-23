@@ -12,10 +12,19 @@ import {
  * in the URL (`/h/<token>`). Whoever has the link is in — the secret is the
  * permission. The token is generated app-side with nanoid (21 chars) so it is
  * brute-force resistant; see the create-household route (step 2).
+ *
+ * `display_code` is a friendly word-pair label (e.g. "maple-otter") shown in
+ * the switcher. It is NOT a secret and never appears in a URL — it just gives
+ * each household a memorable, consistent handle until the user sets a `name`.
+ *
+ * `avatar` is an optional emoji the household picks for itself (no uploads, like
+ * plants); the switcher shows it, falling back to a house glyph when unset.
  */
 export const households = pgTable("households", {
   id: text("id").primaryKey(),
   name: text("name"),
+  displayCode: text("display_code"),
+  avatar: text("avatar"),
   createdAt: timestamp("created_at", { withTimezone: true })
     .notNull()
     .defaultNow(),
