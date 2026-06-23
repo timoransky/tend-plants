@@ -138,7 +138,7 @@ export function PlantDetail({
           />
           Light
         </h2>
-        <p className="mt-2 text-base leading-relaxed text-ink">
+        <p className="mt-2 text-pretty text-base leading-relaxed text-ink">
           {data.lightNote ?? "No light guidance for this plant yet."}
         </p>
       </section>
@@ -154,7 +154,7 @@ export function PlantDetail({
           />
           Your notes
         </h2>
-        <p className="mt-2 text-base leading-relaxed text-ink">
+        <p className="mt-2 text-pretty text-base leading-relaxed text-ink">
           {data.notes ?? (
             <span className="text-ink-soft">No personal notes yet.</span>
           )}
@@ -213,12 +213,12 @@ function CareCard({
         ) : null}
       </div>
 
-      <p className="mt-2 text-base leading-relaxed text-ink">
+      <p className="mt-2 text-pretty text-base leading-relaxed text-ink">
         {note ?? "No guidance for this plant yet."}
       </p>
 
       <div className="mt-4 flex items-center justify-between gap-4">
-        <dl className="flex min-w-0 flex-col gap-y-1 text-xs text-ink-soft sm:flex-row sm:flex-wrap sm:gap-x-6">
+        <dl className="flex min-w-0 flex-col gap-y-1 text-xs tabular-nums text-ink-soft sm:flex-row sm:flex-wrap sm:gap-x-6">
           <div>
             <dt className="inline">Last: </dt>
             <dd className="inline font-medium text-ink">
@@ -277,7 +277,7 @@ function CareActionButton({
       type="button"
       onClick={onClick}
       disabled={pending || done}
-      whileTap={reduce ? undefined : { scale: 0.97 }}
+      whileTap={reduce ? undefined : { scale: 0.96 }}
       className={`relative inline-flex h-10 shrink-0 items-center justify-center rounded-full px-4 text-sm font-semibold text-canvas transition-colors duration-500 disabled:opacity-90 ${
         done ? "bg-healthy" : bg
       }`}

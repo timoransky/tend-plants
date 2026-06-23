@@ -5,6 +5,7 @@ import { useMemo, useState } from "react";
 import { DrawerDescription, DrawerTitle } from "@/components/Drawer";
 import { SHOW_FEED } from "@/lib/features";
 import type { SpeciesDetail } from "@/lib/species";
+import { tapScale } from "@/lib/ui";
 
 const AVATAR_CHOICES = ["🌿", "🪴", "🌵", "🌱", "🌴", "🍃", "🌸", "🌼", "🌺"];
 
@@ -185,7 +186,7 @@ export function PlantForm({
                 key={emo}
                 type="button"
                 onClick={() => set({ avatar: emo })}
-                className={`flex size-10 items-center justify-center rounded-xl text-xl transition-colors ${
+                className={`flex size-10 items-center justify-center rounded-xl text-xl ${tapScale} ${
                   values.avatar === emo
                     ? "bg-healthy/20 ring-2 ring-healthy"
                     : "bg-surface-muted hover:bg-surface-muted/70"
@@ -219,7 +220,7 @@ export function PlantForm({
             min={1}
             value={values.waterIntervalDays}
             onChange={(e) => set({ waterIntervalDays: e.target.value })}
-            className="input"
+            className="input tabular-nums"
           />
         </Field>
         <Field label="Watering note" accent="text-water-ink">
@@ -250,7 +251,7 @@ export function PlantForm({
                 min={1}
                 value={values.feedIntervalDays}
                 onChange={(e) => set({ feedIntervalDays: e.target.value })}
-                className="input"
+                className="input tabular-nums"
               />
             </Field>
             <Field label="Feeding note" accent="text-feed-ink">
@@ -282,7 +283,7 @@ export function PlantForm({
         type="button"
         onClick={submit}
         disabled={submitting || !values.name.trim()}
-        className="mt-4 h-12 w-full rounded-full bg-healthy text-base font-semibold text-canvas transition-colors hover:bg-healthy/90 disabled:opacity-60"
+        className={`mt-4 h-12 w-full rounded-full bg-healthy text-base font-semibold text-canvas ${tapScale} hover:bg-healthy/90 disabled:opacity-60`}
       >
         {submitting ? submittingLabel : submitLabel}
       </button>

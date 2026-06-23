@@ -6,8 +6,10 @@ export default function NotFound() {
       <span className="text-4xl" aria-hidden>
         🍂
       </span>
-      <h1 className="text-xl font-semibold text-cream">Nothing here</h1>
-      <p className="max-w-xs text-sm text-cream-soft">
+      <h1 className="text-balance text-xl font-semibold text-cream">
+        Nothing here
+      </h1>
+      <p className="max-w-xs text-pretty text-sm text-cream-soft">
         This household link may be wrong or no longer active. Check the link, or
         start a new household.
       </p>

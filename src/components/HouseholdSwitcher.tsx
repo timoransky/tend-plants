@@ -23,6 +23,7 @@ import {
   updateVisited,
   type VisitedHousehold,
 } from "@/lib/household-storage";
+import { tapScale } from "@/lib/ui";
 
 /**
  * Human label for a household: its user-set name, else its friendly word-pair
@@ -132,7 +133,7 @@ export function HouseholdSwitcher({
         onClick={() => setOpen((v) => !v)}
         aria-haspopup="menu"
         aria-expanded={open}
-        className="flex items-center gap-1 rounded-full px-2 py-1 text-xs text-cream-soft transition-colors hover:bg-canvas-soft hover:text-cream"
+        className={`flex items-center gap-1 rounded-full px-2 py-1 text-xs text-cream-soft ${tapScale} hover:bg-canvas-soft hover:text-cream`}
       >
         <span className="max-w-[9rem] truncate">{triggerLabel}</span>
         <svg
@@ -173,7 +174,7 @@ export function HouseholdSwitcher({
                 reduce ? { opacity: 0 } : { opacity: 0, y: -6, scale: 0.98 }
               }
               transition={{ duration: 0.16, ease: [0.2, 0.7, 0.3, 1] }}
-              className="absolute left-0 top-full z-50 mt-2 flex w-64 origin-top-left flex-col gap-1 rounded-2xl bg-surface p-1.5 text-ink shadow-xl shadow-scrim/50"
+              className="absolute left-0 top-full z-50 mt-2 flex w-64 origin-top-left flex-col gap-1 rounded-2xl bg-surface p-1 text-ink shadow-xl shadow-scrim/50"
             >
               {ordered.map((h) => {
                 const isCurrent = h.token === token;
@@ -187,7 +188,7 @@ export function HouseholdSwitcher({
                   >
                     <span
                       title={isDefault ? "Your default home" : undefined}
-                      className="flex size-6 shrink-0 items-center justify-center text-healthy"
+                      className="flex size-7 shrink-0 items-center justify-center text-healthy"
                       aria-hidden
                     >
                       {isDefault ? (
@@ -203,7 +204,7 @@ export function HouseholdSwitcher({
                       type="button"
                       role="menuitem"
                       onClick={() => go(h.token)}
-                      className="flex min-w-0 flex-1 items-center py-1.5 pr-1 text-left"
+                      className="flex min-w-0 flex-1 items-center py-2 pr-1 text-left"
                     >
                       <span
                         className={`min-w-0 truncate text-sm text-ink ${
@@ -222,7 +223,7 @@ export function HouseholdSwitcher({
                       aria-label={`Manage ${labelFor(h)}`}
                       title="Manage"
                       onClick={() => manage(h.token)}
-                      className="flex size-6 shrink-0 items-center justify-center rounded-lg text-ink-soft transition-colors hover:bg-ink/10 hover:text-ink"
+                      className={`flex size-7 shrink-0 items-center justify-center rounded-lg text-ink-soft ${tapScale} hover:bg-ink/10 hover:text-ink`}
                     >
                       <HugeiconsIcon
                         icon={MoreHorizontalIcon}
@@ -241,9 +242,9 @@ export function HouseholdSwitcher({
                 role="menuitem"
                 onClick={createNew}
                 disabled={creating}
-                className="flex w-full items-center rounded-xl px-1 gap-0.5 text-left text-sm font-medium text-healthy-ink transition-colors hover:bg-healthy/10 disabled:opacity-60"
+                className={`flex w-full items-center rounded-xl px-1 gap-0.5 text-left text-sm font-medium text-healthy-ink ${tapScale} hover:bg-healthy/10 disabled:opacity-60`}
               >
-                <span className="flex size-6 px-0.5 shrink-0 items-center justify-center">
+                <span className="flex size-7 px-0.5 shrink-0 items-center justify-center">
                   <HugeiconsIcon
                     icon={PlusSignIcon}
                     size={16}

@@ -5,6 +5,7 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { useState } from "react";
 
 import { Drawer, DrawerDescription, DrawerTitle } from "@/components/Drawer";
+import { tapScale } from "@/lib/ui";
 
 export type ManagedHousehold = {
   token: string;
@@ -121,7 +122,7 @@ function ManageBody({
           <DrawerTitle className="truncate text-2xl font-semibold tracking-tight text-ink">
             {labelFor(entry)}
           </DrawerTitle>
-          <DrawerDescription className="text-sm text-ink-soft">
+          <DrawerDescription className="text-pretty text-sm text-ink-soft">
             Give this home a name, or manage it on this device.
           </DrawerDescription>
         </div>
@@ -155,7 +156,7 @@ function ManageBody({
         <button
           type="submit"
           disabled={!dirty || saving}
-          className="mt-2 h-12 w-full rounded-full bg-healthy text-base font-semibold text-canvas transition-colors hover:bg-healthy/90 disabled:opacity-60"
+          className={`mt-2 h-12 w-full rounded-full bg-healthy text-base font-semibold text-canvas ${tapScale} hover:bg-healthy/90 disabled:opacity-60`}
         >
           {saving ? "Saving…" : "Save name"}
         </button>
@@ -173,7 +174,7 @@ function ManageBody({
           type="button"
           onClick={onSetDefault}
           disabled={saving}
-          className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-surface-muted text-base font-semibold text-ink transition-colors hover:bg-surface-muted/70 disabled:opacity-60"
+          className={`flex h-12 w-full items-center justify-center gap-2 rounded-full bg-surface-muted text-base font-semibold text-ink ${tapScale} hover:bg-surface-muted/70 disabled:opacity-60`}
         >
           <HugeiconsIcon
             icon={HouseHeartIcon}
@@ -192,12 +193,12 @@ function ManageBody({
             type="button"
             onClick={onRemoved}
             disabled={saving}
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-surface-muted text-base font-semibold text-danger-ink transition-colors hover:bg-danger/10 disabled:opacity-60"
+            className={`flex h-12 w-full items-center justify-center gap-2 rounded-full bg-surface-muted text-base font-semibold text-danger-ink ${tapScale} hover:bg-danger/10 disabled:opacity-60`}
           >
             <HugeiconsIcon icon={Delete02Icon} size={18} strokeWidth={1.9} aria-hidden />
             Remove from this device
           </button>
-          <p className="px-2 pt-2 text-center text-xs text-ink-soft">
+          <p className="px-2 pt-2 text-center text-pretty text-xs text-ink-soft">
             This only forgets the link on this browser. Your plants and the
             shared link stay intact.
           </p>

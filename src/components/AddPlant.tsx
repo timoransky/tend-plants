@@ -14,6 +14,7 @@ import {
   speciesToValues,
 } from "@/components/PlantForm";
 import type { SpeciesDetail } from "@/lib/species";
+import { tapScale } from "@/lib/ui";
 
 /**
  * The add-plant screen: the species picker stays on the page, and tapping a
@@ -265,7 +266,7 @@ function PickStage({
                 key={s.key}
                 type="button"
                 onClick={() => onPick(s)}
-                className="fade-in flex h-[60px] items-center gap-3 rounded-2xl bg-canvas-soft p-3 text-left transition-colors hover:bg-canvas-soft/70"
+                className={`fade-in flex h-[60px] items-center gap-3 rounded-2xl bg-canvas-soft p-3 text-left ${tapScale} hover:bg-canvas-soft/70`}
               >
                 <span className="text-2xl" aria-hidden>
                   {s.avatar}
@@ -274,7 +275,7 @@ function PickStage({
                   <span className="truncate text-sm font-medium text-cream">
                     {s.commonName}
                   </span>
-                  <span className="text-xs text-cream-soft">
+                  <span className="text-xs tabular-nums text-cream-soft">
                     water · every {s.waterIntervalDays}d
                   </span>
                 </span>
@@ -301,7 +302,7 @@ function PickStage({
             <button
               type="button"
               onClick={onManual}
-              className="rounded-2xl border border-dashed border-cream-soft/40 px-4 py-3 text-sm font-medium text-cream-soft transition-colors hover:border-cream-soft hover:text-cream"
+              className={`rounded-2xl border border-dashed border-cream-soft/40 px-4 py-3 text-sm font-medium text-cream-soft ${tapScale} hover:border-cream-soft hover:text-cream`}
             >
               Can&apos;t find it? Add manually
             </button>

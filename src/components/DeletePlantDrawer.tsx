@@ -4,6 +4,7 @@ import { useState } from "react";
 
 import { Drawer, DrawerDescription, DrawerTitle } from "@/components/Drawer";
 import type { PlantWithStatus } from "@/lib/plants";
+import { tapScale } from "@/lib/ui";
 
 /**
  * Delete confirmation as a nested drawer over the plant-detail sheet — the same
@@ -52,7 +53,7 @@ export function DeletePlantDrawer({
             <DrawerTitle className="text-xl font-semibold tracking-tight text-ink">
               Delete {plant.name}?
             </DrawerTitle>
-            <DrawerDescription className="text-sm text-ink-soft">
+            <DrawerDescription className="text-pretty text-sm text-ink-soft">
               This can&apos;t be undone.
             </DrawerDescription>
           </div>
@@ -63,7 +64,7 @@ export function DeletePlantDrawer({
             type="button"
             onClick={() => onOpenChange(false)}
             disabled={deleting}
-            className="h-12 flex-1 rounded-full bg-surface-muted text-base font-semibold text-ink transition-colors hover:bg-surface-muted/70 disabled:opacity-60"
+            className={`h-12 flex-1 rounded-full bg-surface-muted text-base font-semibold text-ink ${tapScale} hover:bg-surface-muted/70 disabled:opacity-60`}
           >
             Cancel
           </button>
@@ -71,7 +72,7 @@ export function DeletePlantDrawer({
             type="button"
             onClick={remove}
             disabled={deleting}
-            className="h-12 flex-1 rounded-full bg-danger text-base font-semibold text-surface transition-opacity hover:opacity-90 disabled:opacity-60"
+            className={`h-12 flex-1 rounded-full bg-danger text-base font-semibold text-surface ${tapScale} hover:opacity-90 disabled:opacity-60`}
           >
             {deleting ? "Deleting…" : "Delete"}
           </button>
