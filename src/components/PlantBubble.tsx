@@ -56,7 +56,7 @@ export function PlantBubble({
         transition={{ type: "tween", duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
         className="relative"
       >
-        <span className="flex size-20 items-center justify-center rounded-full bg-surface text-4xl shadow-[0_1px_3px_0_rgb(20_16_8_/_0.35)] transition-shadow duration-200 ease-out group-hover:shadow-[0_14px_28px_-4px_rgb(20_16_8_/_0.5)]">
+        <span className="flex size-20 items-center justify-center rounded-full bg-surface text-4xl shadow-[0_1px_2px_0_rgb(20_16_8_/_0.4),0_4px_8px_-2px_rgb(20_16_8_/_0.28)] transition-shadow duration-200 ease-out group-hover:shadow-[0_2px_5px_-1px_rgb(20_16_8_/_0.4),0_16px_30px_-6px_rgb(20_16_8_/_0.45)]">
           <span aria-hidden>{plant.avatar ?? "🪴"}</span>
         </span>
         {needsWater ? (

@@ -79,11 +79,11 @@ export function PlantGarden({
                   />
                 </svg>
                 <span className="text-sm font-medium text-cream">{label}</span>
-                <span className="text-xs text-cream-soft">
+                <span className="text-xs tabular-nums text-cream-soft">
                   {group.plants.length}
                 </span>
                 {thirsty > 0 ? (
-                  <span className="ml-auto inline-flex items-center gap-1 rounded-full bg-water/15 py-0.5 pl-1 pr-2 text-[0.7rem] font-medium text-water">
+                  <span className="ml-auto inline-flex items-center gap-1 rounded-full bg-water/15 py-0.5 pl-1 pr-2 text-[0.7rem] font-medium tabular-nums text-water">
                     <WaterDropBadge className="size-3.5 shrink-0" />
                     {thirsty} thirsty
                   </span>

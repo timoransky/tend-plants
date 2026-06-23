@@ -21,6 +21,7 @@ import {
   subscribe,
   type VisitedHousehold,
 } from "@/lib/household-storage";
+import { tapScale } from "@/lib/ui";
 
 /** Human label for a household: its name, else a short code from the token. */
 function labelFor(h: { token: string; name: string | null }): string {
@@ -93,7 +94,7 @@ export function HouseholdSwitcher({
         onClick={() => setOpen((v) => !v)}
         aria-haspopup="menu"
         aria-expanded={open}
-        className="flex items-center gap-1 rounded-full px-2 py-1 text-xs text-cream-soft transition-colors hover:bg-canvas-soft hover:text-cream"
+        className={`flex items-center gap-1 rounded-full px-2 py-1 text-xs text-cream-soft ${tapScale} hover:bg-canvas-soft hover:text-cream`}
       >
         <span className="max-w-[9rem] truncate">
           {labelFor({ token, name })}
@@ -152,7 +153,7 @@ export function HouseholdSwitcher({
                       <span
                         title="Your default home"
                         aria-label="Your default home"
-                        className="flex size-6 shrink-0 items-center justify-center text-healthy"
+                        className="flex size-8 shrink-0 items-center justify-center text-healthy"
                       >
                         <HugeiconsIcon
                           icon={HouseHeartIcon}
@@ -167,7 +168,7 @@ export function HouseholdSwitcher({
                         aria-label="Set as default home"
                         title="Set as default home"
                         onClick={() => setPrimary(h.token)}
-                        className="flex size-6 shrink-0 items-center justify-center rounded-lg text-ink-soft transition-colors hover:bg-ink/10 hover:text-ink"
+                        className={`flex size-8 shrink-0 items-center justify-center rounded-lg text-ink-soft ${tapScale} hover:bg-ink/10 hover:text-ink`}
                       >
                         <HugeiconsIcon
                           icon={HouseHeartIcon}
@@ -198,7 +199,7 @@ export function HouseholdSwitcher({
                         type="button"
                         aria-label={`Forget ${labelFor(h)}`}
                         onClick={() => removeVisited(h.token)}
-                        className="flex size-6 shrink-0 items-center justify-center rounded-lg text-ink-soft transition-colors hover:bg-ink/10 hover:text-ink"
+                        className={`flex size-8 shrink-0 items-center justify-center rounded-lg text-ink-soft ${tapScale} hover:bg-ink/10 hover:text-ink`}
                       >
                         <HugeiconsIcon
                           icon={Cancel01Icon}
@@ -218,9 +219,9 @@ export function HouseholdSwitcher({
                 role="menuitem"
                 onClick={createNew}
                 disabled={creating}
-                className="flex w-full items-center rounded-xl px-1 gap-0.5 text-left text-sm font-medium text-healthy-ink transition-colors hover:bg-healthy/10 disabled:opacity-60"
+                className={`flex w-full items-center rounded-xl px-1 gap-0.5 text-left text-sm font-medium text-healthy-ink ${tapScale} hover:bg-healthy/10 disabled:opacity-60`}
               >
-                <span className="flex size-6 px-0.5 shrink-0 items-center justify-center">
+                <span className="flex size-8 shrink-0 items-center justify-center">
                   <HugeiconsIcon
                     icon={PlusSignIcon}
                     size={16}

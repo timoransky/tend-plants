@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 
 import { AddPlant } from "@/components/AddPlant";
 import { findHousehold } from "@/lib/api";
+import { tapScale } from "@/lib/ui";
 
 export const dynamic = "force-dynamic";
 
@@ -19,7 +20,7 @@ export default async function AddPlantPage({ params }: Props) {
         <Link
           href={`/h/${token}`}
           aria-label="Back home"
-          className="flex size-9 items-center justify-center rounded-full bg-canvas-soft text-cream transition-colors hover:bg-canvas-soft/70"
+          className={`flex size-10 items-center justify-center rounded-full bg-canvas-soft text-cream ${tapScale} hover:bg-canvas-soft/70`}
         >
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
             <path
@@ -31,12 +32,12 @@ export default async function AddPlantPage({ params }: Props) {
             />
           </svg>
         </Link>
-        <h1 className="text-xl font-semibold tracking-tight text-cream">
+        <h1 className="text-balance text-xl font-semibold tracking-tight text-cream">
           Add a plant
         </h1>
       </div>
 
-      <p className="px-1 pb-4 pt-2 text-sm text-cream-soft">
+      <p className="px-1 pb-4 pt-2 text-pretty text-sm text-cream-soft">
         Pick a houseplant to start from, then tweak anything. Not listed? Add it
         manually.
       </p>

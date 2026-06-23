@@ -10,6 +10,7 @@ import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useRef, useState, useSyncExternalStore } from "react";
 
 import { Drawer, DrawerDescription, DrawerTitle } from "@/components/Drawer";
+import { tapScale } from "@/lib/ui";
 
 // These reads never change after mount, so the store never emits.
 const noopSubscribe = () => () => {};
@@ -89,7 +90,7 @@ export function ShareButton({ token }: { token: string }) {
         type="button"
         onClick={() => setOpen(true)}
         aria-label="Share this garden"
-        className="flex size-9 items-center justify-center rounded-full bg-canvas-soft text-cream transition-colors hover:bg-canvas-soft/70"
+        className={`flex size-10 items-center justify-center rounded-full bg-canvas-soft text-cream ${tapScale} hover:bg-canvas-soft/70`}
       >
         <HugeiconsIcon
           icon={Share08Icon}
@@ -113,7 +114,7 @@ export function ShareButton({ token }: { token: string }) {
             <DrawerTitle className="text-2xl font-semibold tracking-tight text-ink">
               Share this garden
             </DrawerTitle>
-            <DrawerDescription className="text-sm text-ink-soft">
+            <DrawerDescription className="text-pretty text-sm text-ink-soft">
               There&rsquo;s no login, so anyone with this link can view and edit
               your plants. Share it only with your household.
             </DrawerDescription>
@@ -136,7 +137,7 @@ export function ShareButton({ token }: { token: string }) {
               type="button"
               onClick={copy}
               aria-label="Copy link"
-              whileTap={reduce ? undefined : { scale: 0.9 }}
+              whileTap={reduce ? undefined : { scale: 0.96 }}
               className="no-ios-zoom-trailing-center absolute inset-y-0 right-1 my-auto flex size-9 items-center justify-center rounded-lg text-ink-soft transition-colors hover:bg-ink/5 hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-healthy/50"
             >
               <CopyMark copied={copied} reduce={!!reduce} />
@@ -150,7 +151,7 @@ export function ShareButton({ token }: { token: string }) {
             <motion.button
               type="button"
               onClick={share}
-              whileTap={reduce ? undefined : { scale: 0.98 }}
+              whileTap={reduce ? undefined : { scale: 0.96 }}
               className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-healthy text-base font-semibold text-canvas transition-colors hover:bg-healthy/90"
             >
               <HugeiconsIcon
@@ -165,7 +166,7 @@ export function ShareButton({ token }: { token: string }) {
             <motion.button
               type="button"
               onClick={copy}
-              whileTap={reduce ? undefined : { scale: 0.98 }}
+              whileTap={reduce ? undefined : { scale: 0.96 }}
               className="relative flex h-12 w-full items-center justify-center rounded-full bg-healthy text-base font-semibold text-canvas transition-colors hover:bg-healthy/90"
             >
               {/* Invisible sizer pins the width to the widest label, so the pill

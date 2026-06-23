@@ -5,6 +5,7 @@ import { PlantDetail, type PlantDetailData } from "@/components/PlantDetail";
 import { StatusDot } from "@/components/StatusDot";
 import { findHousehold } from "@/lib/api";
 import { getPlantWithStatus } from "@/lib/plants";
+import { tapScale } from "@/lib/ui";
 
 // Live tracker — always read fresh from the DB, never cache.
 export const dynamic = "force-dynamic";
@@ -39,7 +40,7 @@ export default async function PlantDetailPage({ params }: Props) {
         <Link
           href={`/h/${token}`}
           aria-label="Back home"
-          className="flex size-9 items-center justify-center rounded-full bg-canvas-soft text-cream transition-colors hover:bg-canvas-soft/70"
+          className={`flex size-10 items-center justify-center rounded-full bg-canvas-soft text-cream ${tapScale} hover:bg-canvas-soft/70`}
         >
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
             <path
@@ -65,10 +66,10 @@ export default async function PlantDetailPage({ params }: Props) {
           />
         </span>
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight text-cream">
+          <h1 className="text-balance text-2xl font-semibold tracking-tight text-cream">
             {plant.name}
           </h1>
-          <p className="text-sm text-cream-soft">
+          <p className="text-pretty text-sm text-cream-soft">
             {[plant.room, plant.commonName].filter(Boolean).join(" · ") ||
               "Houseplant"}
           </p>
