@@ -1,0 +1,151 @@
+/**
+ * Friendly household display codes: a memorable "<adjective>-<noun>" word-pair
+ * (e.g. "maple-otter") used purely as a label in the switcher.
+ *
+ * This is NOT a credential. The household's secret is still its long `nanoid`
+ * token in the `/h/<token>` URL; the code never appears in a URL and is never
+ * used to look up a household. Because of that we deliberately skip uniqueness:
+ * the switcher only ever shows households *this browser* has visited, so a
+ * collision is both astronomically unlikely per-user (~4k combos) and, even if
+ * it happened, only cosmetic. That lets generation stay a pure, dependency-free
+ * pick with no DB round-trip or retry loop.
+ *
+ * The vocabulary is warm/plant/nature-themed to match the app's tone.
+ */
+
+const ADJECTIVES = [
+  "amber",
+  "autumn",
+  "balmy",
+  "blooming",
+  "breezy",
+  "bright",
+  "calm",
+  "cosy",
+  "creeping",
+  "crisp",
+  "dappled",
+  "dewy",
+  "drowsy",
+  "dusky",
+  "earthy",
+  "evergreen",
+  "fabled",
+  "feathery",
+  "fern",
+  "fragrant",
+  "garden",
+  "gentle",
+  "golden",
+  "grassy",
+  "hardy",
+  "hazel",
+  "honeyed",
+  "leafy",
+  "lush",
+  "meadow",
+  "mellow",
+  "misty",
+  "mossy",
+  "olive",
+  "pebbled",
+  "potted",
+  "quiet",
+  "rambling",
+  "rooted",
+  "rustling",
+  "sage",
+  "sandy",
+  "sappy",
+  "shady",
+  "silver",
+  "sleepy",
+  "snug",
+  "spotted",
+  "sprouting",
+  "sunny",
+  "sunlit",
+  "tender",
+  "thriving",
+  "trailing",
+  "velvet",
+  "verdant",
+  "warm",
+  "wild",
+  "willow",
+  "windswept",
+  "wintry",
+  "woven",
+  "young",
+  "zesty",
+] as const;
+
+const NOUNS = [
+  "acorn",
+  "alder",
+  "aloe",
+  "aspen",
+  "badger",
+  "basil",
+  "bramble",
+  "cedar",
+  "clover",
+  "cricket",
+  "daisy",
+  "dahlia",
+  "fawn",
+  "fern",
+  "ficus",
+  "finch",
+  "fox",
+  "grove",
+  "hazel",
+  "heather",
+  "heron",
+  "ivy",
+  "juniper",
+  "lark",
+  "laurel",
+  "lily",
+  "linden",
+  "lotus",
+  "maple",
+  "marigold",
+  "meadow",
+  "mint",
+  "moss",
+  "nettle",
+  "olive",
+  "orchid",
+  "otter",
+  "palm",
+  "pansy",
+  "pebble",
+  "petal",
+  "pine",
+  "poppy",
+  "quail",
+  "reed",
+  "robin",
+  "sage",
+  "sorrel",
+  "sparrow",
+  "spruce",
+  "thistle",
+  "thrush",
+  "thyme",
+  "tulip",
+  "vine",
+  "violet",
+  "willow",
+  "wren",
+] as const;
+
+function pick<T>(list: readonly T[]): T {
+  return list[Math.floor(Math.random() * list.length)] as T;
+}
+
+/** A fresh, memorable household label like "mossy-otter". Not a secret. */
+export function generateDisplayCode(): string {
+  return `${pick(ADJECTIVES)}-${pick(NOUNS)}`;
+}

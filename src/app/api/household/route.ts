@@ -3,6 +3,7 @@ import { nanoid } from "nanoid";
 import { db } from "@/db";
 import { households } from "@/db/schema";
 import { apiError, json, readJson } from "@/lib/api";
+import { generateDisplayCode } from "@/lib/household-code";
 
 type CreateHouseholdBody = {
   name?: string;
@@ -22,9 +23,10 @@ export async function POST(request: Request) {
       : null;
 
   const id = nanoid();
+  const displayCode = generateDisplayCode();
   const [household] = await db
     .insert(households)
-    .values({ id, name })
+    .values({ id, name, displayCode })
     .returning();
 
   if (!household) {

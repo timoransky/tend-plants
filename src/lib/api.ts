@@ -2,6 +2,7 @@ import { eq } from "drizzle-orm";
 
 import { db } from "@/db";
 import { households, type Household } from "@/db/schema";
+import { generateDisplayCode } from "@/lib/household-code";
 
 /** JSON success response. */
 export function json(data: unknown, init?: ResponseInit): Response {
@@ -26,7 +27,22 @@ export async function findHousehold(token: string): Promise<Household | null> {
     .from(households)
     .where(eq(households.id, token))
     .limit(1);
-  return rows[0] ?? null;
+  const household = rows[0];
+  if (!household) return null;
+
+  // Self-heal households created before display codes existed: assign one on
+  // first access so every household gets a stable, friendly label with no
+  // manual backfill. Fires at most once per legacy row.
+  if (!household.displayCode) {
+    const [updated] = await db
+      .update(households)
+      .set({ displayCode: generateDisplayCode() })
+      .where(eq(households.id, household.id))
+      .returning();
+    return updated ?? household;
+  }
+
+  return household;
 }
 
 /** Parse a JSON request body, returning null on empty/invalid bodies. */
