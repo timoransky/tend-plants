@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Fredoka, Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
 import { ScrollReset } from "@/components/ScrollReset";
@@ -14,10 +14,24 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+// Display face for the "Tend" wordmark (navbar + OG image). Variable font, so no
+// explicit weight; rounded and friendly to match the warm cream-on-charcoal UI.
+const fredoka = Fredoka({
+  variable: "--font-fredoka",
+  subsets: ["latin"],
+});
+
 export const metadata: Metadata = {
-  title: "Tend — shared plant care",
+  // Resolves the file-based og:image to an absolute URL in production; falls back
+  // to localhost in dev so Next doesn't warn.
+  metadataBase: new URL(
+    process.env.VERCEL_PROJECT_PRODUCTION_URL
+      ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+      : "http://localhost:3000",
+  ),
+  title: "Tend - shared plant care",
   description:
-    "Track which houseplants need watering and feeding, shared across your household via a secret link.",
+    "Track which houseplants need watering, shared across your household via a secret link.",
 };
 
 export default function RootLayout({
@@ -28,7 +42,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${fredoka.variable} h-full antialiased`}
     >
       <body className="h-full overflow-hidden">
         {/* The app shell — not the document — is the scroll container. Keeping
