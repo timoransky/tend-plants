@@ -72,6 +72,8 @@
 
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  /* Display face for the "Tend" wordmark (Fredoka) — rounded and friendly. */
+  --font-display: var(--font-fredoka);
 }
 
 html {

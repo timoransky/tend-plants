@@ -5,9 +5,7 @@ export function Logo({ className = "" }: { className?: string }) {
       <span className="text-3xl leading-none" aria-hidden="true">
         🪴
       </span>
-      <span className="text-xl font-semibold tracking-tight text-cream">
-        Tend
-      </span>
+      <span className="font-display text-xl font-medium text-cream">Tend</span>
     </span>
   );
 }
