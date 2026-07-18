@@ -130,9 +130,11 @@ export function AddPlant({
       const res = await fetch("/api/species/identify", { method: "POST", body });
       if (!res.ok) {
         setIdentifyError(
-          res.status === 503
-            ? "Photo identification isn’t available right now."
-            : "Couldn’t identify that photo. Try another, or pick from the list.",
+          res.status === 429
+            ? "Daily photo-identification limit reached. Try again tomorrow, or pick from the list."
+            : res.status === 503
+              ? "Photo identification isn’t available right now."
+              : "Couldn’t identify that photo. Try another, or pick from the list.",
         );
         return;
       }
@@ -140,7 +142,7 @@ export function AddPlant({
       const { result } = (await res.json()) as { result: IdentifyResult };
       if (!result?.isPlant) {
         setIdentifyError(
-          "That doesn’t look like a houseplant. Try another photo, or pick from the list.",
+          "Couldn’t identify a plant in that photo. Try another, or pick from the list.",
         );
         return;
       }

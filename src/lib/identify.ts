@@ -1,152 +1,255 @@
-import Anthropic from "@anthropic-ai/sdk";
-
 import { FALLBACK_SPECIES } from "@/data/fallback-species";
 
 /**
- * Server-only plant identification from a photo, powered by Claude vision.
+ * Server-only plant identification from a photo, powered by the Pl@ntNet API.
  *
- * This is the one AI touch-point in the app and it stays deliberately narrow:
- * image in → a species `key` from our own {@link FALLBACK_SPECIES} dataset out
- * (or "" when the plant isn't in the list). It never invents care data — the
- * add-plant flow snapshots care fields from the matched dataset entry exactly as
- * it does for a hand-picked species, so identification is just a faster way to
- * land on the same picker result.
+ * Pl@ntNet is a purpose-built plant-identification service (its model is trained
+ * on plants, so it beats a general vision model at exactly this task) with a
+ * free tier — the cheapest option that stays accurate. It returns scientific and
+ * common names rather than one of our keys, so the work here is mapping its
+ * answer back onto our own {@link FALLBACK_SPECIES} dataset. As with the rest of
+ * the add flow, identification never invents care data: a mapped species opens
+ * its snapshotted care form; an unmapped-but-real plant drops into manual entry.
  *
- * The whole feature is gated behind `ANTHROPIC_API_KEY`: with no key set,
+ * The feature is gated behind `PLANTNET_API_KEY`: with no key set,
  * {@link isIdentifyEnabled} is false, the UI hides the entry point, and the
  * route returns 503. The key is server-side only and never reaches the browser.
+ * Register for a free key at https://my.plantnet.org/.
  */
 
-/** The four base64 image types the Claude vision API accepts. */
-export type ImageMediaType =
-  | "image/jpeg"
-  | "image/png"
-  | "image/gif"
-  | "image/webp";
-
 export type IdentifyResult = {
-  /** False when the photo isn't a houseplant at all (a pet, a wall, a face…). */
+  /**
+   * False when nothing was confidently identified (a non-plant photo, or a plant
+   * Pl@ntNet couldn't place). The client then prompts for another photo.
+   */
   isPlant: boolean;
   /**
-   * Best-matching key from {@link FALLBACK_SPECIES}, or "" when the plant is
-   * real but not in our dataset (the caller then falls back to manual entry).
-   * Constrained to a valid key by the response schema — never a hallucination.
+   * Matching key from {@link FALLBACK_SPECIES}, or "" when the plant is real but
+   * not in our dataset (the caller falls back to manual entry, name pre-filled).
    */
   speciesKey: string;
-  /** Common name of the identified plant, even when it isn't in the dataset. */
+  /** Common name to show / pre-fill, even when the plant isn't in the dataset. */
   commonName: string;
   confidence: "high" | "medium" | "low";
-  /** One short, friendly sentence about the identification (for future UI use). */
+  /** One short line about the identification (kept for future UI use). */
   note: string;
 };
 
-/** Whether photo identification is configured (an API key is present). */
-export function isIdentifyEnabled(): boolean {
-  return !!process.env.ANTHROPIC_API_KEY;
-}
-
-// Default to the flagship model. Swap to "claude-haiku-4-5" for a cheaper,
-// faster identify (plenty capable for this classification) — it's a one-line
-// change with no other edits needed.
-const MODEL = "claude-opus-4-8";
-
-// The dataset drives the response schema and the prompt, so the two can never
-// drift: the enum guarantees Claude returns a real key, and the catalog tells
-// it which key maps to which plant.
-const SPECIES_KEYS = FALLBACK_SPECIES.map((s) => s.key);
-const CATALOG = FALLBACK_SPECIES.map((s) => `${s.key}: ${s.commonName}`).join(
-  "\n",
-);
-
 /**
- * Structured-output schema. `speciesKey` is an enum of every dataset key plus
- * "" (not-in-dataset), so the model can only return a value the add flow can
- * actually resolve. `confidence` is a small vocabulary rather than a number.
+ * A failure the route can turn into a specific HTTP response — notably the daily
+ * quota (429), which a plain "try again" 502 would misrepresent.
  */
-const SCHEMA = {
-  type: "object",
-  additionalProperties: false,
-  properties: {
-    isPlant: {
-      type: "boolean",
-      description: "True only if the photo shows a houseplant.",
-    },
-    speciesKey: {
-      type: "string",
-      enum: [...SPECIES_KEYS, ""],
-      description:
-        'The catalog key of the best match, or "" if the plant is not in the catalog.',
-    },
-    commonName: {
-      type: "string",
-      description:
-        "The plant's common name (fill this in even when speciesKey is empty).",
-    },
-    confidence: { type: "string", enum: ["high", "medium", "low"] },
-    note: {
-      type: "string",
-      description: "One short, friendly sentence about the identification.",
-    },
-  },
-  required: ["isPlant", "speciesKey", "commonName", "confidence", "note"],
-} as const;
+export class IdentifyError extends Error {
+  constructor(
+    readonly userMessage: string,
+    readonly status = 502,
+  ) {
+    super(userMessage);
+    this.name = "IdentifyError";
+  }
+}
 
-const SYSTEM = `You identify common houseplants from a single photo for a plant-care app.
+/** Whether photo identification is configured (a Pl@ntNet key is present). */
+export function isIdentifyEnabled(): boolean {
+  return !!process.env.PLANTNET_API_KEY;
+}
 
-Return your answer in the required JSON format:
-- If the image is not a houseplant (a person, pet, food, empty room, etc.), set isPlant to false and leave speciesKey "".
-- Otherwise identify the plant. If it matches an entry in the catalog below, set speciesKey to that entry's key. If it's a real houseplant but not in the catalog, set speciesKey to "" and still fill in commonName.
-- Always fill in commonName with your best identification, even at low confidence.
-- Set confidence honestly based on image clarity and how sure you are.
-- Keep note to one short, friendly sentence.
+// Query the global flora ("all" project) and ask for English common names so
+// our (English) dataset names line up. Organs default to "auto", so we don't
+// send them and let Pl@ntNet detect leaf/flower/etc.
+const ENDPOINT = "https://my-api.plantnet.org/v2/identify/all";
 
-Catalog (key: name):
-${CATALOG}`;
+// Below this, treat the photo as "no confident plant" (Pl@ntNet already rejects
+// clear non-plants with a 404; this catches weak, near-random guesses).
+const MIN_PLANT_SCORE = 0.05;
+// Only snap a result onto a dataset species when it's at least this confident.
+const MIN_MAP_SCORE = 0.1;
 
-// One lazily-constructed client, reused across requests. The constructor reads
-// ANTHROPIC_API_KEY from the environment.
-let client: Anthropic | null = null;
-function getClient(): Anthropic {
-  return (client ??= new Anthropic());
+/** Reduce a name to lowercase alphanumeric words: "Snake Plant" → ["snake","plant"]. */
+function tokenize(value: string): string[] {
+  return value
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim()
+    .split(" ")
+    .filter(Boolean);
+}
+
+/** True when every word of `alias` appears in `candidate` (subset match). */
+function isSubset(alias: string[], candidate: string[]): boolean {
+  return alias.length > 0 && alias.every((w) => candidate.includes(w));
 }
 
 /**
- * Identify the plant in a base64-encoded image. Throws if the API call fails or
- * the response can't be parsed; callers surface a retry-able error to the user.
+ * Match aliases for a dataset species, as word lists. Sources: the common name,
+ * its key (often the genus — monstera, philodendron, dracaena… — which matches
+ * Pl@ntNet's `genus` directly), and, for names like "Air Plant (Tillandsia)",
+ * the parts either side of the parentheses. Splitting the parenthetical matters:
+ * the whole three-word alias rarely appears in one Pl@ntNet name, but "air
+ * plant" (a common name) and "tillandsia" (the genus) each match on their own.
+ */
+function aliasesFor(commonName: string, key: string): string[][] {
+  const sources = [commonName, key];
+  const paren = commonName.match(/^([^(]+)\(([^)]+)\)/);
+  if (paren) sources.push(paren[1], paren[2]);
+
+  const seen = new Set<string>();
+  const aliases: string[][] = [];
+  for (const source of sources) {
+    const words = tokenize(source);
+    const signature = words.join(" ");
+    if (words.length && !seen.has(signature)) {
+      seen.add(signature);
+      aliases.push(words);
+    }
+  }
+  return aliases;
+}
+
+const DATASET = FALLBACK_SPECIES.map((s) => ({
+  key: s.key,
+  commonName: s.commonName,
+  aliases: aliasesFor(s.commonName, s.key),
+}));
+
+type PlantNetResult = {
+  score?: number;
+  species?: {
+    scientificNameWithoutAuthor?: string;
+    genus?: { scientificNameWithoutAuthor?: string };
+    commonNames?: string[];
+  };
+};
+type PlantNetResponse = {
+  results?: PlantNetResult[];
+  remainingIdentificationRequests?: number;
+};
+
+/** The candidate name word-sets for one Pl@ntNet result (one set per name). */
+function candidateNameSets(result: PlantNetResult): string[][] {
+  const species = result.species ?? {};
+  const sets = (species.commonNames ?? []).map(tokenize);
+  if (species.scientificNameWithoutAuthor) {
+    sets.push(tokenize(species.scientificNameWithoutAuthor));
+  }
+  if (species.genus?.scientificNameWithoutAuthor) {
+    sets.push(tokenize(species.genus.scientificNameWithoutAuthor));
+  }
+  return sets;
+}
+
+/** A display name for a result: first common name, else the scientific name. */
+function displayName(result: PlantNetResult): string {
+  const species = result.species ?? {};
+  return (
+    species.commonNames?.[0] ?? species.scientificNameWithoutAuthor ?? "Plant"
+  );
+}
+
+function confidenceFor(score: number): IdentifyResult["confidence"] {
+  if (score >= 0.4) return "high";
+  if (score >= 0.15) return "medium";
+  return "low";
+}
+
+const NO_MATCH: IdentifyResult = {
+  isPlant: false,
+  speciesKey: "",
+  commonName: "",
+  confidence: "low",
+  note: "No confident match.",
+};
+
+/**
+ * Identify the plant in an uploaded image via Pl@ntNet, then map the result to a
+ * dataset species. Throws {@link IdentifyError} on service/config failures.
  */
 export async function identifyPlant(image: {
-  data: string;
-  mediaType: ImageMediaType;
+  blob: Blob;
+  filename: string;
 }): Promise<IdentifyResult> {
-  // Small JSON output, so a single non-streaming call is well under any timeout.
-  // Thinking is left off (fast, and structured output keeps the reply to the
-  // schema — no room to ramble).
-  const message = await getClient().messages.create({
-    model: MODEL,
-    max_tokens: 1024,
-    system: SYSTEM,
-    output_config: { format: { type: "json_schema", schema: SCHEMA } },
-    messages: [
-      {
-        role: "user",
-        content: [
-          {
-            type: "image",
-            source: {
-              type: "base64",
-              media_type: image.mediaType,
-              data: image.data,
-            },
-          },
-          { type: "text", text: "Identify the houseplant in this photo." },
-        ],
-      },
-    ],
-  });
-
-  const block = message.content.find((b) => b.type === "text");
-  if (!block || block.type !== "text") {
-    throw new Error("Identification response had no text content");
+  const apiKey = process.env.PLANTNET_API_KEY;
+  if (!apiKey) {
+    throw new IdentifyError("Photo identification is not configured.", 503);
   }
-  return JSON.parse(block.text) as IdentifyResult;
+
+  const form = new FormData();
+  form.append("images", image.blob, image.filename);
+
+  const url = `${ENDPOINT}?api-key=${encodeURIComponent(apiKey)}&lang=en&nb-results=10`;
+
+  let res: Response;
+  try {
+    res = await fetch(url, { method: "POST", body: form });
+  } catch {
+    throw new IdentifyError(
+      "Identification service is unreachable. Please try again.",
+    );
+  }
+
+  // Pl@ntNet returns 404 when it can't match a plant at all (incl. non-plants).
+  if (res.status === 404) return NO_MATCH;
+  if (res.status === 429) {
+    throw new IdentifyError(
+      "Daily identification limit reached. Please try again tomorrow.",
+      429,
+    );
+  }
+  // 401 = bad/absent key: a server misconfiguration, not the user's problem.
+  if (!res.ok) {
+    throw new IdentifyError("Identification failed. Please try again.");
+  }
+
+  let data: PlantNetResponse;
+  try {
+    data = (await res.json()) as PlantNetResponse;
+  } catch {
+    throw new IdentifyError("Identification failed. Please try again.");
+  }
+
+  const results = (data.results ?? []).filter((r) => r.species);
+  const top = results[0];
+  if (!top || (top.score ?? 0) < MIN_PLANT_SCORE) return NO_MATCH;
+
+  // Scan results (already sorted by score, desc) and snap onto the first that
+  // maps to a dataset species, above the mapping floor. `break` at the floor is
+  // safe because the list is sorted. Within a result, prefer the most specific
+  // match — the longest matching alias — so "Monstera adansonii" lands on
+  // monstera-adansonii rather than the generic monstera.
+  let matched: (typeof DATASET)[number] | undefined;
+  let matchedResult = top;
+  for (const result of results) {
+    if ((result.score ?? 0) < MIN_MAP_SCORE) break;
+    const sets = candidateNameSets(result);
+    let best: (typeof DATASET)[number] | undefined;
+    let bestLength = 0;
+    for (const species of DATASET) {
+      for (const alias of species.aliases) {
+        if (
+          alias.length > bestLength &&
+          sets.some((cand) => isSubset(alias, cand))
+        ) {
+          best = species;
+          bestLength = alias.length;
+        }
+      }
+    }
+    if (best) {
+      matched = best;
+      matchedResult = result;
+      break;
+    }
+  }
+
+  const name = matched ? matched.commonName : displayName(top);
+  const score = (matched ? matchedResult.score : top.score) ?? 0;
+
+  return {
+    isPlant: true,
+    speciesKey: matched?.key ?? "",
+    commonName: name,
+    confidence: confidenceFor(score),
+    note: `Pl@ntNet matched this as ${name} (${Math.round(score * 100)}% match).`,
+  };
 }
