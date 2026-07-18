@@ -1,5 +1,7 @@
 "use client";
 
+import { AiImageIcon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
@@ -355,40 +357,10 @@ function PickStage({
   return (
     <>
       {/* The list scrolls; pad the bottom so the last row clears the pinned
-          manual-entry bar instead of hiding under it. */}
-      <div className="flex flex-col gap-4 pb-36">
-        {/* Photo identify: take/choose a photo → land on the matched species'
-            form (or manual entry, name pre-filled). Only shown when the feature
-            is configured server-side; the <input> is nested in the <label> so a
-            tap opens the picker with no ref wiring. */}
-        {identifyEnabled ? (
-          <div className="flex flex-col gap-1.5">
-            <label
-              className={`flex cursor-pointer items-center justify-center gap-2 rounded-2xl border border-healthy/40 bg-healthy/10 px-4 py-3 text-sm font-medium text-cream ${tapScale} hover:bg-healthy/15 ${
-                identifying ? "pointer-events-none opacity-70" : ""
-              }`}
-            >
-              <input
-                type="file"
-                accept="image/*"
-                className="hidden"
-                disabled={identifying}
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  // Reset so re-picking the same file still fires onChange.
-                  e.target.value = "";
-                  if (file) onIdentifyFile(file);
-                }}
-              />
-              <span aria-hidden>{identifying ? "🌱" : "📷"}</span>
-              {identifying ? "Identifying…" : "Identify from a photo"}
-            </label>
-            {identifyError ? (
-              <p className="px-1 text-xs text-danger">{identifyError}</p>
-            ) : null}
-          </div>
-        ) : null}
-
+          action bar instead of hiding under it — taller when identify is on. */}
+      <div
+        className={`flex flex-col gap-4 ${identifyEnabled ? "pb-52" : "pb-36"}`}
+      >
         <input
           type="search"
           value={query}
@@ -429,10 +401,10 @@ function PickStage({
         )}
       </div>
 
-      {/* Manual-entry stays reachable, pinned to the bottom; the gradient lets
-          the list dissolve into the canvas behind it as it scrolls under.
-          pointer-events-none on the fade so it never blocks the chips it overlaps;
-          re-enabled on the inner controls.
+      {/* The pinned action bar: identify (primary) → add manually (secondary) →
+          back link. The gradient lets the list dissolve into the canvas behind
+          it as it scrolls under. pointer-events-none on the fade so it never
+          blocks the chips it overlaps; re-enabled on the inner controls.
 
           Portaled to <body> so it escapes the [data-vaul-drawer-wrapper] element,
           which vaul transforms (scale/translate) while the drawer is open. A
@@ -443,6 +415,44 @@ function PickStage({
       <BodyPortal>
         <div className="pointer-events-none fixed inset-x-0 bottom-0 z-30 bg-linear-to-t from-canvas via-canvas to-transparent pt-16">
           <div className="pointer-events-auto mx-auto flex max-w-2xl flex-col gap-3 px-4 pb-6">
+            {/* Primary action: take/choose a photo → land on the matched
+                species' form (or manual entry, name pre-filled). Only shown when
+                the feature is configured server-side; the <input> is nested in
+                the <label> so a tap opens the picker with no ref wiring. */}
+            {identifyEnabled ? (
+              <div className="flex flex-col gap-1.5">
+                <label
+                  className={`flex cursor-pointer items-center justify-center gap-2 rounded-2xl border border-healthy/40 bg-healthy/10 px-4 py-3 text-sm font-medium text-cream ${tapScale} hover:bg-healthy/15 ${
+                    identifying ? "pointer-events-none opacity-70" : ""
+                  }`}
+                >
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    disabled={identifying}
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      // Reset so re-picking the same file still fires onChange.
+                      e.target.value = "";
+                      if (file) onIdentifyFile(file);
+                    }}
+                  />
+                  <HugeiconsIcon
+                    icon={AiImageIcon}
+                    size={18}
+                    strokeWidth={1.9}
+                    aria-hidden
+                    className={identifying ? "animate-pulse" : ""}
+                  />
+                  {identifying ? "Identifying…" : "Identify from a photo"}
+                </label>
+                {identifyError ? (
+                  <p className="px-1 text-xs text-danger">{identifyError}</p>
+                ) : null}
+              </div>
+            ) : null}
+
             <button
               type="button"
               onClick={() => onManual()}
