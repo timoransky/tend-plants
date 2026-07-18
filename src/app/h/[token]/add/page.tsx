@@ -42,7 +42,7 @@ export default async function AddPlantPage({ params }: Props) {
         manually.
       </p>
 
-      <AddPlant token={token} />
+      <AddPlant token={token} identifyEnabled={!!process.env.ANTHROPIC_API_KEY} />
     </main>
   );
 }

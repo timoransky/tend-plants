@@ -13,6 +13,7 @@ import {
   type PlantFormValues,
   speciesToValues,
 } from "@/components/PlantForm";
+import type { IdentifyResult } from "@/lib/identify";
 import type { SpeciesDetail } from "@/lib/species";
 import { tapScale } from "@/lib/ui";
 
@@ -28,7 +29,13 @@ import { tapScale } from "@/lib/ui";
  * over the form to confirm, then offers "Add another plant" (back to the picker)
  * or "Done" (home) — so adding several plants in a row never round-trips home.
  */
-export function AddPlant({ token }: { token: string }) {
+export function AddPlant({
+  token,
+  identifyEnabled,
+}: {
+  token: string;
+  identifyEnabled: boolean;
+}) {
   const router = useRouter();
 
   // --- Picker (page) data ---
@@ -36,6 +43,10 @@ export function AddPlant({ token }: { token: string }) {
   // no extra round-trip (the dataset is small and local).
   const [list, setList] = useState<SpeciesDetail[] | null>(null);
   const [query, setQuery] = useState("");
+
+  // --- Photo identify (optional; only when identifyEnabled) ---
+  const [identifying, setIdentifying] = useState(false);
+  const [identifyError, setIdentifyError] = useState<string | null>(null);
 
   useEffect(() => {
     let active = true;
@@ -94,11 +105,61 @@ export function AddPlant({ token }: { token: string }) {
     setFormOpen(true);
   }
 
-  function startManual() {
+  function startManual(seedName?: string) {
     setOriginal(null);
-    setInitial(MANUAL_VALUES);
+    setInitial(seedName ? { ...MANUAL_VALUES, name: seedName } : MANUAL_VALUES);
     setFormSeed((s) => s + 1);
     setFormOpen(true);
+  }
+
+  // Take a photo → identify → land on the same form the picker would open. A
+  // matched dataset species opens its pre-filled care form (identical to tapping
+  // it in the list); a real-but-unlisted plant drops into manual entry with the
+  // name pre-filled. Identification is only ever a suggestion — the form is the
+  // confirmation step, so the user always reviews before saving.
+  async function handleIdentifyFile(file: File) {
+    setIdentifyError(null);
+    setIdentifying(true);
+    try {
+      // Downscale client-side so the upload is small (faster round-trip, cheaper
+      // vision call); fall back to the original bytes if the browser can't.
+      const image = await downscaleImage(file).catch(() => file);
+      const body = new FormData();
+      body.append("image", image, "plant.jpg");
+
+      const res = await fetch("/api/species/identify", { method: "POST", body });
+      if (!res.ok) {
+        setIdentifyError(
+          res.status === 503
+            ? "Photo identification isn’t available right now."
+            : "Couldn’t identify that photo. Try another, or pick from the list.",
+        );
+        return;
+      }
+
+      const { result } = (await res.json()) as { result: IdentifyResult };
+      if (!result?.isPlant) {
+        setIdentifyError(
+          "That doesn’t look like a houseplant. Try another photo, or pick from the list.",
+        );
+        return;
+      }
+
+      const match = result.speciesKey
+        ? (list ?? []).find((s) => s.key === result.speciesKey)
+        : undefined;
+      if (match) {
+        pickSpecies(match);
+      } else {
+        startManual(result.commonName || "");
+      }
+    } catch {
+      setIdentifyError(
+        "Couldn’t identify that photo. Try another, or pick from the list.",
+      );
+    } finally {
+      setIdentifying(false);
+    }
   }
 
   async function addPlant(values: PlantFormValues) {
@@ -162,6 +223,10 @@ export function AddPlant({ token }: { token: string }) {
         setQuery={setQuery}
         onPick={pickSpecies}
         onManual={startManual}
+        identifyEnabled={identifyEnabled}
+        identifying={identifying}
+        identifyError={identifyError}
+        onIdentifyFile={handleIdentifyFile}
       />
 
       <Drawer open={formOpen} onOpenChange={setFormOpen}>
@@ -192,6 +257,43 @@ export function AddPlant({ token }: { token: string }) {
       </Drawer>
     </>
   );
+}
+
+/**
+ * Downscale an image file to a JPEG no larger than 1024px on its long edge.
+ * Keeps uploads small (faster, cheaper identification) and normalizes EXIF
+ * orientation so a sideways phone photo isn't sent rotated. Rejects if the
+ * browser can't decode the file (e.g. HEIC without support) — the caller then
+ * falls back to sending the original bytes.
+ */
+async function downscaleImage(file: File): Promise<Blob> {
+  const bitmap = await createImageBitmap(file, {
+    imageOrientation: "from-image",
+  });
+  try {
+    const maxDim = 1024;
+    const scale = Math.min(1, maxDim / Math.max(bitmap.width, bitmap.height));
+    const width = Math.max(1, Math.round(bitmap.width * scale));
+    const height = Math.max(1, Math.round(bitmap.height * scale));
+
+    const canvas = document.createElement("canvas");
+    canvas.width = width;
+    canvas.height = height;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) throw new Error("Canvas 2D context unavailable");
+    ctx.drawImage(bitmap, 0, 0, width, height);
+
+    return await new Promise<Blob>((resolve, reject) =>
+      canvas.toBlob(
+        (blob) =>
+          blob ? resolve(blob) : reject(new Error("Image encoding failed")),
+        "image/jpeg",
+        0.85,
+      ),
+    );
+  } finally {
+    bitmap.close();
+  }
 }
 
 /**
@@ -231,6 +333,10 @@ function PickStage({
   setQuery,
   onPick,
   onManual,
+  identifyEnabled,
+  identifying,
+  identifyError,
+  onIdentifyFile,
 }: {
   token: string;
   list: SpeciesDetail[] | null;
@@ -238,13 +344,49 @@ function PickStage({
   query: string;
   setQuery: (v: string) => void;
   onPick: (species: SpeciesDetail) => void;
-  onManual: () => void;
+  onManual: (seedName?: string) => void;
+  identifyEnabled: boolean;
+  identifying: boolean;
+  identifyError: string | null;
+  onIdentifyFile: (file: File) => void;
 }) {
   return (
     <>
       {/* The list scrolls; pad the bottom so the last row clears the pinned
           manual-entry bar instead of hiding under it. */}
       <div className="flex flex-col gap-4 pb-36">
+        {/* Photo identify: take/choose a photo → land on the matched species'
+            form (or manual entry, name pre-filled). Only shown when the feature
+            is configured server-side; the <input> is nested in the <label> so a
+            tap opens the picker with no ref wiring. */}
+        {identifyEnabled ? (
+          <div className="flex flex-col gap-1.5">
+            <label
+              className={`flex cursor-pointer items-center justify-center gap-2 rounded-2xl border border-healthy/40 bg-healthy/10 px-4 py-3 text-sm font-medium text-cream ${tapScale} hover:bg-healthy/15 ${
+                identifying ? "pointer-events-none opacity-70" : ""
+              }`}
+            >
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                disabled={identifying}
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  // Reset so re-picking the same file still fires onChange.
+                  e.target.value = "";
+                  if (file) onIdentifyFile(file);
+                }}
+              />
+              <span aria-hidden>{identifying ? "🌱" : "📷"}</span>
+              {identifying ? "Identifying…" : "Identify from a photo"}
+            </label>
+            {identifyError ? (
+              <p className="px-1 text-xs text-danger">{identifyError}</p>
+            ) : null}
+          </div>
+        ) : null}
+
         <input
           type="search"
           value={query}
@@ -301,7 +443,7 @@ function PickStage({
           <div className="pointer-events-auto mx-auto flex max-w-2xl flex-col gap-3 px-4 pb-6">
             <button
               type="button"
-              onClick={onManual}
+              onClick={() => onManual()}
               className={`rounded-2xl border border-dashed border-cream-soft/40 px-4 py-3 text-sm font-medium text-cream-soft ${tapScale} hover:border-cream-soft hover:text-cream`}
             >
               Can&apos;t find it? Add manually
