@@ -3,7 +3,8 @@ import { and, eq } from "drizzle-orm";
 import { db } from "@/db";
 import { plants } from "@/db/schema";
 import { apiError, findHousehold, json, readJson } from "@/lib/api";
-import { computeCareState, overallStatus } from "@/lib/status";
+import { withStatus } from "@/lib/plants";
+import { deleteObject } from "@/lib/storage";
 
 type Params = { params: Promise<{ token: string; id: string }> };
 
@@ -11,6 +12,7 @@ type EditPlantBody = {
   name?: unknown;
   room?: unknown;
   avatar?: unknown;
+  avatarImageKey?: unknown;
   waterIntervalDays?: unknown;
   waterNote?: unknown;
   lightNote?: unknown;
@@ -53,6 +55,8 @@ export async function PATCH(request: Request, { params }: Params) {
   }
   if ("room" in body) updates.room = optString(body.room);
   if ("avatar" in body) updates.avatar = optString(body.avatar);
+  if ("avatarImageKey" in body)
+    updates.avatarImageKey = optString(body.avatarImageKey);
   if ("waterIntervalDays" in body)
     updates.waterIntervalDays = optInt(body.waterIntervalDays);
   if ("waterNote" in body) updates.waterNote = optString(body.waterNote);
@@ -66,6 +70,19 @@ export async function PATCH(request: Request, { params }: Params) {
     return apiError(400, "No editable fields provided");
   }
 
+  // When the avatar photo changes, note the previous key so its object can be
+  // cleaned up after the row is updated (below).
+  const replacingImage = "avatarImageKey" in updates;
+  let previousImageKey: string | null = null;
+  if (replacingImage) {
+    const [current] = await db
+      .select({ avatarImageKey: plants.avatarImageKey })
+      .from(plants)
+      .where(and(eq(plants.id, id), eq(plants.householdId, household.id)))
+      .limit(1);
+    previousImageKey = current?.avatarImageKey ?? null;
+  }
+
   const [plant] = await db
     .update(plants)
     .set(updates)
@@ -74,16 +91,13 @@ export async function PATCH(request: Request, { params }: Params) {
 
   if (!plant) return apiError(404, "Plant not found");
 
-  const now = new Date();
-  const water = computeCareState(
-    plant.lastWatered,
-    plant.waterIntervalDays,
-    now,
-  );
-  const feed = computeCareState(plant.lastFed, plant.feedIntervalDays, now);
-  return json({
-    plant: { ...plant, water, feed, status: overallStatus(water, feed) },
-  });
+  // Drop the replaced photo (best-effort) so swapping avatars doesn't orphan
+  // objects. Guarded on a real change so re-saving the same photo is a no-op.
+  if (previousImageKey && previousImageKey !== plant.avatarImageKey) {
+    await deleteObject(previousImageKey);
+  }
+
+  return json({ plant: withStatus(plant, new Date()) });
 }
 
 /**
@@ -98,8 +112,12 @@ export async function DELETE(_request: Request, { params }: Params) {
   const [deleted] = await db
     .delete(plants)
     .where(and(eq(plants.id, id), eq(plants.householdId, household.id)))
-    .returning({ id: plants.id });
+    .returning({ id: plants.id, avatarImageKey: plants.avatarImageKey });
 
   if (!deleted) return apiError(404, "Plant not found");
+
+  // Remove the plant's avatar photo too (best-effort) so it doesn't linger.
+  if (deleted.avatarImageKey) await deleteObject(deleted.avatarImageKey);
+
   return json({ ok: true });
 }

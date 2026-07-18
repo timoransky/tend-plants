@@ -24,6 +24,7 @@ type AddPlantBody = {
   speciesKey?: unknown;
   commonName?: unknown;
   avatar?: unknown;
+  avatarImageKey?: unknown;
   waterIntervalDays?: unknown;
   waterNote?: unknown;
   lightNote?: unknown;
@@ -69,6 +70,7 @@ export async function POST(request: Request, { params }: Params) {
       speciesKey: optString(body.speciesKey),
       commonName: optString(body.commonName),
       avatar: optString(body.avatar),
+      avatarImageKey: optString(body.avatarImageKey),
       waterIntervalDays: optInt(body.waterIntervalDays),
       waterNote: optString(body.waterNote),
       lightNote: optString(body.lightNote),

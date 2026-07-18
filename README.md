@@ -18,6 +18,47 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
+## Environment variables
+
+Set these server-side (Vercel project settings, or `.env.local` for dev):
+
+| Variable | Required | Purpose |
+| --- | --- | --- |
+| `DATABASE_URL` | yes | Neon **pooled** (`-pooler`) connection string. |
+| `PLANTNET_API_KEY` | optional | Enables photo **identification** (Pl@ntNet). Unset → the identify entry point is hidden. |
+| `STORAGE_*` | optional | Enables **photo avatars** (see below). Unset → plants use emoji avatars only. |
+
+### Photo avatars (object storage)
+
+Avatar photos are stored in any S3-compatible bucket — the app talks plain S3,
+so the provider is just configuration (Supabase Storage today; AWS S3 /
+Cloudflare R2 / MinIO later by changing these vars, no code change). With any of
+them unset the feature disables itself and plants fall back to emoji.
+
+| Variable | Example |
+| --- | --- |
+| `STORAGE_ENDPOINT` | `https://<ref>.storage.supabase.co/storage/v1/s3` |
+| `STORAGE_REGION` | `eu-central-1` |
+| `STORAGE_BUCKET` | `plant-avatars` |
+| `STORAGE_ACCESS_KEY_ID` | S3 access key id |
+| `STORAGE_SECRET_ACCESS_KEY` | S3 secret access key |
+| `STORAGE_PUBLIC_URL_BASE` | `https://<ref>.supabase.co/storage/v1/object/public/plant-avatars` |
+
+Supabase setup: create a **public** bucket (e.g. `plant-avatars`), then generate
+S3 access keys under *Project settings → Storage → S3 access keys*. Object keys
+are random and household-agnostic, so a leaked photo URL can't be walked back to
+a household token — the public bucket mirrors the app's "secret link = access"
+model.
+
+### Database migrations
+
+The avatar feature adds an `avatar_image_key` column. Apply pending migrations
+after pulling and before deploying:
+
+```bash
+pnpm db:migrate
+```
+
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
 ## Learn More

@@ -25,9 +25,11 @@ function thirstyCount(plants: PlantWithStatus[]): number {
 export function PlantGarden({
   groups,
   token,
+  photoEnabled,
 }: {
   groups: RoomGroup[];
   token: string;
+  photoEnabled: boolean;
 }) {
   const reduce = useReducedMotion();
   const [collapsed, setCollapsed] = useState<Set<string>>(() => new Set());
@@ -130,6 +132,7 @@ export function PlantGarden({
         plant={drawerPlant}
         open={drawerOpen}
         token={token}
+        photoEnabled={photoEnabled}
         onOpenChange={setDrawerOpen}
       />
     </>

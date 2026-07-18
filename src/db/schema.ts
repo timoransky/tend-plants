@@ -53,8 +53,12 @@ export const plants = pgTable("plants", {
   // the add flow and when editing the plant later.
   speciesKey: text("species_key"),
   commonName: text("common_name"),
-  // Emoji or stock image key — no uploads in v1.
+  // Emoji glyph — the default avatar and the fallback whenever no photo is set.
   avatar: text("avatar"),
+  // Object-storage key for an uploaded avatar photo (see src/lib/storage.ts),
+  // or null. When set it takes precedence over the emoji; the public URL is
+  // derived from the key at read time so the storage provider stays swappable.
+  avatarImageKey: text("avatar_image_key"),
 
   // Water
   lastWatered: timestamp("last_watered", { withTimezone: true }),

@@ -20,6 +20,7 @@ import {
   speciesToValues,
 } from "@/components/PlantForm";
 import type { IdentifyCandidate, IdentifyResult } from "@/lib/identify";
+import { downscaleImage } from "@/lib/image";
 import type { SpeciesDetail } from "@/lib/species";
 import { tapScale } from "@/lib/ui";
 
@@ -38,9 +39,11 @@ import { tapScale } from "@/lib/ui";
 export function AddPlant({
   token,
   identifyEnabled,
+  photoEnabled,
 }: {
   token: string;
   identifyEnabled: boolean;
+  photoEnabled: boolean;
 }) {
   const router = useRouter();
 
@@ -60,6 +63,9 @@ export function AddPlant({
   const [candidates, setCandidates] = useState<IdentifyCandidate[] | null>(null);
   const [identifyError, setIdentifyError] = useState<string | null>(null);
   const [photoUrl, setPhotoUrl] = useState<string | null>(null);
+  // The downscaled photo the user identified from, kept so it can be reused as
+  // the new plant's avatar when they pick a candidate (or add manually).
+  const [photoBlob, setPhotoBlob] = useState<Blob | null>(null);
 
   useEffect(() => {
     let active = true;
@@ -103,14 +109,19 @@ export function AddPlant({
   const [original, setOriginal] = useState<SpeciesDetail | null>(null);
   const [initial, setInitial] = useState<PlantFormValues | null>(null);
   const [formSeed, setFormSeed] = useState(0);
+  // The photo (if any) to seed the next-opened form with — set when a plant is
+  // added straight from an identified photo, cleared for a plain picker choice.
+  const [formPhoto, setFormPhoto] = useState<Blob | null>(null);
 
   // --- Success (nested drawer) ---
   // After a save, this confirmation sheet stacks over the still-open form; it
   // holds the saved plant's name/avatar for the "{name} added" header.
   const [successOpen, setSuccessOpen] = useState(false);
-  const [added, setAdded] = useState<{ name: string; avatar: string } | null>(
-    null,
-  );
+  const [added, setAdded] = useState<{
+    name: string;
+    avatar: string;
+    imageUrl: string | null;
+  } | null>(null);
 
   // If the form drawer closes for any reason, drop the nested success sheet with
   // it (mirrors PlantDrawer's guard). Adjusting state during render is the
@@ -122,17 +133,20 @@ export function AddPlant({
   }
 
   // Synchronous: the picker already holds full care detail, so opening the form
-  // is just a state swap — no fetch, no loading flash.
-  function pickSpecies(species: SpeciesDetail) {
+  // is just a state swap — no fetch, no loading flash. `photo` (from identify)
+  // seeds the form's avatar; a plain picker choice passes none.
+  function pickSpecies(species: SpeciesDetail, photo: Blob | null = null) {
     setOriginal(species);
     setInitial(speciesToValues(species));
+    setFormPhoto(photo);
     setFormSeed((s) => s + 1);
     setFormOpen(true);
   }
 
-  function startManual(seedName?: string) {
+  function startManual(seedName?: string, photo: Blob | null = null) {
     setOriginal(null);
     setInitial(seedName ? { ...MANUAL_VALUES, name: seedName } : MANUAL_VALUES);
+    setFormPhoto(photo);
     setFormSeed((s) => s + 1);
     setFormOpen(true);
   }
@@ -152,8 +166,10 @@ export function AddPlant({
     setIdentifying(true);
     try {
       // Downscale client-side so the upload is small (faster round-trip, cheaper
-      // call); fall back to the original bytes if the browser can't.
+      // call); fall back to the original bytes if the browser can't. Keep the
+      // downscaled photo so it can double as the plant's avatar on confirm.
       const image = await downscaleImage(file).catch(() => file);
+      setPhotoBlob(image);
       const body = new FormData();
       body.append("image", image, "plant.jpg");
 
@@ -188,13 +204,18 @@ export function AddPlant({
   }
 
   // A chosen candidate opens its pre-filled form: a dataset match its species
-  // form, an unlisted plant manual entry with the name pre-filled.
+  // form, an unlisted plant manual entry with the name pre-filled. The photo
+  // they identified from is carried through as the plant's avatar (when photo
+  // uploads are enabled).
   function chooseCandidate(candidate: IdentifyCandidateView) {
+    const photo = photoEnabled ? photoBlob : null;
     const match = candidate.speciesKey
       ? (list ?? []).find((s) => s.key === candidate.speciesKey)
       : undefined;
     afterIdentifyClose(() =>
-      match ? pickSpecies(match) : startManual(candidate.commonName || undefined),
+      match
+        ? pickSpecies(match, photo)
+        : startManual(candidate.commonName || undefined, photo),
     );
   }
 
@@ -206,6 +227,7 @@ export function AddPlant({
         name: values.name,
         room: values.room.trim() || null,
         avatar: values.avatar,
+        avatarImageKey: values.avatarImageKey,
         speciesKey: original?.key ?? null,
         commonName: original?.commonName ?? null,
         waterIntervalDays: Number(values.waterIntervalDays) || null,
@@ -220,7 +242,11 @@ export function AddPlant({
     // Keep Home current for whenever they finish, but don't navigate yet: leave
     // the form open and stack the success sheet over it (which scales it back).
     router.refresh();
-    setAdded({ name: values.name, avatar: values.avatar });
+    setAdded({
+      name: values.name,
+      avatar: values.avatar,
+      imageUrl: values.avatarImageUrl,
+    });
     setSuccessOpen(true);
   }
 
@@ -269,6 +295,9 @@ export function AddPlant({
             key={formSeed}
             initial={initial}
             species={original}
+            token={token}
+            photoEnabled={photoEnabled}
+            pendingPhoto={formPhoto}
             title={original ? original.commonName : "New plant"}
             subtitle="Set the name, room and care details"
             submitLabel="Add plant"
@@ -283,6 +312,7 @@ export function AddPlant({
         <AddedPlantDrawer
           name={added?.name ?? ""}
           avatar={added?.avatar ?? ""}
+          imageUrl={added?.imageUrl ?? null}
           open={successOpen}
           onOpenChange={(open) => (open ? setSuccessOpen(true) : addAnother())}
           onAddAnother={addAnother}
@@ -301,49 +331,16 @@ export function AddPlant({
           error={identifyError}
           candidates={displayCandidates}
           onChoose={chooseCandidate}
-          onManual={() => afterIdentifyClose(() => startManual())}
+          onManual={() =>
+            afterIdentifyClose(() =>
+              startManual(undefined, photoEnabled ? photoBlob : null),
+            )
+          }
           onRetryFile={handleIdentifyFile}
         />
       ) : null}
     </>
   );
-}
-
-/**
- * Downscale an image file to a JPEG no larger than 1024px on its long edge.
- * Keeps uploads small (faster, cheaper identification) and normalizes EXIF
- * orientation so a sideways phone photo isn't sent rotated. Rejects if the
- * browser can't decode the file (e.g. HEIC without support) — the caller then
- * falls back to sending the original bytes.
- */
-async function downscaleImage(file: File): Promise<Blob> {
-  const bitmap = await createImageBitmap(file, {
-    imageOrientation: "from-image",
-  });
-  try {
-    const maxDim = 1024;
-    const scale = Math.min(1, maxDim / Math.max(bitmap.width, bitmap.height));
-    const width = Math.max(1, Math.round(bitmap.width * scale));
-    const height = Math.max(1, Math.round(bitmap.height * scale));
-
-    const canvas = document.createElement("canvas");
-    canvas.width = width;
-    canvas.height = height;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) throw new Error("Canvas 2D context unavailable");
-    ctx.drawImage(bitmap, 0, 0, width, height);
-
-    return await new Promise<Blob>((resolve, reject) =>
-      canvas.toBlob(
-        (blob) =>
-          blob ? resolve(blob) : reject(new Error("Image encoding failed")),
-        "image/jpeg",
-        0.85,
-      ),
-    );
-  } finally {
-    bitmap.close();
-  }
 }
 
 /**

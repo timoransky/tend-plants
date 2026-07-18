@@ -1,9 +1,13 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { CameraAdd01Icon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { useEffect, useMemo, useState } from "react";
 
 import { DrawerDescription, DrawerTitle } from "@/components/Drawer";
+import { PlantAvatar } from "@/components/PlantAvatar";
 import { SHOW_FEED } from "@/lib/features";
+import { downscaleImage } from "@/lib/image";
 import type { SpeciesDetail } from "@/lib/species";
 import { tapScale } from "@/lib/ui";
 
@@ -14,6 +18,11 @@ export type PlantFormValues = {
   name: string;
   room: string;
   avatar: string;
+  // An uploaded avatar photo: the storage object key (sent on save) and its
+  // public URL (for preview). Both null when the avatar is the emoji. A photo,
+  // when present, wins over the emoji everywhere it's shown.
+  avatarImageKey: string | null;
+  avatarImageUrl: string | null;
   waterIntervalDays: string;
   waterNote: string;
   lightNote: string;
@@ -40,6 +49,8 @@ export function speciesToValues(s: SpeciesDetail): PlantFormValues {
     name: s.commonName,
     room: "",
     avatar: s.avatar,
+    avatarImageKey: null,
+    avatarImageUrl: null,
     waterIntervalDays: String(s.waterIntervalDays),
     waterNote: s.waterNote,
     lightNote: s.lightNote,
@@ -54,6 +65,8 @@ export const MANUAL_VALUES: PlantFormValues = {
   name: "",
   room: "",
   avatar: "🪴",
+  avatarImageKey: null,
+  avatarImageUrl: null,
   waterIntervalDays: "7",
   waterNote: "",
   lightNote: "",
@@ -79,6 +92,9 @@ export const MANUAL_VALUES: PlantFormValues = {
 export function PlantForm({
   initial,
   species,
+  token,
+  photoEnabled,
+  pendingPhoto,
   title,
   subtitle,
   submitLabel,
@@ -87,6 +103,12 @@ export function PlantForm({
 }: {
   initial: PlantFormValues;
   species: SpeciesDetail | null;
+  token: string;
+  photoEnabled: boolean;
+  // A photo handed in from the identify flow to become this plant's avatar.
+  // Previewed instantly (local blob) and uploaded in the background, so it's
+  // applied without an extra tap. Null/omitted for the picker and edit flows.
+  pendingPhoto?: Blob | null;
   title: string;
   subtitle: string;
   submitLabel: string;
@@ -95,10 +117,83 @@ export function PlantForm({
 }) {
   const [values, setValues] = useState<PlantFormValues>(initial);
   const [submitting, setSubmitting] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const set = (patch: Partial<PlantFormValues>) =>
     setValues((v) => ({ ...v, ...patch }));
+
+  // Take/choose a photo → downscale → upload → use it as this plant's avatar.
+  // The photo overrides the emoji; picking an emoji below clears it again.
+  async function uploadPhoto(file: File) {
+    setUploading(true);
+    setError(null);
+    try {
+      const blob = await downscaleImage(file).catch(() => file);
+      const body = new FormData();
+      body.append("image", blob, "avatar.jpg");
+      const res = await fetch(`/api/h/${token}/avatar`, {
+        method: "POST",
+        body,
+      });
+      if (!res.ok) throw new Error();
+      const { key, url } = (await res.json()) as { key: string; url: string };
+      set({ avatarImageKey: key, avatarImageUrl: url });
+    } catch {
+      setError("Couldn’t upload that photo. Please try again.");
+    } finally {
+      setUploading(false);
+    }
+  }
+
+  // Absorb a photo handed in from identify (runs once — the form is remounted
+  // per open): preview it instantly from a local blob URL, then upload it and
+  // swap in the stored key/URL. `uploading` disables submit until it lands. All
+  // state updates happen inside the async task (never synchronously in the
+  // effect body) so they don't trigger cascading renders.
+  useEffect(() => {
+    if (!pendingPhoto || !photoEnabled) return;
+    let active = true;
+    const localUrl = URL.createObjectURL(pendingPhoto);
+    (async () => {
+      setUploading(true);
+      setValues((v) => ({
+        ...v,
+        avatarImageUrl: localUrl,
+        avatarImageKey: null,
+      }));
+      try {
+        const body = new FormData();
+        body.append("image", pendingPhoto, "avatar.jpg");
+        const res = await fetch(`/api/h/${token}/avatar`, {
+          method: "POST",
+          body,
+        });
+        if (!res.ok) throw new Error();
+        const { key, url } = (await res.json()) as { key: string; url: string };
+        if (active) {
+          setValues((v) => ({ ...v, avatarImageKey: key, avatarImageUrl: url }));
+        }
+      } catch {
+        if (active) {
+          setValues((v) => ({
+            ...v,
+            avatarImageKey: null,
+            avatarImageUrl: null,
+          }));
+          setError("Couldn’t attach that photo. Pick an avatar below.");
+        }
+      } finally {
+        if (active) setUploading(false);
+        URL.revokeObjectURL(localUrl);
+      }
+    })();
+    return () => {
+      active = false;
+    };
+    // Runs once for this form instance; deps intentionally omitted.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const defaults = useMemo(
     () => (species ? speciesToValues(species) : null),
@@ -148,7 +243,11 @@ export function PlantForm({
     <>
       <header className="flex items-center gap-4 pb-5">
         <span className="flex size-20 shrink-0 items-center justify-center rounded-full bg-surface-muted text-4xl">
-          <span aria-hidden>{values.avatar || "🪴"}</span>
+          <PlantAvatar
+            avatar={values.avatar || "🪴"}
+            imageUrl={values.avatarImageUrl}
+            alt={values.name}
+          />
         </span>
         <div className="min-w-0">
           <DrawerTitle className="truncate text-2xl font-semibold tracking-tight text-ink">
@@ -181,20 +280,78 @@ export function PlantForm({
 
         <Field label="Avatar">
           <div className="flex flex-wrap gap-1.5">
-            {avatarChoices.map((emo) => (
-              <button
-                key={emo}
-                type="button"
-                onClick={() => set({ avatar: emo })}
-                className={`flex size-10 items-center justify-center rounded-xl text-xl ${tapScale} ${
-                  values.avatar === emo
-                    ? "bg-healthy/20 ring-2 ring-healthy"
-                    : "bg-surface-muted hover:bg-surface-muted/70"
+            {/* Photo tile: take/choose a picture to use as the avatar. Shown
+                only when uploads are configured. When a photo is set it shows a
+                thumbnail and carries the selected ring; re-tapping replaces it. */}
+            {photoEnabled ? (
+              <label
+                aria-label="Use a photo"
+                className={`relative flex size-10 cursor-pointer items-center justify-center overflow-hidden rounded-xl ${tapScale} ${
+                  values.avatarImageUrl
+                    ? "ring-2 ring-healthy"
+                    : "bg-surface-muted text-ink-soft hover:bg-surface-muted/70"
                 }`}
               >
-                {emo}
-              </button>
-            ))}
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  disabled={uploading}
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    // Reset so re-picking the same file still fires onChange.
+                    e.target.value = "";
+                    if (file) uploadPhoto(file);
+                  }}
+                />
+                {uploading ? (
+                  <span
+                    className="size-4 animate-spin rounded-full border-2 border-ink/20 border-t-ink/70"
+                    aria-label="Uploading"
+                  />
+                ) : values.avatarImageUrl ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={values.avatarImageUrl}
+                    alt=""
+                    className="size-full object-cover"
+                  />
+                ) : (
+                  <HugeiconsIcon
+                    icon={CameraAdd01Icon}
+                    size={18}
+                    strokeWidth={1.9}
+                    aria-hidden
+                  />
+                )}
+              </label>
+            ) : null}
+
+            {avatarChoices.map((emo) => {
+              // A photo overrides emoji selection: while one is set, no emoji is
+              // highlighted, and tapping an emoji clears the photo.
+              const selected = !values.avatarImageUrl && values.avatar === emo;
+              return (
+                <button
+                  key={emo}
+                  type="button"
+                  onClick={() =>
+                    set({
+                      avatar: emo,
+                      avatarImageKey: null,
+                      avatarImageUrl: null,
+                    })
+                  }
+                  className={`flex size-10 items-center justify-center rounded-xl text-xl ${tapScale} ${
+                    selected
+                      ? "bg-healthy/20 ring-2 ring-healthy"
+                      : "bg-surface-muted hover:bg-surface-muted/70"
+                  }`}
+                >
+                  {emo}
+                </button>
+              );
+            })}
           </div>
         </Field>
 
@@ -282,7 +439,7 @@ export function PlantForm({
       <button
         type="button"
         onClick={submit}
-        disabled={submitting || !values.name.trim()}
+        disabled={submitting || uploading || !values.name.trim()}
         className={`mt-4 h-12 w-full rounded-full bg-healthy text-base font-semibold text-canvas ${tapScale} hover:bg-healthy/90 disabled:opacity-60`}
       >
         {submitting ? submittingLabel : submitLabel}
