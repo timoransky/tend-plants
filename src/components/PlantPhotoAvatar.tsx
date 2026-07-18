@@ -19,9 +19,8 @@ import { tapScale } from "@/lib/ui";
  * content, which is transformed while dragging) is positioned relative to that
  * subtree, not the viewport, which would break the full-screen overlay. Sitting
  * outside the drawer's tree also means the drawer's own dismiss handlers would
- * fire on the lightbox's Escape / outside-tap, so both are stopped here (see the
- * effect and the overlay's onPointerDown) — closing the lightbox must not also
- * close the drawer underneath.
+ * fire on the lightbox's Escape / tap / focus, so those are intercepted in the
+ * effect below — closing the lightbox must not also close the drawer underneath.
  */
 export function PlantPhotoAvatar({
   avatar,
@@ -46,21 +45,35 @@ export function PlantPhotoAvatar({
 
   useEffect(() => {
     if (!open) return;
-    // Capture phase + stopImmediatePropagation so this runs before (and hides
-    // the key from) any drawer that also closes on Escape — only the lightbox
-    // should close.
-    const onKey = (e: KeyboardEvent) => {
+
+    // The lightbox is portalled to <body>, so a parent drawer (vaul, a Radix
+    // dialog) treats interactions inside it as happening "outside" itself and
+    // dismisses too. Radix's dismissers listen on `document`: `pointerdown` and
+    // `focusin` in the bubble phase, and `Escape` in the capture phase. Notably
+    // `focusin` fires with target `<body>` (not the overlay) when a backdrop tap
+    // blurs the trigger button — so a target-based filter misses it. While the
+    // lightbox owns the screen nothing beneath it should react, so we swallow
+    // these events wholesale, intercepting on `window` in the capture phase
+    // (which always precedes any `document` listener: capture flows window →
+    // document → target). The lightbox itself closes on the separate `click`
+    // event, which we leave untouched.
+    const stop = (e: Event) => e.stopPropagation();
+    const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
-        e.stopImmediatePropagation();
+        e.stopPropagation();
         e.preventDefault();
         setOpen(false);
       }
     };
-    document.addEventListener("keydown", onKey, true);
+    window.addEventListener("pointerdown", stop, true);
+    window.addEventListener("focusin", stop, true);
+    window.addEventListener("keydown", onKeyDown, true);
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     return () => {
-      document.removeEventListener("keydown", onKey, true);
+      window.removeEventListener("pointerdown", stop, true);
+      window.removeEventListener("focusin", stop, true);
+      window.removeEventListener("keydown", onKeyDown, true);
       document.body.style.overflow = prevOverflow;
     };
   }, [open]);
@@ -94,22 +107,15 @@ export function PlantPhotoAvatar({
                   aria-modal="true"
                   aria-label={`Photo of ${alt}`}
                   onClick={() => setOpen(false)}
-                  // Keep the tap from reaching the drawer's pointer-outside
-                  // dismiss (vaul/Radix listens on document) — see the header
-                  // note. React (Next's App Router) delegates events at document
-                  // and registers before Radix mounts, so stopping the native
-                  // event's immediate propagation skips Radix's same-node
-                  // listener while our own onClick (a separate click event) still
-                  // fires to close the lightbox.
-                  onPointerDown={(e) => {
-                    e.stopPropagation();
-                    e.nativeEvent.stopImmediatePropagation();
-                  }}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.2, ease: "easeOut" }}
-                  className="fixed inset-0 z-[100] flex cursor-zoom-out items-center justify-center bg-scrim/80 p-6 backdrop-blur-sm"
+                  // pointer-events-auto is required: a modal vaul drawer sets
+                  // `body { pointer-events: none }`, which this portalled overlay
+                  // would otherwise inherit — making it click-through so taps fall
+                  // to the drawer's scrim and dismiss it.
+                  className="pointer-events-auto fixed inset-0 z-[100] flex cursor-zoom-out items-center justify-center bg-scrim/80 p-6 backdrop-blur-sm"
                 >
                   {/* motion.img (not <img>) so the enlarge animates; alt carries
                       the plant name for assistive tech. */}
