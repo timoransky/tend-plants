@@ -17,22 +17,25 @@ import { FALLBACK_SPECIES } from "@/data/fallback-species";
  * Register for a free key at https://my.plantnet.org/.
  */
 
-export type IdentifyResult = {
-  /**
-   * False when nothing was confidently identified (a non-plant photo, or a plant
-   * Pl@ntNet couldn't place). The client then prompts for another photo.
-   */
-  isPlant: boolean;
+export type IdentifyCandidate = {
   /**
    * Matching key from {@link FALLBACK_SPECIES}, or "" when the plant is real but
-   * not in our dataset (the caller falls back to manual entry, name pre-filled).
+   * not in our dataset (choosing it falls back to manual entry, name pre-filled).
    */
   speciesKey: string;
-  /** Common name to show / pre-fill, even when the plant isn't in the dataset. */
+  /** Common name to show / pre-fill. */
   commonName: string;
   confidence: "high" | "medium" | "low";
-  /** One short line about the identification (kept for future UI use). */
-  note: string;
+};
+
+export type IdentifyResult = {
+  /**
+   * Up to a few ranked candidates, best first — so the user can confirm the top
+   * guess or pick a close alternative rather than being stuck with one answer.
+   * Empty when nothing was confidently identified (a non-plant photo, or a plant
+   * Pl@ntNet couldn't place); the client then offers another photo / manual entry.
+   */
+  candidates: IdentifyCandidate[];
 };
 
 /**
@@ -59,11 +62,11 @@ export function isIdentifyEnabled(): boolean {
 // send them and let Pl@ntNet detect leaf/flower/etc.
 const ENDPOINT = "https://my-api.plantnet.org/v2/identify/all";
 
-// Below this, treat the photo as "no confident plant" (Pl@ntNet already rejects
-// clear non-plants with a 404; this catches weak, near-random guesses).
+// Below this, skip the candidate — a weak, near-random guess (Pl@ntNet already
+// rejects clear non-plants with a 404).
 const MIN_PLANT_SCORE = 0.05;
-// Only snap a result onto a dataset species when it's at least this confident.
-const MIN_MAP_SCORE = 0.1;
+// How many ranked options to offer for review. More than this is just noise.
+const MAX_CANDIDATES = 3;
 
 /** Reduce a name to lowercase alphanumeric words: "Snake Plant" → ["snake","plant"]. */
 function tokenize(value: string): string[] {
@@ -147,19 +150,43 @@ function displayName(result: PlantNetResult): string {
   );
 }
 
-function confidenceFor(score: number): IdentifyResult["confidence"] {
+function confidenceFor(score: number): IdentifyCandidate["confidence"] {
   if (score >= 0.4) return "high";
   if (score >= 0.15) return "medium";
   return "low";
 }
 
-const NO_MATCH: IdentifyResult = {
-  isPlant: false,
-  speciesKey: "",
-  commonName: "",
-  confidence: "low",
-  note: "No confident match.",
-};
+/**
+ * Map one Pl@ntNet result to a dataset species, preferring the most specific
+ * match (longest matching alias) so "Monstera adansonii" lands on
+ * monstera-adansonii rather than the generic monstera. Falls back to a
+ * manual-entry candidate (empty key + the result's display name) when nothing
+ * in the dataset matches.
+ */
+function mapResultToSpecies(result: PlantNetResult): {
+  speciesKey: string;
+  commonName: string;
+} {
+  const sets = candidateNameSets(result);
+  let best: (typeof DATASET)[number] | undefined;
+  let bestLength = 0;
+  for (const species of DATASET) {
+    for (const alias of species.aliases) {
+      if (
+        alias.length > bestLength &&
+        sets.some((cand) => isSubset(alias, cand))
+      ) {
+        best = species;
+        bestLength = alias.length;
+      }
+    }
+  }
+  return best
+    ? { speciesKey: best.key, commonName: best.commonName }
+    : { speciesKey: "", commonName: displayName(result) };
+}
+
+const NO_MATCH: IdentifyResult = { candidates: [] };
 
 /**
  * Identify the plant in an uploaded image via Pl@ntNet, then map the result to a
@@ -209,47 +236,24 @@ export async function identifyPlant(image: {
   }
 
   const results = (data.results ?? []).filter((r) => r.species);
-  const top = results[0];
-  if (!top || (top.score ?? 0) < MIN_PLANT_SCORE) return NO_MATCH;
 
-  // Scan results (already sorted by score, desc) and snap onto the first that
-  // maps to a dataset species, above the mapping floor. `break` at the floor is
-  // safe because the list is sorted. Within a result, prefer the most specific
-  // match — the longest matching alias — so "Monstera adansonii" lands on
-  // monstera-adansonii rather than the generic monstera.
-  let matched: (typeof DATASET)[number] | undefined;
-  let matchedResult = top;
+  // Build up to MAX_CANDIDATES ranked options (Pl@ntNet returns them sorted by
+  // score, desc). Each result maps to a dataset species when its names match,
+  // else becomes a manual-entry candidate keyed by name. Dedupe so two Pl@ntNet
+  // species that resolve to the same option don't both appear.
+  const candidates: IdentifyCandidate[] = [];
+  const seen = new Set<string>();
   for (const result of results) {
-    if ((result.score ?? 0) < MIN_MAP_SCORE) break;
-    const sets = candidateNameSets(result);
-    let best: (typeof DATASET)[number] | undefined;
-    let bestLength = 0;
-    for (const species of DATASET) {
-      for (const alias of species.aliases) {
-        if (
-          alias.length > bestLength &&
-          sets.some((cand) => isSubset(alias, cand))
-        ) {
-          best = species;
-          bestLength = alias.length;
-        }
-      }
-    }
-    if (best) {
-      matched = best;
-      matchedResult = result;
-      break;
-    }
+    const score = result.score ?? 0;
+    if (score < MIN_PLANT_SCORE) break; // sorted, so the rest are weaker still
+    const mapped = mapResultToSpecies(result);
+    const dedupeKey =
+      mapped.speciesKey || `name:${mapped.commonName.toLowerCase()}`;
+    if (seen.has(dedupeKey)) continue;
+    seen.add(dedupeKey);
+    candidates.push({ ...mapped, confidence: confidenceFor(score) });
+    if (candidates.length >= MAX_CANDIDATES) break;
   }
 
-  const name = matched ? matched.commonName : displayName(top);
-  const score = (matched ? matchedResult.score : top.score) ?? 0;
-
-  return {
-    isPlant: true,
-    speciesKey: matched?.key ?? "",
-    commonName: name,
-    confidence: confidenceFor(score),
-    note: `Pl@ntNet matched this as ${name} (${Math.round(score * 100)}% match).`,
-  };
+  return { candidates };
 }

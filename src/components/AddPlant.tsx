@@ -10,12 +10,16 @@ import { createPortal } from "react-dom";
 import { AddedPlantDrawer } from "@/components/AddedPlantDrawer";
 import { Drawer } from "@/components/Drawer";
 import {
+  IdentifyDrawer,
+  type IdentifyCandidateView,
+} from "@/components/IdentifyDrawer";
+import {
   MANUAL_VALUES,
   PlantForm,
   type PlantFormValues,
   speciesToValues,
 } from "@/components/PlantForm";
-import type { IdentifyResult } from "@/lib/identify";
+import type { IdentifyCandidate, IdentifyResult } from "@/lib/identify";
 import type { SpeciesDetail } from "@/lib/species";
 import { tapScale } from "@/lib/ui";
 
@@ -47,8 +51,15 @@ export function AddPlant({
   const [query, setQuery] = useState("");
 
   // --- Photo identify (optional; only when identifyEnabled) ---
+  // The review sheet owns the lifecycle: `identifyOpen` drives it, `identifying`
+  // shows the loading state, `candidates` holds the ranked guesses (null while
+  // loading, [] when nothing matched), `identifyError` a failure, `photoUrl` a
+  // local preview of the picked photo.
+  const [identifyOpen, setIdentifyOpen] = useState(false);
   const [identifying, setIdentifying] = useState(false);
+  const [candidates, setCandidates] = useState<IdentifyCandidate[] | null>(null);
   const [identifyError, setIdentifyError] = useState<string | null>(null);
+  const [photoUrl, setPhotoUrl] = useState<string | null>(null);
 
   useEffect(() => {
     let active = true;
@@ -70,6 +81,18 @@ export function AddPlant({
       ? list.filter((s) => s.commonName.toLowerCase().includes(needle))
       : list;
   }, [list, query]);
+
+  // Enrich each candidate with its avatar for display: a dataset match shows the
+  // species' emoji; an unlisted plant gets a neutral pot.
+  const displayCandidates = useMemo<IdentifyCandidateView[] | null>(() => {
+    if (!candidates) return null;
+    return candidates.map((c) => ({
+      ...c,
+      avatar: c.speciesKey
+        ? ((list ?? []).find((s) => s.key === c.speciesKey)?.avatar ?? "🪴")
+        : "🪴",
+    }));
+  }, [candidates, list]);
 
   // --- Form (drawer) data ---
   // `original` is the species the form was seeded from (null for manual entry);
@@ -114,17 +137,22 @@ export function AddPlant({
     setFormOpen(true);
   }
 
-  // Take a photo → identify → land on the same form the picker would open. A
-  // matched dataset species opens its pre-filled care form (identical to tapping
-  // it in the list); a real-but-unlisted plant drops into manual entry with the
-  // name pre-filled. Identification is only ever a suggestion — the form is the
-  // confirmation step, so the user always reviews before saving.
+  // Take a photo → open the review sheet with a loading state → fill it with
+  // Pl@ntNet's ranked guesses (or an error). Choosing a candidate lands on the
+  // same form the picker would open. Also runs on "try another photo" from
+  // inside the sheet, which just replaces the current result.
   async function handleIdentifyFile(file: File) {
+    setPhotoUrl((prev) => {
+      if (prev) URL.revokeObjectURL(prev);
+      return URL.createObjectURL(file);
+    });
+    setCandidates(null);
     setIdentifyError(null);
+    setIdentifyOpen(true);
     setIdentifying(true);
     try {
       // Downscale client-side so the upload is small (faster round-trip, cheaper
-      // vision call); fall back to the original bytes if the browser can't.
+      // call); fall back to the original bytes if the browser can't.
       const image = await downscaleImage(file).catch(() => file);
       const body = new FormData();
       body.append("image", image, "plant.jpg");
@@ -133,37 +161,38 @@ export function AddPlant({
       if (!res.ok) {
         setIdentifyError(
           res.status === 429
-            ? "Daily photo-identification limit reached. Try again tomorrow, or pick from the list."
+            ? "You’ve hit today’s identification limit. Try again tomorrow."
             : res.status === 503
               ? "Photo identification isn’t available right now."
-              : "Couldn’t identify that photo. Try another, or pick from the list.",
+              : "Something went wrong identifying that photo.",
         );
         return;
       }
-
       const { result } = (await res.json()) as { result: IdentifyResult };
-      if (!result?.isPlant) {
-        setIdentifyError(
-          "Couldn’t identify a plant in that photo. Try another, or pick from the list.",
-        );
-        return;
-      }
-
-      const match = result.speciesKey
-        ? (list ?? []).find((s) => s.key === result.speciesKey)
-        : undefined;
-      if (match) {
-        pickSpecies(match);
-      } else {
-        startManual(result.commonName || "");
-      }
+      setCandidates(result.candidates ?? []);
     } catch {
-      setIdentifyError(
-        "Couldn’t identify that photo. Try another, or pick from the list.",
-      );
+      setIdentifyError("Something went wrong identifying that photo.");
     } finally {
       setIdentifying(false);
     }
+  }
+
+  // Close the review sheet, then run `action` once it has slid down — so the two
+  // top-level drawers don't fight over vaul's background-scale in one frame.
+  function afterIdentifyClose(action: () => void) {
+    setIdentifyOpen(false);
+    window.setTimeout(action, 220);
+  }
+
+  // A chosen candidate opens its pre-filled form: a dataset match its species
+  // form, an unlisted plant manual entry with the name pre-filled.
+  function chooseCandidate(candidate: IdentifyCandidateView) {
+    const match = candidate.speciesKey
+      ? (list ?? []).find((s) => s.key === candidate.speciesKey)
+      : undefined;
+    afterIdentifyClose(() =>
+      match ? pickSpecies(match) : startManual(candidate.commonName || undefined),
+    );
   }
 
   async function addPlant(values: PlantFormValues) {
@@ -228,8 +257,6 @@ export function AddPlant({
         onPick={pickSpecies}
         onManual={startManual}
         identifyEnabled={identifyEnabled}
-        identifying={identifying}
-        identifyError={identifyError}
         onIdentifyFile={handleIdentifyFile}
       />
 
@@ -259,6 +286,23 @@ export function AddPlant({
           onDone={finish}
         />
       </Drawer>
+
+      {/* The photo-identify review sheet — a sibling top-level drawer, opened
+          from the picker's Identify button. Owns loading / candidates / error. */}
+      {identifyEnabled ? (
+        <IdentifyDrawer
+          open={identifyOpen}
+          onOpenChange={setIdentifyOpen}
+          photoUrl={photoUrl}
+          loading={identifying}
+          error={identifyError}
+          candidates={displayCandidates}
+          onChoose={chooseCandidate}
+          onManual={() => afterIdentifyClose(() => startManual())}
+          onSearch={() => setIdentifyOpen(false)}
+          onRetryFile={handleIdentifyFile}
+        />
+      ) : null}
     </>
   );
 }
@@ -338,8 +382,6 @@ function PickStage({
   onPick,
   onManual,
   identifyEnabled,
-  identifying,
-  identifyError,
   onIdentifyFile,
 }: {
   token: string;
@@ -350,8 +392,6 @@ function PickStage({
   onPick: (species: SpeciesDetail) => void;
   onManual: (seedName?: string) => void;
   identifyEnabled: boolean;
-  identifying: boolean;
-  identifyError: string | null;
   onIdentifyFile: (file: File) => void;
 }) {
   return (
@@ -432,42 +472,33 @@ function PickStage({
       <BodyPortal>
         <div className="pointer-events-none fixed inset-x-0 bottom-0 z-30 bg-linear-to-t from-canvas via-canvas to-transparent pt-16">
           <div className="pointer-events-auto mx-auto flex max-w-2xl flex-col gap-3 px-4 pb-6">
-            {/* Primary action: take/choose a photo → land on the matched
-                species' form (or manual entry, name pre-filled). Only shown when
-                the feature is configured server-side; the <input> is nested in
-                the <label> so a tap opens the picker with no ref wiring. */}
+            {/* Primary action: take/choose a photo → the review sheet opens and
+                owns all feedback (loading, results, errors). Only shown when the
+                feature is configured server-side; the <input> is nested in the
+                <label> so a tap opens the picker with no ref wiring. */}
             {identifyEnabled ? (
-              <div className="flex flex-col gap-1.5">
-                <label
-                  className={`flex cursor-pointer items-center justify-center gap-2 rounded-2xl border border-healthy/40 bg-healthy/10 px-4 py-3 text-sm font-medium text-cream ${tapScale} hover:bg-healthy/15 ${
-                    identifying ? "pointer-events-none opacity-70" : ""
-                  }`}
-                >
-                  <input
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    disabled={identifying}
-                    onChange={(e) => {
-                      const file = e.target.files?.[0];
-                      // Reset so re-picking the same file still fires onChange.
-                      e.target.value = "";
-                      if (file) onIdentifyFile(file);
-                    }}
-                  />
-                  <HugeiconsIcon
-                    icon={AiImageIcon}
-                    size={18}
-                    strokeWidth={1.9}
-                    aria-hidden
-                    className={identifying ? "animate-pulse" : ""}
-                  />
-                  {identifying ? "Identifying…" : "Identify from a photo"}
-                </label>
-                {identifyError ? (
-                  <p className="px-1 text-xs text-danger">{identifyError}</p>
-                ) : null}
-              </div>
+              <label
+                className={`flex cursor-pointer items-center justify-center gap-2 rounded-2xl border border-healthy/40 bg-healthy/10 px-4 py-3 text-sm font-medium text-cream ${tapScale} hover:bg-healthy/15`}
+              >
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    // Reset so re-picking the same file still fires onChange.
+                    e.target.value = "";
+                    if (file) onIdentifyFile(file);
+                  }}
+                />
+                <HugeiconsIcon
+                  icon={AiImageIcon}
+                  size={18}
+                  strokeWidth={1.9}
+                  aria-hidden
+                />
+                Identify from a photo
+              </label>
             ) : null}
 
             <Link
