@@ -359,7 +359,7 @@ function PickStage({
       {/* The list scrolls; pad the bottom so the last row clears the pinned
           action bar instead of hiding under it — taller when identify is on. */}
       <div
-        className={`flex flex-col gap-4 ${identifyEnabled ? "pb-52" : "pb-36"}`}
+        className={`flex flex-col gap-4 ${identifyEnabled ? "pb-36" : "pb-24"}`}
       >
         <input
           type="search"
@@ -371,40 +371,57 @@ function PickStage({
 
         {list === null ? (
           <PickSkeleton />
-        ) : filtered.length === 0 ? (
-          <p className="py-8 text-center text-sm text-cream-soft">
-            No matches. You can add it manually below.
-          </p>
         ) : (
-          <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-            {filtered.map((s) => (
-              <button
-                key={s.key}
-                type="button"
-                onClick={() => onPick(s)}
-                className={`fade-in flex h-[60px] items-center gap-3 rounded-2xl bg-canvas-soft p-3 text-left ${tapScale} hover:bg-canvas-soft/70`}
-              >
-                <span className="text-2xl" aria-hidden>
-                  {s.avatar}
-                </span>
-                <span className="flex min-w-0 flex-col">
-                  <span className="truncate text-sm font-medium text-cream">
-                    {s.commonName}
-                  </span>
-                  <span className="text-xs tabular-nums text-cream-soft">
-                    water · every {s.waterIntervalDays}d
-                  </span>
-                </span>
-              </button>
-            ))}
-          </div>
+          <>
+            {filtered.length === 0 ? (
+              <p className="pt-6 text-center text-sm text-cream-soft">
+                No matches{query.trim() ? ` for “${query.trim()}”` : ""}.
+              </p>
+            ) : (
+              <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+                {filtered.map((s) => (
+                  <button
+                    key={s.key}
+                    type="button"
+                    onClick={() => onPick(s)}
+                    className={`fade-in flex h-[60px] items-center gap-3 rounded-2xl bg-canvas-soft p-3 text-left ${tapScale} hover:bg-canvas-soft/70`}
+                  >
+                    <span className="text-2xl" aria-hidden>
+                      {s.avatar}
+                    </span>
+                    <span className="flex min-w-0 flex-col">
+                      <span className="truncate text-sm font-medium text-cream">
+                        {s.commonName}
+                      </span>
+                      <span className="text-xs tabular-nums text-cream-soft">
+                        water · every {s.waterIntervalDays}d
+                      </span>
+                    </span>
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {/* Add-manually lives at the end of the list: reachable by scrolling
+                to the bottom of the full list, and right there when a search
+                finds nothing. Kept out of the pinned bar so Identify stays the
+                hero; seeds the new plant's name from the current search. */}
+            <button
+              type="button"
+              onClick={() => onManual(query.trim() || undefined)}
+              className={`rounded-2xl border border-dashed border-cream-soft/40 px-4 py-3 text-sm font-medium text-cream-soft ${tapScale} hover:border-cream-soft hover:text-cream`}
+            >
+              Can&apos;t find it? Add manually
+            </button>
+          </>
         )}
       </div>
 
-      {/* The pinned action bar: identify (primary) → add manually (secondary) →
-          back link. The gradient lets the list dissolve into the canvas behind
-          it as it scrolls under. pointer-events-none on the fade so it never
-          blocks the chips it overlaps; re-enabled on the inner controls.
+      {/* The pinned action bar: identify (primary, always reachable) → back
+          link. "Add manually" lives at the end of the list instead. The gradient
+          lets the list dissolve into the canvas behind it as it scrolls under.
+          pointer-events-none on the fade so it never blocks the chips it
+          overlaps; re-enabled on the inner controls.
 
           Portaled to <body> so it escapes the [data-vaul-drawer-wrapper] element,
           which vaul transforms (scale/translate) while the drawer is open. A
@@ -453,14 +470,6 @@ function PickStage({
               </div>
             ) : null}
 
-            <button
-              type="button"
-              onClick={() => onManual()}
-              className={`rounded-2xl border border-dashed border-cream-soft/40 px-4 py-3 text-sm font-medium text-cream-soft ${tapScale} hover:border-cream-soft hover:text-cream`}
-            >
-              Can&apos;t find it? Add manually
-            </button>
-
             <Link
               href={`/h/${token}`}
               className="self-center text-sm text-cream-soft hover:text-cream"
@@ -475,7 +484,7 @@ function PickStage({
 }
 
 /** Renders children into document.body (after mount, so SSR stays clean). Used
- * to lift the pinned manual-entry bar out of vaul's scaled drawer wrapper. */
+ * to lift the pinned action bar out of vaul's scaled drawer wrapper. */
 function BodyPortal({ children }: { children: React.ReactNode }) {
   // false during SSR, true once hydrated — document.body only exists client-side.
   const mounted = useSyncExternalStore(
