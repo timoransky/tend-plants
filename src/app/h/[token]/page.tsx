@@ -10,6 +10,7 @@ import { findHousehold } from "@/lib/api";
 import { groupByRoom } from "@/lib/group-rooms";
 import { listPlantsWithStatus } from "@/lib/plants";
 import { seedEnabled } from "@/lib/seed";
+import { isStorageEnabled } from "@/lib/storage";
 import { tapScale } from "@/lib/ui";
 
 // Live tracker — always read fresh from the DB, never cache.
@@ -61,7 +62,11 @@ export default async function HomePage({ params }: Props) {
         {plants.length === 0 ? (
           <EmptyState token={token} />
         ) : (
-          <PlantGarden groups={groups} token={token} />
+          <PlantGarden
+            groups={groups}
+            token={token}
+            photoEnabled={isStorageEnabled()}
+          />
         )}
       </main>
     </div>

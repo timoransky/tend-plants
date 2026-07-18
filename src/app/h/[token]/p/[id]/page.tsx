@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { PlantAvatar } from "@/components/PlantAvatar";
 import { PlantDetail, type PlantDetailData } from "@/components/PlantDetail";
 import { StatusDot } from "@/components/StatusDot";
 import { findHousehold } from "@/lib/api";
@@ -57,7 +58,11 @@ export default async function PlantDetailPage({ params }: Props) {
       <header className="flex flex-col items-center gap-3 py-6 text-center">
         <span className="relative">
           <span className="flex size-24 items-center justify-center rounded-full bg-surface text-5xl shadow-sm">
-            <span aria-hidden>{plant.avatar ?? "🪴"}</span>
+            <PlantAvatar
+              avatar={plant.avatar}
+              imageUrl={plant.avatarUrl}
+              alt={plant.name}
+            />
           </span>
           <StatusDot
             water={plant.water}

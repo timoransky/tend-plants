@@ -2,6 +2,7 @@
 
 import { motion, useReducedMotion } from "motion/react";
 
+import { PlantAvatar } from "@/components/PlantAvatar";
 import { WaterDropBadge } from "@/components/WaterDropBadge";
 import type { PlantWithStatus } from "@/lib/plants";
 
@@ -57,7 +58,11 @@ export function PlantBubble({
         className="relative"
       >
         <span className="flex size-20 items-center justify-center rounded-full bg-surface text-4xl shadow-[0_1px_2px_0_rgb(20_16_8_/_0.4),0_4px_8px_-2px_rgb(20_16_8_/_0.28)] transition-shadow duration-200 ease-out group-hover:shadow-[0_2px_5px_-1px_rgb(20_16_8_/_0.4),0_16px_30px_-6px_rgb(20_16_8_/_0.45)]">
-          <span aria-hidden>{plant.avatar ?? "🪴"}</span>
+          <PlantAvatar
+            avatar={plant.avatar}
+            imageUrl={plant.avatarUrl}
+            alt={plant.name}
+          />
         </span>
         {needsWater ? (
           <span className="absolute bottom-0.5 right-0.5 size-[1.15rem]">
