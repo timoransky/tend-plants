@@ -42,7 +42,13 @@ them unset the feature disables itself and plants fall back to emoji.
 | `STORAGE_BUCKET` | `plant-avatars` |
 | `STORAGE_ACCESS_KEY_ID` | S3 access key id |
 | `STORAGE_SECRET_ACCESS_KEY` | S3 secret access key |
-| `STORAGE_PUBLIC_URL_BASE` | `https://<ref>.supabase.co/storage/v1/object/public/plant-avatars` |
+
+The public URL objects are served from is **derived** from the endpoint and
+bucket — no separate var to keep in sync. For Supabase the `/s3` endpoint is
+rewritten to `/object/public/<bucket>`; other S3 providers use the standard
+path-style `<endpoint>/<bucket>` (a provider that serves public objects from a
+different host — e.g. Cloudflare R2's `r2.dev` — would need a small tweak to
+`publicUrl` in `src/lib/storage.ts`).
 
 Supabase setup: create a **public** bucket (e.g. `plant-avatars`), then generate
 S3 access keys under *Project settings → Storage → S3 access keys*. Object keys

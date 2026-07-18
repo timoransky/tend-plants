@@ -18,8 +18,9 @@ import {
  *   STORAGE_BUCKET            e.g. plant-avatars
  *   STORAGE_ACCESS_KEY_ID     S3 access key id
  *   STORAGE_SECRET_ACCESS_KEY S3 secret access key
- *   STORAGE_PUBLIC_URL_BASE   where objects are publicly served from, e.g.
- *                             https://<ref>.supabase.co/storage/v1/object/public/plant-avatars
+ *
+ * The public serving URL is derived from the endpoint + bucket (see
+ * {@link publicUrl}), so there's no separate URL var to keep in sync.
  *
  * With any of these unset the feature disables itself: {@link isStorageEnabled}
  * is false, the photo-avatar UI hides, uploads 503, and existing plants fall
@@ -36,17 +37,11 @@ const REGION = process.env.STORAGE_REGION;
 const BUCKET = process.env.STORAGE_BUCKET;
 const ACCESS_KEY_ID = process.env.STORAGE_ACCESS_KEY_ID;
 const SECRET_ACCESS_KEY = process.env.STORAGE_SECRET_ACCESS_KEY;
-const PUBLIC_URL_BASE = process.env.STORAGE_PUBLIC_URL_BASE;
 
 /** Whether object storage is configured (all required vars present). */
 export function isStorageEnabled(): boolean {
   return Boolean(
-    ENDPOINT &&
-      REGION &&
-      BUCKET &&
-      ACCESS_KEY_ID &&
-      SECRET_ACCESS_KEY &&
-      PUBLIC_URL_BASE,
+    ENDPOINT && REGION && BUCKET && ACCESS_KEY_ID && SECRET_ACCESS_KEY,
   );
 }
 
@@ -106,12 +101,23 @@ export async function deleteObject(key: string): Promise<void> {
 }
 
 /**
- * Public URL for an object key, derived from `STORAGE_PUBLIC_URL_BASE` at read
- * time. Storing the *key* (not this URL) in the DB is what keeps the provider
- * swappable — the serving host can change with no data migration. Returns null
- * when storage isn't configured.
+ * Public URL for an object key, derived from the endpoint + bucket at read time
+ * (no separate serving-URL var to keep in sync). Storing the *key* — not this
+ * URL — in the DB is what keeps the provider swappable: the serving host is
+ * recomputed here, so it can change with no data migration. Returns null when
+ * storage isn't configured.
+ *
+ * Supabase's S3 endpoint (`.../storage/v1/s3`) is *not* the public-read path —
+ * public objects are served from `.../storage/v1/object/public/<bucket>` on the
+ * same host — so we rewrite the `/s3` suffix. Any other S3-compatible provider
+ * (AWS S3, MinIO, …) serves public objects at the standard path-style URL
+ * `<endpoint>/<bucket>/<key>`, which is the fallback.
  */
 export function publicUrl(key: string): string | null {
-  if (!PUBLIC_URL_BASE) return null;
-  return `${PUBLIC_URL_BASE.replace(/\/+$/, "")}/${key}`;
+  if (!ENDPOINT || !BUCKET) return null;
+  const endpoint = ENDPOINT.replace(/\/+$/, "");
+  const base = endpoint.endsWith("/s3")
+    ? `${endpoint.slice(0, -"/s3".length)}/object/public/${BUCKET}`
+    : `${endpoint}/${BUCKET}`;
+  return `${base}/${key}`;
 }
