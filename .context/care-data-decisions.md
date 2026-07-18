@@ -64,12 +64,41 @@ One thing PlantSolve tracks that we don't: **pet safety** (`pet-safe` /
 `toxic-to-pets`). Genuinely useful for a houseplant app, but out of the v1
 schema — noted as a possible future field, not adopted here.
 
-## Note on images (separate concern)
+## Plant photos — parked 2026-07-18 (revisit later)
 
-There's a real product need to show plant **photos** in the add/search flow
-(people recognize plants visually, not by name). PlantSolve has per-plant
-thumbnails, but they're CC BY 4.0 — using them means visible attribution + a
-backlink, and there's no working API to fetch them anyway. If/when we add
-photos, use an **attribution-free or public-domain source** (Unsplash / Pexels
-license, or public-domain Wikimedia Commons), self-hosted, keyed by species via
-the existing `avatar` "stock image key" — not scraped CC BY assets.
+Real product need: show plant **photos** in the add-plant flow (people recognize
+plants visually, not by name). Decision for now: **keep emoji avatars** (matches
+v1 scope); photos are a fast-follow whenever someone picks it up. This section is
+the turnkey record so it doesn't need re-deriving.
+
+**Where it slots in (don't guess again):**
+- Target is the **species picker**, not the home grid. `AddPlant.tsx` renders
+  `{s.avatar}` (emoji) per species — that's where a photo helps search. Leave
+  `PlantBubble` (home) as emoji + status dot by design.
+- Add an optional `image` to the species data → expose via `/api/species`
+  (`searchSpeciesDetail`) → render photo **with emoji fallback** in the picker.
+  Missing photo → today's emoji. No schema change needed on `plants` if we only
+  show photos in the picker; snapshotting a photo onto a plant row is a later,
+  bigger call.
+
+**Sourcing — findings verified from the build environment 2026-07-18:**
+- **Unsplash / Pexels** — correct license (free commercial use, *no attribution
+  owed*), but the **search APIs require a free key** (`api.pexels.com` /
+  `api.unsplash.com` both reachable, return `401` without one). Image CDNs
+  (`images.pexels.com`, `images.unsplash.com`) are reachable and serve sized
+  bytes. The old keyless `source.unsplash.com` is dead (`503`). **This is the
+  recommended path** once a key exists.
+- **Wikimedia Commons** — keyless, reachable, a photo for *every* species, but a
+  license probe showed only ~1 in 6 is CC0/public-domain; the rest are
+  CC BY / CC BY-SA (attribution owed). Viable only if we accept one light
+  "Plant photos via Wikimedia Commons" credit line.
+- **PlantSolve thumbnails** — CC BY 4.0 (attribution + backlink) *and* no working
+  API to fetch them. Not viable.
+
+**Pickup steps (Pexels path):** get a free key at `pexels.com/api` → set
+`PEXELS_API_KEY` as an env var → script: for each species, search by name
+(`?query=<name>&orientation=landscape&per_page=1`, `Authorization: <key>`),
+download `photos[0].src` sized ~600×400, write `public/species/<key>.jpg` →
+add the `image` field through `species.ts` + `/api/species` → render in the
+picker with emoji fallback → verify the add flow end-to-end. ~51 requests, well
+within the free tier (200/hr).
