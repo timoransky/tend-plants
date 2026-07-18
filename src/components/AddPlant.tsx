@@ -157,7 +157,10 @@ export function AddPlant({
       const body = new FormData();
       body.append("image", image, "plant.jpg");
 
-      const res = await fetch("/api/species/identify", { method: "POST", body });
+      const res = await fetch(`/api/h/${token}/identify`, {
+        method: "POST",
+        body,
+      });
       if (!res.ok) {
         setIdentifyError(
           res.status === 429

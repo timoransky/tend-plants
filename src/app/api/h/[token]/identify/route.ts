@@ -1,19 +1,21 @@
 import type { NextRequest } from "next/server";
 
-import { apiError, json } from "@/lib/api";
+import { apiError, findHousehold, json } from "@/lib/api";
 import { identifyPlant, IdentifyError, isIdentifyEnabled } from "@/lib/identify";
 
 /**
- * POST /api/species/identify — identify a houseplant from an uploaded photo.
+ * POST /api/h/[token]/identify — identify a houseplant from an uploaded photo,
+ * returning ranked candidates (see {@link identifyPlant}). The add-plant flow
+ * opens the matched species' form pre-filled, as tapping a search result does.
  *
- * The photo-by-name sibling of `/api/species`: same job (land on a dataset
- * species), different input. Stateless and household-agnostic — no token, no DB
- * write. Takes a multipart form with an `image` field and returns `{ result }`
- * (see {@link identifyPlant}); the add-plant flow then opens the matched
- * species' form pre-filled, exactly as tapping a search result does.
+ * Unlike the static `/api/species` routes, identify makes an expensive external
+ * call, so it's gated behind the household token like every other data route:
+ * the unguessable link is the permission. A request without a valid token 404s
+ * before any Pl@ntNet call — closing the endpoint to crawlers and anonymous
+ * abuse that could otherwise burn the shared identification quota.
  *
- * The whole feature is optional: with no `PLANTNET_API_KEY` set it returns 503
- * and the UI never shows the entry point.
+ * Also optional overall: with no `PLANTNET_API_KEY` set it returns 503 and the
+ * UI never shows the entry point.
  */
 
 // Give the identification call headroom on serverless platforms (Vercel reads this).
@@ -23,14 +25,21 @@ export const maxDuration = 30;
 // normal path is always image/jpeg; PNG covers the rare no-downscale fallback.
 const ALLOWED_TYPES = ["image/jpeg", "image/png"];
 
-// The client downscales before upload (~a few hundred KB), so anything larger is
-// unexpected — cap it so a stray full-res photo can't blow up the request.
-const MAX_BYTES = 5 * 1024 * 1024;
+// The client downscales to a ~200–400 KB JPEG before upload, so anything much
+// bigger is unexpected — cap tightly to bound bandwidth/decoding on abuse.
+const MAX_BYTES = 2 * 1024 * 1024;
 
-export async function POST(request: NextRequest) {
+type Params = { params: Promise<{ token: string }> };
+
+export async function POST(request: NextRequest, { params }: Params) {
   if (!isIdentifyEnabled()) {
     return apiError(503, "Photo identification is not configured.");
   }
+
+  // Capability check first — no valid household token, no expensive call.
+  const { token } = await params;
+  const household = await findHousehold(token);
+  if (!household) return apiError(404, "Household not found");
 
   let form: FormData;
   try {
