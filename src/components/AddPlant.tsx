@@ -299,7 +299,6 @@ export function AddPlant({
           candidates={displayCandidates}
           onChoose={chooseCandidate}
           onManual={() => afterIdentifyClose(() => startManual())}
-          onSearch={() => setIdentifyOpen(false)}
           onRetryFile={handleIdentifyFile}
         />
       ) : null}

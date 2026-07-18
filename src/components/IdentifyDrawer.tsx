@@ -41,7 +41,6 @@ export function IdentifyDrawer({
   candidates,
   onChoose,
   onManual,
-  onSearch,
   onRetryFile,
 }: {
   open: boolean;
@@ -52,7 +51,6 @@ export function IdentifyDrawer({
   candidates: IdentifyCandidateView[] | null;
   onChoose: (candidate: IdentifyCandidateView) => void;
   onManual: () => void;
-  onSearch: () => void;
   onRetryFile: (file: File) => void;
 }) {
   const hasMatches = !loading && !error && !!candidates && candidates.length > 0;
@@ -121,17 +119,10 @@ export function IdentifyDrawer({
               onClick={onManual}
               className={`h-11 w-full rounded-full bg-surface-muted text-sm font-semibold text-ink ${tapScale} hover:bg-surface-muted/70`}
             >
-              None of these — add manually
+              None of these - add manually
             </button>
-            <div className="flex items-center justify-center gap-5 pt-1 text-sm text-ink-soft">
+            <div className="flex justify-center pt-1 text-sm text-ink-soft">
               <RetryLabel onRetryFile={onRetryFile} />
-              <button
-                type="button"
-                onClick={onSearch}
-                className="hover:text-ink"
-              >
-                Search the list
-              </button>
             </div>
           </div>
         </div>
@@ -144,13 +135,6 @@ export function IdentifyDrawer({
             className={`h-12 w-full rounded-full bg-surface-muted text-base font-semibold text-ink ${tapScale} hover:bg-surface-muted/70`}
           >
             Add manually
-          </button>
-          <button
-            type="button"
-            onClick={onSearch}
-            className="self-center pt-1 text-sm text-ink-soft hover:text-ink"
-          >
-            Search the list
           </button>
         </div>
       ) : null}
