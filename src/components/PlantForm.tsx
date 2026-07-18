@@ -119,12 +119,22 @@ export function PlantForm({
   const [submitting, setSubmitting] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // The uploaded photo, kept for this form session independently of whether it's
+  // the *active* avatar. Choosing an emoji only deactivates it (clears
+  // values.avatarImage*); the photo stays here as a swatch so switching back is
+  // one tap, never a re-upload. Seeded from an existing plant's photo on edit.
+  const [photo, setPhoto] = useState<{ key: string; url: string } | null>(
+    initial.avatarImageKey && initial.avatarImageUrl
+      ? { key: initial.avatarImageKey, url: initial.avatarImageUrl }
+      : null,
+  );
 
   const set = (patch: Partial<PlantFormValues>) =>
     setValues((v) => ({ ...v, ...patch }));
 
   // Take/choose a photo → downscale → upload → use it as this plant's avatar.
-  // The photo overrides the emoji; picking an emoji below clears it again.
+  // The photo overrides the emoji; picking an emoji below deactivates it (but
+  // keeps it available as a swatch to re-select).
   async function uploadPhoto(file: File) {
     setUploading(true);
     setError(null);
@@ -138,6 +148,7 @@ export function PlantForm({
       });
       if (!res.ok) throw new Error();
       const { key, url } = (await res.json()) as { key: string; url: string };
+      setPhoto({ key, url });
       set({ avatarImageKey: key, avatarImageUrl: url });
     } catch {
       setError("Couldn’t upload that photo. Please try again.");
@@ -172,6 +183,7 @@ export function PlantForm({
         if (!res.ok) throw new Error();
         const { key, url } = (await res.json()) as { key: string; url: string };
         if (active) {
+          setPhoto({ key, url });
           setValues((v) => ({ ...v, avatarImageKey: key, avatarImageUrl: url }));
         }
       } catch {
@@ -280,17 +292,13 @@ export function PlantForm({
 
         <Field label="Avatar">
           <div className="flex flex-wrap gap-1.5">
-            {/* Photo tile: take/choose a picture to use as the avatar. Shown
-                only when uploads are configured. When a photo is set it shows a
-                thumbnail and carries the selected ring; re-tapping replaces it. */}
+            {/* Upload / change tile: opens the picker to take or choose a photo.
+                Always present while uploads are configured, so a new photo is
+                one tap away even when one is already set. */}
             {photoEnabled ? (
               <label
-                aria-label="Use a photo"
-                className={`relative flex size-10 cursor-pointer items-center justify-center overflow-hidden rounded-xl ${tapScale} ${
-                  values.avatarImageUrl
-                    ? "ring-2 ring-healthy"
-                    : "bg-surface-muted text-ink-soft hover:bg-surface-muted/70"
-                }`}
+                aria-label={photo ? "Choose a different photo" : "Use a photo"}
+                className={`flex size-10 cursor-pointer items-center justify-center rounded-xl bg-surface-muted text-ink-soft ${tapScale} hover:bg-surface-muted/70`}
               >
                 <input
                   type="file"
@@ -309,13 +317,6 @@ export function PlantForm({
                     className="size-4 animate-spin rounded-full border-2 border-ink/20 border-t-ink/70"
                     aria-label="Uploading"
                   />
-                ) : values.avatarImageUrl ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={values.avatarImageUrl}
-                    alt=""
-                    className="size-full object-cover"
-                  />
                 ) : (
                   <HugeiconsIcon
                     icon={CameraAdd01Icon}
@@ -327,9 +328,35 @@ export function PlantForm({
               </label>
             ) : null}
 
+            {/* The uploaded photo as its own selectable swatch. It stays here
+                even after an emoji is chosen, so switching back to the photo is
+                one tap — the earlier bug was clearing it on emoji select. */}
+            {photo ? (
+              <button
+                type="button"
+                aria-label="Use the uploaded photo"
+                aria-pressed={!!values.avatarImageUrl}
+                onClick={() =>
+                  set({ avatarImageKey: photo.key, avatarImageUrl: photo.url })
+                }
+                className={`size-10 overflow-hidden rounded-xl ${tapScale} ${
+                  values.avatarImageUrl
+                    ? "ring-2 ring-healthy"
+                    : "hover:opacity-90"
+                }`}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={photo.url}
+                  alt=""
+                  className="size-full object-cover"
+                />
+              </button>
+            ) : null}
+
             {avatarChoices.map((emo) => {
-              // A photo overrides emoji selection: while one is set, no emoji is
-              // highlighted, and tapping an emoji clears the photo.
+              // While a photo is the active avatar no emoji is highlighted;
+              // tapping an emoji deactivates the photo (but keeps its swatch).
               const selected = !values.avatarImageUrl && values.avatar === emo;
               return (
                 <button
