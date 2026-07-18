@@ -45,6 +45,44 @@ export function PlantGarden({
     });
   }
 
+  function selectPlant(plant: PlantWithStatus) {
+    setDrawerPlant(plant);
+    setDrawerOpen(true);
+  }
+
+  function bubbleGrid(plants: PlantWithStatus[]) {
+    return (
+      <div className="grid grid-cols-3 gap-2 px-1 pb-3 pt-2 sm:grid-cols-5">
+        {plants.map((plant, i) => (
+          <PlantBubble
+            key={plant.id}
+            plant={plant}
+            delayMs={Math.min(i, 12) * 35}
+            onSelect={selectPlant}
+          />
+        ))}
+      </div>
+    );
+  }
+
+  // With no rooms at all, the lone "Everywhere else" group has nothing to
+  // distinguish it from — so skip the header/accordion and just show the grid.
+  const hasRooms = groups.some((group) => group.room !== null);
+  if (!hasRooms) {
+    return (
+      <>
+        <div className="pt-1">{bubbleGrid(groups.flatMap((g) => g.plants))}</div>
+        <PlantDrawer
+          plant={drawerPlant}
+          open={drawerOpen}
+          token={token}
+          photoEnabled={photoEnabled}
+          onOpenChange={setDrawerOpen}
+        />
+      </>
+    );
+  }
+
   return (
     <>
       <div className="flex flex-col gap-1 pt-1">
@@ -107,19 +145,7 @@ export function PlantGarden({
                     }
                     className="overflow-hidden"
                   >
-                    <div className="grid grid-cols-3 gap-2 px-1 pb-3 pt-2 sm:grid-cols-5">
-                      {group.plants.map((plant, i) => (
-                        <PlantBubble
-                          key={plant.id}
-                          plant={plant}
-                          delayMs={Math.min(i, 12) * 35}
-                          onSelect={(p) => {
-                            setDrawerPlant(p);
-                            setDrawerOpen(true);
-                          }}
-                        />
-                      ))}
-                    </div>
+                    {bubbleGrid(group.plants)}
                   </motion.div>
                 ) : null}
               </AnimatePresence>
