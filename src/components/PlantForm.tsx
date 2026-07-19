@@ -2,10 +2,12 @@
 
 import { CameraAdd01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
+import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 
 import { DrawerDescription, DrawerTitle } from "@/components/Drawer";
 import { PlantAvatar } from "@/components/PlantAvatar";
+import { SpeciesPhotos } from "@/components/SpeciesPhotos";
 import { SHOW_FEED } from "@/lib/features";
 import { downscaleImage } from "@/lib/image";
 import type { SpeciesDetail } from "@/lib/species";
@@ -270,6 +272,26 @@ export function PlantForm({
           </DrawerDescription>
         </div>
       </header>
+
+      {/* Reference photos so someone unfamiliar with the name can confirm this
+          is the plant they have before adding it. Only for the add-from-species
+          flow (manual/edit have no species photos). */}
+      {species && species.images.length > 0 ? (
+        <section className="pb-5" aria-label={`${species.commonName} reference photos`}>
+          <div className="mb-1.5 flex items-baseline justify-between gap-2">
+            <p className="text-xs font-medium uppercase tracking-wide text-ink-soft">
+              Is this your plant?
+            </p>
+            <Link
+              href="/credits"
+              className="text-xs text-ink-soft/70 underline-offset-2 hover:text-ink-soft hover:underline"
+            >
+              Photo credits
+            </Link>
+          </div>
+          <SpeciesPhotos images={species.images} alt={species.commonName} />
+        </section>
+      ) : null}
 
       <div className="flex flex-col gap-4">
         <Field label="Name">
