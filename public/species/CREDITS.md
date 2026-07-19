@@ -1,254 +1,255 @@
 # Photo credits
 
-Reference photos in the add-plant picker come from Wikimedia Commons.
-Each is used under its stated license (CC0 / public domain / CC BY / CC BY-SA).
+Reference photos in the add-plant picker are provided by Pexels
+(https://www.pexels.com) under the Pexels License. Thanks to the
+photographers who share their work.
 
 ## african-violet
-- Chandralekha CT — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Streptocarpus_ionanthus_by_Chandralekha_CT.jpg
-- Daderot — CC0 — https://commons.wikimedia.org/wiki/File:Saintpaulia_magungensis_-_Botanischer_Garten,_Dresden,_Germany_-_DSC08528.JPG
-- M. S. del. ( = Matilda Smith, 1854-1926), J. N. Fitch lith. ( = John Nugent Fitch, 1840–1927) Description by Joseph Dalton Hooker (1817—1911) Colour and contrast altered to remove paper yellowing by Peter coxhead — Public domain — https://commons.wikimedia.org/wiki/File:Streptocarpus_ionanthus_(as_Saintpaulia_ionantha)_-_Curtis%27_121_(Ser._3_no._51)_pl._7408_(1895).jpg
+- Valentin Ivantsov — Pexels — https://www.pexels.com/photo/vibrant-african-violet-in-a-white-pot-36581193/
+- Anna Bondarenko — Pexels — https://www.pexels.com/photo/close-up-photo-of-flowers-7090475/
+- Andreas Schnabl — Pexels — https://www.pexels.com/photo/close-up-of-a-blue-blooming-african-violet-21365108/
 
 ## air-plant-tillandsia
-- JLPC — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Fille_de_l%27air_FR_2014.jpg
-- Kurt Stüber [1] — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Tillandsia_flabellata1.jpg
-- Godman Lloyd — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Tillandsia_Plant_screen.jpg
+- Valeria Palesska — Pexels — https://www.pexels.com/photo/close-up-of-a-plant-10194606/
+- Dmitry Kharitonov — Pexels — https://www.pexels.com/photo/selective-focus-of-tillandsia-albida-20868772/
+- Valeria Palesska — Pexels — https://www.pexels.com/photo/houseplant-on-desk-10194603/
 
 ## aloe
-- User:Arjun01 — Public domain — https://commons.wikimedia.org/wiki/File:Potted_Aloe_vera_plant.jpg
-- H. Zell — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Aloe_vera_Lanzarote.jpg
-- Dietmar Rabich — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Cape_Town_(ZA),_Table_Mountain,_Aloe_vera_--_2024_--_2869.jpg
+- Alexey Demidov — Pexels — https://www.pexels.com/photo/green-plant-in-a-black-pot-12448627/
+- Lidia Bekenova — Pexels — https://www.pexels.com/photo/a-close-up-shot-of-an-aloe-vera-plant-7408838/
+- Fco Javier Carriola — Pexels — https://www.pexels.com/photo/leaves-of-aloes-19797887/
 
 ## anthurium
-- Taken by Fanghong — CC BY 2.5 — https://commons.wikimedia.org/wiki/File:AnthuriumAndraenum.jpg
-- Agnes Monkelbaan — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Anthurium_(Flamingoplant)_12-08-2019_(actm)_01.jpg
-- Diego Delso — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Anthurium_andraeanum,_jard%C3%ADn_bot%C3%A1nico_de_Tallinn,_Estonia,_2012-08-13,_DD_01.JPG
+- Jef K — Pexels — https://www.pexels.com/photo/vibrant-anthurium-flower-with-lush-greenery-30396852/
+- William ZALI — Pexels — https://www.pexels.com/photo/vibrant-anthurium-plant-in-outdoor-garden-33559058/
+- Maria Tyutina — Pexels — https://www.pexels.com/photo/red-anthuriums-flowers-with-green-leaves-8458247/
 
 ## areca-palm
-- Agnieszka Kwiecień, Nova — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Dypsis_lutescens_2024-01-20_Malaga_01.jpg
-- Jules Verne Times Two — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Golden_cane_palm_(Dypsis_lutescens)_trunk,_Estufa_Fria,_Lisbon,_Portugal_julesvernex2.jpg
-- KENPEI — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Dypsis_lutescens1.jpg
+- Yavuz Eren Güngör — Pexels — https://www.pexels.com/photo/a-small-plant-on-the-table-18063065/
+- Alexey Demidov — Pexels — https://www.pexels.com/photo/palm-plants-in-the-garden-12349129/
+- Vova Kras — Pexels — https://www.pexels.com/photo/green-leafed-plant-3126442/
 
 ## bird-of-paradise
-- Scott Bauer, USDA — Public domain — https://commons.wikimedia.org/wiki/File:Strelitzia_larger.jpg
-- Diego Delso — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Ave_del_Para%C3%ADso_(Strelitzia_reginae),_Jard%C3%ADn_Bot%C3%A1nico_de_M%C3%BAnich,_Alemania,_2013-05-04,_DD_02.jpg
-- Roger Culos — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Strelitzia_reginae_MHNT.BOT.2009.13.52.jpg
+- Jayakrishnan Krishnakumar — Pexels — https://www.pexels.com/photo/yellow-petaled-flower-2377186/
+- Alina Skazka — Pexels — https://www.pexels.com/photo/flowers-and-leaves-16647090/
+- Susanne Jutzeler, suju-foto — Pexels — https://www.pexels.com/photo/close-up-of-bird-of-paradise-17289905/
 
 ## birds-nest-fern
-- Forest and Kim Starr — CC BY 3.0 us — https://commons.wikimedia.org/wiki/File:Starr-090623-1444-Asplenium_nidus-habit_and_sori-Nahiku-Maui_(24335949904).jpg
-- Krzysztof Ziarnek, Kenraiz — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Asplenium_nidus_%27Fimbriatum%27_kz02.jpg
-- Krzysztof Ziarnek, Kenraiz — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Asplenium_nidus_%27Fimbriatum%27_kz01.jpg
+- hartono subagio — Pexels — https://www.pexels.com/photo/close-up-of-lush-green-fern-leaves-34191732/
+- Sunny Li — Pexels — https://www.pexels.com/photo/lush-bird-s-nest-ferns-in-taiwan-garden-37484960/
+- Jeffry Surianto — Pexels — https://www.pexels.com/photo/vibrant-bird-s-nest-fern-in-pot-close-up-37106452/
 
 ## boston-fern
-- Wikimedia Commons contributor — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Nephrolepis_exaltata_indoor0705c.jpg
-- Nathaly 1106 — CC0 — https://commons.wikimedia.org/wiki/File:Helecho_de_Boston_(Nephrolepis_exaltata).jpg
-- Nathaly 1106 — CC0 — https://commons.wikimedia.org/wiki/File:Helechos_de_Boston_(Nephrolepis_exaltata).jpg
+- Felipe Helfstein — Pexels — https://www.pexels.com/photo/boston-fern-leaves-16270192/
+- Maya Ali — Pexels — https://www.pexels.com/photo/close-up-of-vibrant-green-ferns-in-sunlight-35987859/
+- Joshua Mcknight — Pexels — https://www.pexels.com/photo/green-plant-on-black-pot-3854749/
 
 ## bromeliad
-- Wikimedia Commons contributor — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Guzmania_Hybrid_Rana_Orange_Habitus.jpg
-- Agnieszka Kwiecień, Nova — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Guzmania_%27Remembrance%27_2019-05-03_01.jpg
-- Agnieszka Kwiecień, Nova — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Guzmania_%27Remembrance%27_2019-05-03_02.jpg
+- Olli — Pexels — https://www.pexels.com/photo/vibrant-red-bromeliad-plant-in-sunlight-37451410/
+- Caique Gomes — Pexels — https://www.pexels.com/photo/vibrant-red-bromeliad-flower-close-up-34705794/
+- Zeynep KATIRCI — Pexels — https://www.pexels.com/photo/vibrant-red-bromeliad-in-lush-green-foliage-37245253/
 
 ## calathea
-- Mokkie — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Zebra_Plant_(Calathea_zebrina)_1.jpg
-- H. Zell — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Calathea_warscewiczii_-_Wilhelma.jpg
-- 3steph14 — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Calathea_freddie.jpg
+- MrGajowy3 Teodor — Pexels — https://www.pexels.com/photo/vibrant-calathea-leaf-close-up-in-natural-setting-36483658/
+- Edu Raw — Pexels — https://www.pexels.com/photo/vibrant-green-potted-calathea-plant-leaves-37347934/
+- Jardín  De Neko — Pexels — https://www.pexels.com/photo/vibrant-calathea-orbifolia-houseplant-in-pot-33448610/
 
 ## cast-iron-plant
-- frau-doktor — Public domain — https://commons.wikimedia.org/wiki/File:Aspidistra-elatior-variegata.jpg
-- 小石川人晃 — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Aspidistra_elatior_Blume_cv.jpg
-- Dandarmkd — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Aspidistra_elatior_-_%D0%91%D0%BE%D1%82%D0%B0%D0%BD%D0%B8%D1%87%D0%BA%D0%B0_%D0%B3%D1%80%D0%B0%D0%B4%D0%B8%D0%BD%D0%B0_%D0%A1%D0%BA%D0%BE%D0%BF%D1%98%D0%B5_(1).jpg
+- Alina Gribanova — Pexels — https://www.pexels.com/photo/green-leaves-with-lines-in-close-up-6484637/
+- Ala J Graczyk — Pexels — https://www.pexels.com/photo/potted-plant-outside-in-front-of-a-painted-window-16710149/
+- Jose Rodriguez Ortega — Pexels — https://www.pexels.com/photo/lush-green-aspidistra-plant-in-urban-alleyway-38162473/
 
 ## chinese-evergreen
-- H. Zell — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Aglaonema_costatum_001.JPG
-- H. Zell — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Aglaonema_costatum_002.JPG
-- H. Zell — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Aglaonema_costatum_003.JPG
+- K — Pexels — https://www.pexels.com/photo/green-leafed-plant-3119964/
+- EL The Explorer — Pexels — https://www.pexels.com/photo/close-up-shot-of-an-aglaonema-plant-12243538/
+- Kulbir — Pexels — https://www.pexels.com/photo/a-person-holding-the-plant-of-chinese-evergreen-9311882/
 
 ## chinese-money-plant
-- Didier Descouens — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:(MHNT)_Pilea_peperomioides_Foliage.jpg
-- Husky — CC0 — https://commons.wikimedia.org/wiki/File:Pilea_peperomioides_Chinese_money_plant.jpg
-- Iva508 — CC BY 4.0 — https://commons.wikimedia.org/wiki/File:Pilea_Peperomioides.jpg
+- Kulbir — Pexels — https://www.pexels.com/photo/close-up-shot-of-a-green-plant-7180559/
+- Kulbir — Pexels — https://www.pexels.com/photo/green-plant-in-white-ceramic-pot-7210780/
+- Kulbir — Pexels — https://www.pexels.com/photo/pilea-peperomioides-plant-in-white-ceramic-pot-6853078/
 
 ## christmas-cactus
-- Agnes Monkelbaan — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Schlumbergera_(actm)_01.jpg
-- Agnes Monkelbaan — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Schlumbergera_(actm)_13.jpg
-- Agnes Monkelbaan — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Schlumbergera_(actm)_05.jpg
+- Sergej  ***** — Pexels — https://www.pexels.com/photo/vibrant-christmas-cactus-in-rustic-pot-34880906/
+- Dmitry Kharitonov — Pexels — https://www.pexels.com/photo/close-up-of-schlumbergera-plant-in-bloom-20137809/
+- Ramon Perucho — Pexels — https://www.pexels.com/photo/close-up-of-a-bright-pink-flower-19602362/
 
 ## croton
-- Louise Wolff --darina 23:22, 6 May 2005 (UTC) — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Colpfl05.jpg
-- Joydeep — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Codiaeum_variegatum_31032014.jpg
-- Photo by and (c)2006 Derek Ramsey (Ram-Man). Location credit to the Chanticleer Garden. — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Codiaeum_variegatum_var._pictum_Leaf_Closeup_2900px.jpg
+- compack disc — Pexels — https://www.pexels.com/photo/vibrant-croton-leaves-in-natural-light-36684052/
+- aksinfo7 universe — Pexels — https://www.pexels.com/photo/beautiful-variegated-croton-leaves-in-sunlight-36893931/
+- Erik Mclean — Pexels — https://www.pexels.com/photo/selective-focus-of-croton-plants-11457407/
 
 ## dieffenbachia
-- Grace789 — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Dieffenbachia_seguine_plant,_April_2023.jpg
-- Simon A. Eugster — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Dieffenbachia_inflorescence.jpg
-- Lessormore — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Dieffenbachia_(flower)_03.jpg
+- Mobile Photography® — Pexels — https://www.pexels.com/photo/close-up-shot-of-green-leaves-7439365/
+- Nandda Souza — Pexels — https://www.pexels.com/photo/close-up-of-dieffenbachia-plant-leaves-30800552/
+- Alexey Demidov — Pexels — https://www.pexels.com/photo/dieffenbachia-seguine-plant-10482140/
 
 ## dracaena-marginata
-- Wikimedia Commons contributor — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Dracaena_marginata_IndoorPlant_0605k.jpg
-- H. Zell — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Dracaena_reflexa_var._angustifolia_-_Jard%C3%ADn_Bot%C3%A1nico_Canario_Viera_y_Clavijo_-_Gran_Canaria.jpg
-- H. Zell — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Dracaena_reflexa_-_Jard%C3%ADn_Bot%C3%A1nico_Canario_Viera_y_Clavijo_-_Gran_Canaria.jpg
+- Maryann Kariuki — Pexels — https://www.pexels.com/photo/exotic-green-potted-houseplant-on-white-surface-4299019/
+- Yeşim Çolak — Pexels — https://www.pexels.com/photo/sunlit-indoor-plant-casting-shadows-on-wall-31024989/
+- Sid Maia — Pexels — https://www.pexels.com/photo/green-plant-on-white-wall-3489128/
 
 ## echeveria
-- Didier Descouens — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:(MHNT)_Echeveria_secunda.jpg
-- Diego Delso — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Rosa_de_alabastro_(Echeveria_elegans),_jard%C3%ADn_del_molino,_Sierra_de_San_Felipe,_Set%C3%BAbal,_Portugal,_2012-05-11,_DD_01.JPG
-- H. Zell — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Echeveria_laui_01.JPG
+- fei wang — Pexels — https://www.pexels.com/photo/close-up-shot-of-succulent-plants-14245929/
+- Duc Anh Nguyen — Pexels — https://www.pexels.com/photo/potted-succulent-plant-8147056/
+- Lara Farber — Pexels — https://www.pexels.com/photo/potted-green-succulents-7607544/
 
 ## english-ivy
-- Photo by and (c)2006 Derek Ramsey (Ram-Man). Location credit to the Chanticleer Garden. — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Hedera_helix_%27Buttercup%27_Urn_2000px.JPG
-- Didier Descouens — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:(MHNT)_Hedera_helix_-_immature_inflorescences.jpg
-- kallerna — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Hedera_helix_Dover.jpg
+- Greta Hoffman — Pexels — https://www.pexels.com/photo/green-plants-in-pots-on-farm-7728872/
+- Eriks Abzinovs — Pexels — https://www.pexels.com/photo/green-leaves-3117228/
+- Arina Krasnikova — Pexels — https://www.pexels.com/photo/close-up-of-leaves-6317496/
 
 ## fiddle-leaf-fig
-- Forest and Kim Starr — CC BY 3.0 us — https://commons.wikimedia.org/wiki/File:Starr-120513-5858-Ficus_lyrata-leaves-Waihee_Coastal_Preserve-Maui_(25024431542).jpg
-- Forest & Kim Starr — CC BY 3.0 — https://commons.wikimedia.org/wiki/File:Starr_031108-0130_Ficus_lyrata.jpg
-- Smatu — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Ficus_lyrata_DSCN4457.jpg
+- Lachlan  Ross — Pexels — https://www.pexels.com/photo/green-ficus-lyrata-on-table-7084309/
+- Lachlan  Ross — Pexels — https://www.pexels.com/photo/green-potted-plant-with-fresh-leaves-7084324/
+- Orione  Conceição — Pexels — https://www.pexels.com/photo/a-person-holding-a-potted-ficus-lyrata-15191694/
 
 ## haworthia
-- Abu Shawka — CC0 — https://commons.wikimedia.org/wiki/File:Haworthia_mirabilis_in_cultivation_6.jpg
-- Albert SN — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Haworthia_decipiens_var._xiphiophylla.jpg
-- LFernandoHV — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Succulent_haworthia.jpg
+- Sandeep Singh — Pexels — https://www.pexels.com/photo/succulent-in-a-square-pot-5856066/
+- Anca — Pexels — https://www.pexels.com/photo/green-plant-in-white-ceramic-pot-7118700/
+- Jessica Lewis 🦋 thepaintedsquare — Pexels — https://www.pexels.com/photo/close-up-photograph-of-white-and-green-leaves-10880506/
 
 ## heartleaf-philodendron
-- Moheen Reeyad — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Philodendron_hederaceum,_Singapore_Botanic_Gardens_(141542).jpg
-- Krzysztof Ziarnek, Kenraiz — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Philodendron_hederaceum_kz02.jpg
-- Krzysztof Ziarnek, Kenraiz — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Philodendron_hederaceum_kz01.jpg
+- Ahmad Fauzi Al Faridi — Pexels — https://www.pexels.com/photo/lush-green-philodendron-leaves-closeup-36582295/
+- Sasha  Kim — Pexels — https://www.pexels.com/photo/person-holding-a-hanging-plant-9413775/
+- Joshua Mcknight — Pexels — https://www.pexels.com/photo/heartleaf-philodendron-plant-on-pots-3854750/
 
 ## hoya-wax-plant
-- JLPC — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Hoya_FR_2013.jpg
-- Acroterion — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Hoya_carnosa_1.jpg
-- Acroterion — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Hoya_carnosa_buds_1.jpg
+- Felipe Alves — Pexels — https://www.pexels.com/photo/green-leaves-of-plant-in-white-ceramic-pot-9297353/
+- Gene&Mandee Maroulitsas — Pexels — https://www.pexels.com/photo/close-up-of-delicate-hoya-carnosa-flowers-35060566/
+- Gene&Mandee Maroulitsas — Pexels — https://www.pexels.com/photo/delicate-hoya-carnosa-flower-in-soft-focus-35060562/
 
 ## jade-plant
-- JLPC — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Crassula_ovata_2012.jpg
-- W.carter — CC0 — https://commons.wikimedia.org/wiki/File:Among_the_branches_of_a_potted_jade_plant.jpg
-- JJ Harrison (https://www.jjharrison.com.au/) — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Crassula_ovata_RTBG.jpg
+- Febe Theodora — Pexels — https://www.pexels.com/photo/two-plants-in-pots-1836600/
+- Mario Spencer — Pexels — https://www.pexels.com/photo/close-up-of-a-green-crassula-ovata-succulent-plant-36346257/
+- Bruchin Noeka — Pexels — https://www.pexels.com/photo/succulent-plant-in-a-garden-6011343/
 
 ## kalanchoe
-- Sabalo22 — CC0 — https://commons.wikimedia.org/wiki/File:Kalanchoe_blossfeldiana_(Florist_Kalanchoe).jpg
-- Luis Miguel Bugallo Sánchez — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:2025_Kalanchoe_blossfeldiana_Poelin._Santiago_de_Compostela._Galiza.jpg
-- Luis Miguel Bugallo Sánchez — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:2025_Kalanchoe_blossfeldiana_Poelin._Santiago_de_Compostela._Galiza-2.jpg
+- Du Tử Mộng — Pexels — https://www.pexels.com/photo/blooming-orange-flowers-in-brown-pot-2333906/
+- Guzel Sadykova — Pexels — https://www.pexels.com/photo/colorful-kalanchoe-blossfeldiana-bouquets-33024685/
+- Jessika Arraes — Pexels — https://www.pexels.com/photo/close-up-of-green-plant-7763838/
 
 ## lucky-bamboo
-- Bernard Ladenthin — CC0 — https://commons.wikimedia.org/wiki/File:Many_Dracaena_sanderiana.jpg
-- Just some student on the web — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:A_trio_of_plantae_%22Dracaena_Sanderiana%22.jpg
-- Beah Vega — CC BY 4.0 — https://commons.wikimedia.org/wiki/File:Dracaena_sanderiana_132157891.jpg
+- Markus Winkler — Pexels — https://www.pexels.com/photo/clusters-of-lucky-bamboo-plants-13677856/
+- Lidia Bekenova — Pexels — https://www.pexels.com/photo/a-bamboo-with-green-leaves-7352303/
+- Hafize  Balcı — Pexels — https://www.pexels.com/photo/elegant-lucky-bamboo-plant-in-glass-vase-30384232/
 
 ## maidenhair-fern
-- Vengolis — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Flora_of_Wayanad_0112.jpg
-- Turini — Public domain — https://commons.wikimedia.org/wiki/File:Bermuda_Maidenhair_Fern-01.JPG
-- Turini — Public domain — https://commons.wikimedia.org/wiki/File:Bermuda_Maidenhair_Fern-02.JPG
+- 豫 庞 — Pexels — https://www.pexels.com/photo/close-up-of-vibrant-green-fern-leaves-with-water-droplets-34046762/
+- Muhammad Hendrawan, S. Pd — Pexels — https://www.pexels.com/photo/lush-green-maidenhair-fern-foliage-close-up-35522425/
+- Bui Van Dong — Pexels — https://www.pexels.com/photo/close-up-of-green-leave-18133929/
 
 ## majesty-palm
-- Forest & Kim Starr — CC BY 3.0 — https://commons.wikimedia.org/wiki/File:Starr_080103-1158_Ravenea_rivularis.jpg
-- Stickpen — Public domain — https://commons.wikimedia.org/wiki/File:Ravenearivularis.jpg
-- C T Johansson — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Ravenea_rivularis-IMG_0468.jpg
+- Maksim Goncharenok — Pexels — https://www.pexels.com/photo/close-up-of-green-plant-with-leaves-4596808/
+- David Munoz — Pexels — https://www.pexels.com/photo/lush-green-tropical-palm-leaves-close-up-33421594/
+- Jess Loiterton — Pexels — https://www.pexels.com/photo/areca-plants-growing-in-a-garden-4327640/
 
 ## money-tree
-- Mokkie — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Braided_Money_Tree_Plant_(Pachira_aquatica)_1.jpg
-- Hans Hillewaert, edited by Muhammad Mahdi Karim — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Pachira_aquatica_(fruit)_edit1.jpg
-- Hans Hillewaert — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Pachira_aquatica_(fruit).jpg
+- Daan Rink — Pexels — https://www.pexels.com/photo/potted-plant-beside-the-window-7047366/
+- Loft of SAX — Pexels — https://www.pexels.com/photo/close-up-of-the-leaves-of-a-potted-plant-15039491/
+- Kha Ruxury — Pexels — https://www.pexels.com/photo/money-tree-houseplant-and-a-glass-jug-on-a-dresser-17151138/
 
 ## monstera
-- Agnieszka Kwiecień, Nova — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Monstera_deliciosa_Monstera_dziurawa_2023-10-31_04.jpg
-- H. Zell — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Monstera_deliciosa_-_Wilhelma_01.jpg
-- H. Zell — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Monstera_deliciosa_002.jpg
+- Anca — Pexels — https://www.pexels.com/photo/a-monstera-deliciosa-green-plant-7318283/
+- Dani Randall — Pexels — https://www.pexels.com/photo/big-green-monstera-leaf-17619301/
+- Esra Afşar — Pexels — https://www.pexels.com/photo/vibrant-monstera-leaf-in-natural-sunlight-36477236/
 
 ## monstera-adansonii
-- Photo by David J. Stang — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Monstera_adansonii_2zz.jpg
-- Walter Hood Fitch — Public domain — https://commons.wikimedia.org/wiki/File:Monstera_adansonii_CBM.png
-- Jacob Rehage — CC0 — https://commons.wikimedia.org/wiki/File:Monstera_adansonii_112059118.jpg
+- Jardín  De Neko — Pexels — https://www.pexels.com/photo/vibrant-swiss-cheese-plant-monstera-indoors-32286095/
+- Talha Kuğu — Pexels — https://www.pexels.com/photo/lush-monstera-leaves-with-intricate-patterns-37118223/
+- hello aesthe — Pexels — https://www.pexels.com/photo/a-close-up-of-a-plant-with-green-leaves-27400958/
 
 ## nerve-plant
-- Louise Wolff --darina 00:12, 7 May 2005 (UTC) — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Colpfl25.jpg
-- Diego Delso — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Fittonia_verschaffeltii,_Jard%C3%ADn_Bot%C3%A1nico_de_M%C3%BAnich,_Alemania,_2013-01-27,_DD_01.JPG
-- Why can't i get a cow — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Potted_Fittonia_albivenis.jpg
+- Melbin Jacob — Pexels — https://www.pexels.com/photo/lush-fittonia-foliage-with-veined-leaves-38542809/
+- Egor Komarov — Pexels — https://www.pexels.com/photo/close-up-photo-of-leaves-11692283/
+- Kenny — Pexels — https://www.pexels.com/photo/close-up-shot-of-potted-nerve-plants-12351052/
 
 ## norfolk-island-pine
-- RANJEET2792 — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Ferns_in_pot.jpg
-- thinboyfatter — CC BY 2.0 — https://commons.wikimedia.org/wiki/File:Norfolk-Island-Pines.jpg
-- Rjcastillo — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Araucaria_heterophylla._02.01.2023.jpg
+- Tim & Martin Klement — Pexels — https://www.pexels.com/photo/majestic-norfolk-pines-in-hawaiian-landscape-30664944/
+- Dario Durham — Pexels — https://www.pexels.com/photo/beautiful-norfolk-island-pine-against-blue-sky-33578798/
+- Rajesh S  Balouria — Pexels — https://www.pexels.com/photo/close-up-of-an-australian-pine-branch-15684435/
 
 ## parlor-palm
-- Agnieszka Kwiecień, Nova — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Chamaedorea_elegans_Chamedora_wytworna_2024-01-20_Malaga_04.jpg
-- Tequila 13:54, 24 June 2007 (UTC) — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Chamaedorea_elegans.jpg
-- Bachelot Pierre J-P — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Chamaedorea_elegans_Mart.JPG
+- Sóc Năng Động — Pexels — https://www.pexels.com/photo/small-potted-palm-on-wooden-table-37188193/
+- Engin Akyurt — Pexels — https://www.pexels.com/photo/close-up-of-bright-green-leaves-of-neanthe-bella-palms-16689889/
+- Cintia  Cerpa — Pexels — https://www.pexels.com/photo/green-palms-leaves-in-close-up-photography-11210268/
 
 ## peace-lily
-- W.carter — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Peace_lily_-_2.jpg
-- W.carter — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Peace_lily_-_1_-_cropped.jpg
-- Peter Fiskerstrand — Public domain — https://commons.wikimedia.org/wiki/File:SpathiphyllumWallisii.jpg
+- www.kaboompics.com — Pexels — https://www.pexels.com/photo/person-holding-plant-in-a-pot-4751967/
+- Subhrajyoti Paul — Pexels — https://www.pexels.com/photo/close-up-of-white-peace-lily-in-garden-setting-32425127/
+- cottonbro studio — Pexels — https://www.pexels.com/photo/green-plants-in-brown-clay-pots-9731992/
 
 ## phalaenopsis-orchid
-- Uoaei1 — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Phalaenopsis_Cultivar_White_01.jpg
-- Uoaei1 — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Phalaenopsis_Cultivar_Mini_01.jpg
-- Uoaei1 — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Phalaenopsis_Cultivar_Yellow_01.jpg
+- Emel Cirakoglu — Pexels — https://www.pexels.com/photo/white-flowers-on-gray-background-18378607/
+- Andréa Devillier — Pexels — https://www.pexels.com/photo/elegant-white-orchids-against-warm-background-35531494/
+- Rachella Roepa — Pexels — https://www.pexels.com/photo/vibrant-yellow-orchids-against-a-clean-background-34216936/
 
 ## philodendron-birkin
-- Yercaud-elango — CC BY 4.0 — https://commons.wikimedia.org/wiki/File:Philodendron_birkin-5-R.M.Nagar-bengaluru-India.jpg
-- Yercaud-elango — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Philodendron_birkin-3-RM_Nagar-bangalore-India.jpg
-- Yercaud-elango — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Philodendron_birkin-4-RM_Nagar-bangalore-India.jpg
+- Drew Dempsey — Pexels — https://www.pexels.com/photo/lush-indoor-garden-with-diverse-potted-plants-28753971/
+- Tara Winstead — Pexels — https://www.pexels.com/photo/a-potted-philodendron-birkins-beside-a-glass-window-7663987/
+- Katarzyna Modrzejewska — Pexels — https://www.pexels.com/photo/green-plant-in-close-up-photography-7494831/
 
 ## polka-dot-plant
-- Didier Descouens — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:(MHNT)_Hypoestes_phyllostachya_-_leaves.jpg
-- Vengolis — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Hypoestes_phyllostachya_0200.jpg
-- Vengolis — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Hypoestes_phyllostachya_0205.jpg
+- Anina Güntensperger — Pexels — https://www.pexels.com/photo/close-up-shot-of-pink-leaves-10999665/
+- TU HAN-WEI — Pexels — https://www.pexels.com/photo/vibrant-polka-dot-plants-in-red-and-green-35360013/
+- Victor Candiani — Pexels — https://www.pexels.com/photo/pink-and-green-leaves-in-macro-photography-6134816/
 
 ## ponytail-palm
-- Krzysztof Ziarnek, Kenraiz — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Beaucarnea_recurvata_kz02.jpg
-- juancruzado — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Beaucarnea_recurvata,_Ocampo,_Tamaulipas,_Mexico_1.jpg
-- juancruzado — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Beaucarnea_recurvata,_Sierra_del_Abra_Tanchipa,_San_Luis_Potos%C3%AD,_Mexico_2.jpg
+- T. Royce Xan — Pexels — https://www.pexels.com/photo/close-up-of-plant-with-leaves-10785988/
+- Kriss  L — Pexels — https://www.pexels.com/photo/potted-ponytail-palm-in-sunlit-patio-setting-30343680/
+- Ivan S — Pexels — https://www.pexels.com/photo/green-plant-in-brown-pot-7212859/
 
 ## pothos
-- Joydeep — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Epipremnum_aureum_31082012.jpg
-- Krzysztof Ziarnek, Kenraiz — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Epipremnum_aureum_kz01.jpg
-- Mokkie — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Money_Plant_(Epipremnum_aureum)_4.jpg
+- Ja Kubislav — Pexels — https://www.pexels.com/photo/plants-in-flowerpots-14534666/
+- Teona Swift — Pexels — https://www.pexels.com/photo/potted-plant-with-green-leaves-6913641/
+- Nataliya Vaitkevich — Pexels — https://www.pexels.com/photo/green-leaves-beside-white-wall-4641442/
 
 ## prayer-plant
-- KATHERINE WAGNER-REISS — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Maranta_leuconeura_%27Marisela%27.jpg
-- Kurt Stüber [1] — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Maranta_leuconeura3.jpg
-- Photo by David J. Stang — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Maranta_leuconeura_11zz.jpg
+- www.kaboompics.com — Pexels — https://www.pexels.com/photo/close-up-photo-of-green-plant-4590442/
+- Matheus Bertelli — Pexels — https://www.pexels.com/photo/green-leaves-on-a-shrub-20233792/
+- Saleh Almawed — Pexels — https://www.pexels.com/photo/vibrant-prayer-plant-leaves-display-32980736/
 
 ## rex-begonia
-- NasserHalaweh — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Begoniaceae_Begonia_rex_1.jpg
-- W.J. Hooker — Public domain — https://commons.wikimedia.org/wiki/File:Begonia_rex.jpg
-- Photo by David J. Stang — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Begonia_rex_5zz.jpg
+- Leonard Richards — Pexels — https://www.pexels.com/photo/vibrant-red-begonia-leaves-in-nature-34312913/
+- Jeffry Surianto — Pexels — https://www.pexels.com/photo/close-up-of-spiral-begonia-leaf-pattern-36775907/
+- Matheus Bertelli — Pexels — https://www.pexels.com/photo/leaves-on-a-shrub-in-forest-20233824/
 
 ## rubber-plant
-- Alvesgaspar (talk) — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Ficus_November_2008-1.jpg
-- Julian Herzog (Website) — CC BY 4.0 — https://commons.wikimedia.org/wiki/File:Backlit_ficus_elastica_leaf_texture_2014_02.jpg
-- Cayambe — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Catania,_Villa_Bellini_2024f,_Ficus_elastica.jpg
+- Hanna Pad — Pexels — https://www.pexels.com/photo/green-plant-on-brown-pot-8989427/
+- Scott Webb — Pexels — https://www.pexels.com/photo/monochrome-photo-of-rubber-plant-1903964/
+- Arthur  Uzoagba — Pexels — https://www.pexels.com/photo/rubber-plant-in-green-pot-on-brick-wall-indoors-29518481/
 
 ## schefflera
-- JMK — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Schefflera_arboricola,_vrugte,_a,_Pretoria.jpg
-- Dandy1022 — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Dwarf_umbrella_tree_(Schefflera_arboricola).jpg
-- Dr. Alexey Yakovlev — CC BY-SA 2.0 — https://commons.wikimedia.org/wiki/File:Schefflera_arboricola_%3D_Heptapleurum_arboricola_(Araliaceae)_(50041889661).jpg
+- Артем Смолдарев — Pexels — https://www.pexels.com/photo/close-up-shot-of-green-plant-7462741/
+- Ryszard Zaleski — Pexels — https://www.pexels.com/photo/sunlight-behind-plant-leaves-15497753/
+- Teona Swift — Pexels — https://www.pexels.com/photo/bush-with-fresh-green-leaves-in-sunlight-6913604/
 
 ## snake-plant
-- Mokkie — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Snake_Plant_(Sansevieria_trifasciata_%27Laurentii%27)_2.jpg
-- Fanti Salms — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Dracaena_Trifasciata_Plant.jpg
-- elawrey — CC BY 4.0 — https://commons.wikimedia.org/wiki/File:Dracaena_trifasciata_55523547.jpg
+- Mustafa Akın — Pexels — https://www.pexels.com/photo/stylish-indoor-snake-plant-in-modern-pot-29218657/
+- Nadiye Odabaşı — Pexels — https://www.pexels.com/photo/potted-plants-at-home-10467813/
+- Olha Ruskykh — Pexels — https://www.pexels.com/photo/lush-sansevieria-plant-leaves-in-light-room-6279940/
 
 ## spider-plant
-- Sebastian Martin Dicke — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Chlorophytum_comosum_as_an_office_plant.jpg
-- Adrian Tync — CC BY 4.0 — https://commons.wikimedia.org/wiki/File:Chlorophytum_comosum_flos.jpg
-- Juan Carlos Fonseca Mata — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Malamadre_(Chlorophytum_comosum).jpg
+- Celal Metin — Pexels — https://www.pexels.com/photo/vibrant-indoor-spider-plant-on-wooden-table-31757820/
+- Natalia Sevruk — Pexels — https://www.pexels.com/photo/lush-green-spider-plants-on-stone-wall-36314009/
+- PARTY MALL — Pexels — https://www.pexels.com/photo/cozy-indoor-garden-with-spider-plant-and-rustic-decor-34681349/
 
 ## string-of-hearts
-- Agnieszka Kwiecień, Nova — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Ceropegia_woodii_Ceropegia_Wooda_2024-04-26_01.jpg
-- Agnieszka Kwiecień, Nova — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Ceropegia_woodii_Ceropegia_Wooda_2024-04-26_02.jpg
-- Salicyna — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Ceropegia_woodii_Silver_Glory_2020-06-07_9407.jpg
+- Bruno Abdiel — Pexels — https://www.pexels.com/photo/close-up-shot-of-green-leaves-on-wicker-basket-10592221/
+- Lisett Kruusimäe — Pexels — https://www.pexels.com/photo/heart-cutouts-on-a-white-wall-13786304/
+- Nichita  Grimovici — Pexels — https://www.pexels.com/photo/a-hanging-potted-plant-13593070/
 
 ## string-of-pearls
-- Agnieszka Kwiecień, Nova — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Curio_rowleyanus_syn._Senecio_rowleyanus_2019-04-14_02.jpg
-- NasserHalaweh — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Asteraceae_Curio_rowleyanus_1.jpg
-- YuriNikolai — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Curio_rowleyanus_flower.jpg
+- Rumeysa Akbaş — Pexels — https://www.pexels.com/photo/string-of-pearls-in-a-pot-13799658/
+- Ant Armada — Pexels — https://www.pexels.com/photo/green-buds-hanging-on-branches-20601177/
+- Rumeysa Akbaş — Pexels — https://www.pexels.com/photo/close-up-shot-of-a-plant-13799752/
 
 ## tradescantia-inch-plant
-- Flocci Nivis — CC BY 4.0 — https://commons.wikimedia.org/wiki/File:20260317_Tradescantia_zebrina_01.jpg
-- Juan Carlos Fonseca Mata — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Paname%C3%B1a_(Tradescantia_zebrina).jpg
-- Umfassender — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Tradescantia_zebrina_silver_glitter.jpg
+- Anna Khomutova — Pexels — https://www.pexels.com/photo/a-plant-in-a-box-5783142/
+- Nothing Ahead — Pexels — https://www.pexels.com/photo/vibrant-tradescantia-zebrina-foliage-background-32795767/
+- İrem  Akkoyun — Pexels — https://www.pexels.com/photo/plant-on-shelf-17115891/
 
 ## zz-plant
-- User:WeFt — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Zamioculcas_zamiifolia_1.jpg
-- Photo by David J. Stang — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Zamioculcas_zamiifolia_7zz.jpg
-- Jamshid Nurkulov — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Zamioculcas_zamiifolia._Tashkent._01.jpg
+- cottonbro studio — Pexels — https://www.pexels.com/photo/green-plant-on-white-ceramic-pot-4503744/
+- Ksenia Chernaya — Pexels — https://www.pexels.com/photo/green-zamioculcas-on-white-pot-3952024/
+- Polina Zimmerman — Pexels — https://www.pexels.com/photo/green-plant-in-white-ceramic-pot-3747079/

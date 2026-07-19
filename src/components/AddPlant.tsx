@@ -344,7 +344,7 @@ function PickStage({
               href="/credits"
               className="self-center text-xs text-cream-soft/60 hover:text-cream-soft"
             >
-              Plant photos via Wikimedia Commons
+              Photos provided by Pexels
             </Link>
           </div>
         </div>
