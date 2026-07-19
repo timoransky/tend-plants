@@ -92,6 +92,37 @@ const SPECIES = [
   ["air-plant-tillandsia", "Air Plant (Tillandsia)", "Tillandsia"],
 ];
 
+// Hand-picked lead photos for species where the automatic search surfaced a
+// flower / fruit / distant outdoor shot instead of the recognizable potted
+// houseplant. These exact Commons files are used as the lead (grid) image;
+// the rest of each species' strip still fills from the search. Curated by
+// eyeballing candidate contact sheets — see scripts notes.
+const PINS = {
+  monstera: ["File:Monstera deliciosa Monstera dziurawa 2023-10-31 04.jpg"],
+  calathea: ["File:Zebra Plant (Calathea zebrina) 1.jpg"],
+  aloe: ["File:Potted Aloe vera plant.jpg"],
+  "fiddle-leaf-fig": [
+    "File:Starr-120513-5858-Ficus lyrata-leaves-Waihee Coastal Preserve-Maui (25024431542).jpg",
+  ],
+  "spider-plant": ["File:Chlorophytum comosum as an office plant.jpg"],
+  "rubber-plant": ["File:Ficus November 2008-1.jpg"],
+  "dracaena-marginata": ["File:Dracaena marginata IndoorPlant 0605k.jpg"],
+  "areca-palm": ["File:Dypsis lutescens 2024-01-20 Malaga 01.jpg"],
+  "parlor-palm": [
+    "File:Chamaedorea elegans Chamedora wytworna 2024-01-20 Malaga 04.jpg",
+  ],
+  "ponytail-palm": ["File:Beaucarnea recurvata kz02.jpg"],
+  "norfolk-island-pine": ["File:Ferns in pot.jpg"],
+  "money-tree": ["File:Braided Money Tree Plant (Pachira aquatica) 1.jpg"],
+  "monstera-adansonii": ["File:Monstera adansonii 2zz.jpg"],
+  "english-ivy": ["File:Hedera helix 'Buttercup' Urn 2000px.JPG"],
+  "jade-plant": ["File:Crassula ovata 2012.jpg"],
+  dieffenbachia: ["File:Dieffenbachia seguine plant, April 2023.jpg"],
+  "lucky-bamboo": ["File:Many Dracaena sanderiana.jpg"],
+  "snake-plant": ["File:Snake Plant (Sansevieria trifasciata 'Laurentii') 2.jpg"],
+  "majesty-palm": ["File:Starr 080103-1158 Ravenea rivularis.jpg"],
+};
+
 const COMMONS = "https://commons.wikimedia.org/w/api.php";
 const WIKI = "https://en.wikipedia.org/w/api.php";
 
@@ -233,10 +264,14 @@ async function run() {
   const missing = [];
 
   for (const [key, , title] of list) {
-    // Candidate files: Wikipedia lead first, then Commons search hits.
+    // Candidate files: hand-picked pins first (so they lead), then the
+    // Wikipedia lead, then Commons search hits.
     const candidates = [];
+    for (const p of PINS[key] ?? []) {
+      if (!candidates.includes(p)) candidates.push(p);
+    }
     const lead = await leadFile(title);
-    if (lead) candidates.push(lead);
+    if (lead && !candidates.includes(lead)) candidates.push(lead);
     for (const t of await searchFiles(title)) {
       if (!candidates.includes(t)) candidates.push(t);
     }

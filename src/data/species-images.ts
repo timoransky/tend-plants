@@ -27,9 +27,9 @@ export const SPECIES_IMAGES: Record<string, SpeciesImage[]> = {
     { src: "/species/air-plant-tillandsia-3.jpg", author: "Godman Lloyd", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Tillandsia_Plant_screen.jpg" },
   ],
   "aloe": [
-    { src: "/species/aloe-1.jpg", author: "H. Zell", license: "CC BY-SA 3.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Aloe_vera_Lanzarote.jpg" },
-    { src: "/species/aloe-2.jpg", author: "Dietmar Rabich", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Cape_Town_(ZA),_Table_Mountain,_Aloe_vera_--_2024_--_2869.jpg" },
-    { src: "/species/aloe-3.jpg", author: "Ввласенко", license: "CC BY-SA 3.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Aloe_Vera_in_January._Madeira,_Portugal.jpg" },
+    { src: "/species/aloe-1.jpg", author: "User:Arjun01", license: "Public domain", licenseUrl: "", sourceUrl: "https://commons.wikimedia.org/wiki/File:Potted_Aloe_vera_plant.jpg" },
+    { src: "/species/aloe-2.jpg", author: "H. Zell", license: "CC BY-SA 3.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Aloe_vera_Lanzarote.jpg" },
+    { src: "/species/aloe-3.jpg", author: "Dietmar Rabich", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Cape_Town_(ZA),_Table_Mountain,_Aloe_vera_--_2024_--_2869.jpg" },
   ],
   "anthurium": [
     { src: "/species/anthurium-1.jpg", author: "Taken by Fanghong", license: "CC BY 2.5", licenseUrl: "https://creativecommons.org/licenses/by/2.5", sourceUrl: "https://commons.wikimedia.org/wiki/File:AnthuriumAndraenum.jpg" },
@@ -37,9 +37,9 @@ export const SPECIES_IMAGES: Record<string, SpeciesImage[]> = {
     { src: "/species/anthurium-3.jpg", author: "Diego Delso", license: "CC BY-SA 3.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Anthurium_andraeanum,_jard%C3%ADn_bot%C3%A1nico_de_Tallinn,_Estonia,_2012-08-13,_DD_01.JPG" },
   ],
   "areca-palm": [
-    { src: "/species/areca-palm-1.jpg", author: "Jules Verne Times Two", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Golden_cane_palm_(Dypsis_lutescens)_trunk,_Estufa_Fria,_Lisbon,_Portugal_julesvernex2.jpg" },
-    { src: "/species/areca-palm-2.jpg", author: "KENPEI", license: "CC BY-SA 3.0", licenseUrl: "http://creativecommons.org/licenses/by-sa/3.0/", sourceUrl: "https://commons.wikimedia.org/wiki/File:Dypsis_lutescens1.jpg" },
-    { src: "/species/areca-palm-3.jpg", author: "Juan Carlos Fonseca Mata", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Dypsis_lutescens_(Family_Arecaceae)_-_leaves.jpg" },
+    { src: "/species/areca-palm-1.jpg", author: "Agnieszka Kwiecień, Nova", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Dypsis_lutescens_2024-01-20_Malaga_01.jpg" },
+    { src: "/species/areca-palm-2.jpg", author: "Jules Verne Times Two", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Golden_cane_palm_(Dypsis_lutescens)_trunk,_Estufa_Fria,_Lisbon,_Portugal_julesvernex2.jpg" },
+    { src: "/species/areca-palm-3.jpg", author: "KENPEI", license: "CC BY-SA 3.0", licenseUrl: "http://creativecommons.org/licenses/by-sa/3.0/", sourceUrl: "https://commons.wikimedia.org/wiki/File:Dypsis_lutescens1.jpg" },
   ],
   "bird-of-paradise": [
     { src: "/species/bird-of-paradise-1.jpg", author: "Scott Bauer, USDA", license: "Public domain", licenseUrl: "", sourceUrl: "https://commons.wikimedia.org/wiki/File:Strelitzia_larger.jpg" },
@@ -62,9 +62,9 @@ export const SPECIES_IMAGES: Record<string, SpeciesImage[]> = {
     { src: "/species/bromeliad-3.jpg", author: "Agnieszka Kwiecień, Nova", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Guzmania_%27Remembrance%27_2019-05-03_02.jpg" },
   ],
   "calathea": [
-    { src: "/species/calathea-1.jpg", author: "H. Zell", license: "CC BY-SA 3.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Calathea_warscewiczii_-_Wilhelma.jpg" },
-    { src: "/species/calathea-2.jpg", author: "3steph14", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Calathea_freddie.jpg" },
-    { src: "/species/calathea-3.jpg", author: "Jess255721", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Calathea_Jerome.jpg" },
+    { src: "/species/calathea-1.jpg", author: "Mokkie", license: "CC BY-SA 3.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Zebra_Plant_(Calathea_zebrina)_1.jpg" },
+    { src: "/species/calathea-2.jpg", author: "H. Zell", license: "CC BY-SA 3.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Calathea_warscewiczii_-_Wilhelma.jpg" },
+    { src: "/species/calathea-3.jpg", author: "3steph14", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Calathea_freddie.jpg" },
   ],
   "cast-iron-plant": [
     { src: "/species/cast-iron-plant-1.jpg", author: "frau-doktor", license: "Public domain", licenseUrl: "", sourceUrl: "https://commons.wikimedia.org/wiki/File:Aspidistra-elatior-variegata.jpg" },
@@ -83,8 +83,8 @@ export const SPECIES_IMAGES: Record<string, SpeciesImage[]> = {
   ],
   "christmas-cactus": [
     { src: "/species/christmas-cactus-1.jpg", author: "Agnes Monkelbaan", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Schlumbergera_(actm)_01.jpg" },
-    { src: "/species/christmas-cactus-2.jpg", author: "Agnes Monkelbaan", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Schlumbergera_(actm)_05.jpg" },
-    { src: "/species/christmas-cactus-3.jpg", author: "Agnes Monkelbaan", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Schlumbergera_(actm)_14.jpg" },
+    { src: "/species/christmas-cactus-2.jpg", author: "Agnes Monkelbaan", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Schlumbergera_(actm)_13.jpg" },
+    { src: "/species/christmas-cactus-3.jpg", author: "Agnes Monkelbaan", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Schlumbergera_(actm)_05.jpg" },
   ],
   "croton": [
     { src: "/species/croton-1.jpg", author: "Louise Wolff --darina 23:22, 6 May 2005 (UTC)", license: "CC BY-SA 3.0", licenseUrl: "http://creativecommons.org/licenses/by-sa/3.0/", sourceUrl: "https://commons.wikimedia.org/wiki/File:Colpfl05.jpg" },
@@ -92,14 +92,14 @@ export const SPECIES_IMAGES: Record<string, SpeciesImage[]> = {
     { src: "/species/croton-3.jpg", author: "Photo by and (c)2006 Derek Ramsey (Ram-Man). Location credit to the Chanticleer Garden.", license: "CC BY-SA 3.0", licenseUrl: "http://creativecommons.org/licenses/by-sa/3.0/", sourceUrl: "https://commons.wikimedia.org/wiki/File:Codiaeum_variegatum_var._pictum_Leaf_Closeup_2900px.jpg" },
   ],
   "dieffenbachia": [
-    { src: "/species/dieffenbachia-1.jpg", author: "Simon A. Eugster", license: "CC BY-SA 3.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Dieffenbachia_inflorescence.jpg" },
-    { src: "/species/dieffenbachia-2.jpg", author: "Lessormore", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Dieffenbachia_(flower)_03.jpg" },
-    { src: "/species/dieffenbachia-3.jpg", author: "Lessormore", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Dieffenbachia_(flower)_05.jpg" },
+    { src: "/species/dieffenbachia-1.jpg", author: "Grace789", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Dieffenbachia_seguine_plant,_April_2023.jpg" },
+    { src: "/species/dieffenbachia-2.jpg", author: "Simon A. Eugster", license: "CC BY-SA 3.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Dieffenbachia_inflorescence.jpg" },
+    { src: "/species/dieffenbachia-3.jpg", author: "Lessormore", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Dieffenbachia_(flower)_03.jpg" },
   ],
   "dracaena-marginata": [
-    { src: "/species/dracaena-marginata-1.jpg", author: "H. Zell", license: "CC BY-SA 3.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Dracaena_reflexa_var._angustifolia_-_Jard%C3%ADn_Bot%C3%A1nico_Canario_Viera_y_Clavijo_-_Gran_Canaria.jpg" },
-    { src: "/species/dracaena-marginata-2.jpg", author: "H. Zell", license: "CC BY-SA 3.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Dracaena_reflexa_-_Jard%C3%ADn_Bot%C3%A1nico_Canario_Viera_y_Clavijo_-_Gran_Canaria.jpg" },
-    { src: "/species/dracaena-marginata-3.jpg", author: "Wikimedia Commons contributor", license: "CC BY-SA 3.0", licenseUrl: "http://creativecommons.org/licenses/by-sa/3.0/", sourceUrl: "https://commons.wikimedia.org/wiki/File:Dracaena_marginata_IndoorPlant_0605k.jpg" },
+    { src: "/species/dracaena-marginata-1.jpg", author: "Wikimedia Commons contributor", license: "CC BY-SA 3.0", licenseUrl: "http://creativecommons.org/licenses/by-sa/3.0/", sourceUrl: "https://commons.wikimedia.org/wiki/File:Dracaena_marginata_IndoorPlant_0605k.jpg" },
+    { src: "/species/dracaena-marginata-2.jpg", author: "H. Zell", license: "CC BY-SA 3.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Dracaena_reflexa_var._angustifolia_-_Jard%C3%ADn_Bot%C3%A1nico_Canario_Viera_y_Clavijo_-_Gran_Canaria.jpg" },
+    { src: "/species/dracaena-marginata-3.jpg", author: "H. Zell", license: "CC BY-SA 3.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Dracaena_reflexa_-_Jard%C3%ADn_Bot%C3%A1nico_Canario_Viera_y_Clavijo_-_Gran_Canaria.jpg" },
   ],
   "echeveria": [
     { src: "/species/echeveria-1.jpg", author: "Didier Descouens", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:(MHNT)_Echeveria_secunda.jpg" },
@@ -107,14 +107,14 @@ export const SPECIES_IMAGES: Record<string, SpeciesImage[]> = {
     { src: "/species/echeveria-3.jpg", author: "H. Zell", license: "CC BY-SA 3.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Echeveria_laui_01.JPG" },
   ],
   "english-ivy": [
-    { src: "/species/english-ivy-1.jpg", author: "Didier Descouens", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:(MHNT)_Hedera_helix_-_immature_inflorescences.jpg" },
-    { src: "/species/english-ivy-2.jpg", author: "kallerna", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Hedera_helix_Dover.jpg" },
-    { src: "/species/english-ivy-3.jpg", author: "Commonists", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Hedera_helix_with_fruits.jpg" },
+    { src: "/species/english-ivy-1.jpg", author: "Photo by and (c)2006 Derek Ramsey (Ram-Man). Location credit to the Chanticleer Garden.", license: "CC BY-SA 3.0", licenseUrl: "http://creativecommons.org/licenses/by-sa/3.0/", sourceUrl: "https://commons.wikimedia.org/wiki/File:Hedera_helix_%27Buttercup%27_Urn_2000px.JPG" },
+    { src: "/species/english-ivy-2.jpg", author: "Didier Descouens", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:(MHNT)_Hedera_helix_-_immature_inflorescences.jpg" },
+    { src: "/species/english-ivy-3.jpg", author: "kallerna", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Hedera_helix_Dover.jpg" },
   ],
   "fiddle-leaf-fig": [
-    { src: "/species/fiddle-leaf-fig-1.jpg", author: "Forest & Kim Starr", license: "CC BY 3.0", licenseUrl: "https://creativecommons.org/licenses/by/3.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Starr_031108-0130_Ficus_lyrata.jpg" },
-    { src: "/species/fiddle-leaf-fig-2.jpg", author: "Smatu", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Ficus_lyrata_DSCN4457.jpg" },
-    { src: "/species/fiddle-leaf-fig-3.jpg", author: "Djibo Zanzot", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Ficus_lyrata_393081802.jpg" },
+    { src: "/species/fiddle-leaf-fig-1.jpg", author: "Forest and Kim Starr", license: "CC BY 3.0 us", licenseUrl: "https://creativecommons.org/licenses/by/3.0/us/deed.en", sourceUrl: "https://commons.wikimedia.org/wiki/File:Starr-120513-5858-Ficus_lyrata-leaves-Waihee_Coastal_Preserve-Maui_(25024431542).jpg" },
+    { src: "/species/fiddle-leaf-fig-2.jpg", author: "Forest & Kim Starr", license: "CC BY 3.0", licenseUrl: "https://creativecommons.org/licenses/by/3.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Starr_031108-0130_Ficus_lyrata.jpg" },
+    { src: "/species/fiddle-leaf-fig-3.jpg", author: "Smatu", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Ficus_lyrata_DSCN4457.jpg" },
   ],
   "haworthia": [
     { src: "/species/haworthia-1.jpg", author: "Abu Shawka", license: "CC0", licenseUrl: "http://creativecommons.org/publicdomain/zero/1.0/deed.en", sourceUrl: "https://commons.wikimedia.org/wiki/File:Haworthia_mirabilis_in_cultivation_6.jpg" },
@@ -132,8 +132,8 @@ export const SPECIES_IMAGES: Record<string, SpeciesImage[]> = {
     { src: "/species/hoya-wax-plant-3.jpg", author: "Acroterion", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Hoya_carnosa_buds_1.jpg" },
   ],
   "jade-plant": [
-    { src: "/species/jade-plant-1.jpg", author: "W.carter", license: "CC0", licenseUrl: "http://creativecommons.org/publicdomain/zero/1.0/deed.en", sourceUrl: "https://commons.wikimedia.org/wiki/File:Among_the_branches_of_a_potted_jade_plant.jpg" },
-    { src: "/species/jade-plant-2.jpg", author: "JLPC", license: "CC BY-SA 3.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Crassula_ovata_2012.jpg" },
+    { src: "/species/jade-plant-1.jpg", author: "JLPC", license: "CC BY-SA 3.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Crassula_ovata_2012.jpg" },
+    { src: "/species/jade-plant-2.jpg", author: "W.carter", license: "CC0", licenseUrl: "http://creativecommons.org/publicdomain/zero/1.0/deed.en", sourceUrl: "https://commons.wikimedia.org/wiki/File:Among_the_branches_of_a_potted_jade_plant.jpg" },
     { src: "/species/jade-plant-3.jpg", author: "JJ Harrison (https://www.jjharrison.com.au/)", license: "CC BY-SA 3.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Crassula_ovata_RTBG.jpg" },
   ],
   "kalanchoe": [
@@ -142,9 +142,9 @@ export const SPECIES_IMAGES: Record<string, SpeciesImage[]> = {
     { src: "/species/kalanchoe-3.jpg", author: "Luis Miguel Bugallo Sánchez", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:2025_Kalanchoe_blossfeldiana_Poelin._Santiago_de_Compostela._Galiza-2.jpg" },
   ],
   "lucky-bamboo": [
-    { src: "/species/lucky-bamboo-1.jpg", author: "Just some student on the web", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:A_trio_of_plantae_%22Dracaena_Sanderiana%22.jpg" },
-    { src: "/species/lucky-bamboo-2.jpg", author: "Beah Vega", license: "CC BY 4.0", licenseUrl: "https://creativecommons.org/licenses/by/4.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Dracaena_sanderiana_132157891.jpg" },
-    { src: "/species/lucky-bamboo-3.jpg", author: "Beah Vega", license: "CC BY 4.0", licenseUrl: "https://creativecommons.org/licenses/by/4.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Dracaena_sanderiana_132158060.jpg" },
+    { src: "/species/lucky-bamboo-1.jpg", author: "Bernard Ladenthin", license: "CC0", licenseUrl: "http://creativecommons.org/publicdomain/zero/1.0/deed.en", sourceUrl: "https://commons.wikimedia.org/wiki/File:Many_Dracaena_sanderiana.jpg" },
+    { src: "/species/lucky-bamboo-2.jpg", author: "Just some student on the web", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:A_trio_of_plantae_%22Dracaena_Sanderiana%22.jpg" },
+    { src: "/species/lucky-bamboo-3.jpg", author: "Beah Vega", license: "CC BY 4.0", licenseUrl: "https://creativecommons.org/licenses/by/4.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Dracaena_sanderiana_132157891.jpg" },
   ],
   "maidenhair-fern": [
     { src: "/species/maidenhair-fern-1.jpg", author: "Vengolis", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Flora_of_Wayanad_0112.jpg" },
@@ -152,24 +152,24 @@ export const SPECIES_IMAGES: Record<string, SpeciesImage[]> = {
     { src: "/species/maidenhair-fern-3.jpg", author: "Turini", license: "Public domain", licenseUrl: "", sourceUrl: "https://commons.wikimedia.org/wiki/File:Bermuda_Maidenhair_Fern-02.JPG" },
   ],
   "majesty-palm": [
-    { src: "/species/majesty-palm-1.jpg", author: "Stickpen", license: "Public domain", licenseUrl: "", sourceUrl: "https://commons.wikimedia.org/wiki/File:Ravenearivularis.jpg" },
-    { src: "/species/majesty-palm-2.jpg", author: "C T Johansson", license: "CC BY-SA 3.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Ravenea_rivularis-IMG_0468.jpg" },
-    { src: "/species/majesty-palm-3.jpg", author: "Krzysztof Ziarnek, Kenraiz", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Ravenea_rivularis_kz01.jpg" },
+    { src: "/species/majesty-palm-1.jpg", author: "Forest & Kim Starr", license: "CC BY 3.0", licenseUrl: "https://creativecommons.org/licenses/by/3.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Starr_080103-1158_Ravenea_rivularis.jpg" },
+    { src: "/species/majesty-palm-2.jpg", author: "Stickpen", license: "Public domain", licenseUrl: "", sourceUrl: "https://commons.wikimedia.org/wiki/File:Ravenearivularis.jpg" },
+    { src: "/species/majesty-palm-3.jpg", author: "C T Johansson", license: "CC BY-SA 3.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Ravenea_rivularis-IMG_0468.jpg" },
   ],
   "money-tree": [
-    { src: "/species/money-tree-1.jpg", author: "Hans Hillewaert, edited by Muhammad Mahdi Karim", license: "CC BY-SA 3.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Pachira_aquatica_(fruit)_edit1.jpg" },
-    { src: "/species/money-tree-2.jpg", author: "Hans Hillewaert", license: "CC BY-SA 3.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Pachira_aquatica_(fruit).jpg" },
-    { src: "/species/money-tree-3.jpg", author: "Hans Hillewaert", license: "CC BY-SA 3.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Pachira_aquatica_(inflorescense).jpg" },
+    { src: "/species/money-tree-1.jpg", author: "Mokkie", license: "CC BY-SA 3.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Braided_Money_Tree_Plant_(Pachira_aquatica)_1.jpg" },
+    { src: "/species/money-tree-2.jpg", author: "Hans Hillewaert, edited by Muhammad Mahdi Karim", license: "CC BY-SA 3.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Pachira_aquatica_(fruit)_edit1.jpg" },
+    { src: "/species/money-tree-3.jpg", author: "Hans Hillewaert", license: "CC BY-SA 3.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Pachira_aquatica_(fruit).jpg" },
   ],
   "monstera": [
-    { src: "/species/monstera-1.jpg", author: "H. Zell", license: "CC BY-SA 3.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Monstera_deliciosa_-_Wilhelma_01.jpg" },
-    { src: "/species/monstera-2.jpg", author: "H. Zell", license: "CC BY-SA 3.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Monstera_deliciosa_002.jpg" },
-    { src: "/species/monstera-3.jpg", author: "H. Zell", license: "CC BY 3.0", licenseUrl: "https://creativecommons.org/licenses/by/3.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Monstera_deliciosa_001.jpg" },
+    { src: "/species/monstera-1.jpg", author: "Agnieszka Kwiecień, Nova", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Monstera_deliciosa_Monstera_dziurawa_2023-10-31_04.jpg" },
+    { src: "/species/monstera-2.jpg", author: "H. Zell", license: "CC BY-SA 3.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Monstera_deliciosa_-_Wilhelma_01.jpg" },
+    { src: "/species/monstera-3.jpg", author: "H. Zell", license: "CC BY-SA 3.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Monstera_deliciosa_002.jpg" },
   ],
   "monstera-adansonii": [
-    { src: "/species/monstera-adansonii-1.png", author: "Walter Hood Fitch", license: "Public domain", licenseUrl: "", sourceUrl: "https://commons.wikimedia.org/wiki/File:Monstera_adansonii_CBM.png" },
-    { src: "/species/monstera-adansonii-2.jpg", author: "Jacob Rehage", license: "CC0", licenseUrl: "http://creativecommons.org/publicdomain/zero/1.0/deed.en", sourceUrl: "https://commons.wikimedia.org/wiki/File:Monstera_adansonii_112059118.jpg" },
-    { src: "/species/monstera-adansonii-3.jpg", author: "Aitor", license: "CC BY 4.0", licenseUrl: "https://creativecommons.org/licenses/by/4.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Monstera_adansonii_46016108.jpg" },
+    { src: "/species/monstera-adansonii-1.jpg", author: "Photo by David J. Stang", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Monstera_adansonii_2zz.jpg" },
+    { src: "/species/monstera-adansonii-2.png", author: "Walter Hood Fitch", license: "Public domain", licenseUrl: "", sourceUrl: "https://commons.wikimedia.org/wiki/File:Monstera_adansonii_CBM.png" },
+    { src: "/species/monstera-adansonii-3.jpg", author: "Jacob Rehage", license: "CC0", licenseUrl: "http://creativecommons.org/publicdomain/zero/1.0/deed.en", sourceUrl: "https://commons.wikimedia.org/wiki/File:Monstera_adansonii_112059118.jpg" },
   ],
   "nerve-plant": [
     { src: "/species/nerve-plant-1.jpg", author: "Louise Wolff --darina 00:12, 7 May 2005 (UTC)", license: "CC BY-SA 3.0", licenseUrl: "http://creativecommons.org/licenses/by-sa/3.0/", sourceUrl: "https://commons.wikimedia.org/wiki/File:Colpfl25.jpg" },
@@ -177,14 +177,14 @@ export const SPECIES_IMAGES: Record<string, SpeciesImage[]> = {
     { src: "/species/nerve-plant-3.jpg", author: "Why can't i get a cow", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Potted_Fittonia_albivenis.jpg" },
   ],
   "norfolk-island-pine": [
-    { src: "/species/norfolk-island-pine-1.jpg", author: "thinboyfatter", license: "CC BY 2.0", licenseUrl: "https://creativecommons.org/licenses/by/2.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Norfolk-Island-Pines.jpg" },
-    { src: "/species/norfolk-island-pine-2.jpg", author: "Rjcastillo", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Araucaria_heterophylla._02.01.2023.jpg" },
-    { src: "/species/norfolk-island-pine-3.jpg", author: "Jules Verne Times Two", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Norfolk_Island_pine_leaves_(Araucaria_heterophylla,_Jardim_da_Pra%C3%A7a_de_Londres,_Lisbon,_Portugal_julesvernex2.jpg" },
+    { src: "/species/norfolk-island-pine-1.jpg", author: "RANJEET2792", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Ferns_in_pot.jpg" },
+    { src: "/species/norfolk-island-pine-2.jpg", author: "thinboyfatter", license: "CC BY 2.0", licenseUrl: "https://creativecommons.org/licenses/by/2.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Norfolk-Island-Pines.jpg" },
+    { src: "/species/norfolk-island-pine-3.jpg", author: "Rjcastillo", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Araucaria_heterophylla._02.01.2023.jpg" },
   ],
   "parlor-palm": [
-    { src: "/species/parlor-palm-1.jpg", author: "Tequila 13:54, 24 June 2007 (UTC)", license: "CC BY-SA 3.0", licenseUrl: "http://creativecommons.org/licenses/by-sa/3.0/", sourceUrl: "https://commons.wikimedia.org/wiki/File:Chamaedorea_elegans.jpg" },
-    { src: "/species/parlor-palm-2.jpg", author: "Bachelot Pierre J-P", license: "CC BY-SA 3.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Chamaedorea_elegans_Mart.JPG" },
-    { src: "/species/parlor-palm-3.jpg", author: "Dinkun Chen", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Chamaedorea_elegans_in_China.jpg" },
+    { src: "/species/parlor-palm-1.jpg", author: "Agnieszka Kwiecień, Nova", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Chamaedorea_elegans_Chamedora_wytworna_2024-01-20_Malaga_04.jpg" },
+    { src: "/species/parlor-palm-2.jpg", author: "Tequila 13:54, 24 June 2007 (UTC)", license: "CC BY-SA 3.0", licenseUrl: "http://creativecommons.org/licenses/by-sa/3.0/", sourceUrl: "https://commons.wikimedia.org/wiki/File:Chamaedorea_elegans.jpg" },
+    { src: "/species/parlor-palm-3.jpg", author: "Bachelot Pierre J-P", license: "CC BY-SA 3.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Chamaedorea_elegans_Mart.JPG" },
   ],
   "peace-lily": [
     { src: "/species/peace-lily-1.jpg", author: "W.carter", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Peace_lily_-_2.jpg" },
@@ -207,9 +207,9 @@ export const SPECIES_IMAGES: Record<string, SpeciesImage[]> = {
     { src: "/species/polka-dot-plant-3.jpg", author: "Vengolis", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Hypoestes_phyllostachya_0205.jpg" },
   ],
   "ponytail-palm": [
-    { src: "/species/ponytail-palm-1.jpg", author: "juancruzado", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Beaucarnea_recurvata,_Ocampo,_Tamaulipas,_Mexico_1.jpg" },
-    { src: "/species/ponytail-palm-2.jpg", author: "juancruzado", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Beaucarnea_recurvata,_Sierra_del_Abra_Tanchipa,_San_Luis_Potos%C3%AD,_Mexico_2.jpg" },
-    { src: "/species/ponytail-palm-3.jpg", author: "juancruzado", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Beaucarnea_recurvata,_Llera,_Tamaulipas,_Mexico_3.jpg" },
+    { src: "/species/ponytail-palm-1.jpg", author: "Krzysztof Ziarnek, Kenraiz", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Beaucarnea_recurvata_kz02.jpg" },
+    { src: "/species/ponytail-palm-2.jpg", author: "juancruzado", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Beaucarnea_recurvata,_Ocampo,_Tamaulipas,_Mexico_1.jpg" },
+    { src: "/species/ponytail-palm-3.jpg", author: "juancruzado", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Beaucarnea_recurvata,_Sierra_del_Abra_Tanchipa,_San_Luis_Potos%C3%AD,_Mexico_2.jpg" },
   ],
   "pothos": [
     { src: "/species/pothos-1.jpg", author: "Joydeep", license: "CC BY-SA 3.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Epipremnum_aureum_31082012.jpg" },
@@ -227,8 +227,8 @@ export const SPECIES_IMAGES: Record<string, SpeciesImage[]> = {
     { src: "/species/rex-begonia-3.jpg", author: "Photo by David J. Stang", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Begonia_rex_5zz.jpg" },
   ],
   "rubber-plant": [
-    { src: "/species/rubber-plant-1.jpg", author: "Julian Herzog (Website)", license: "CC BY 4.0", licenseUrl: "https://creativecommons.org/licenses/by/4.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Backlit_ficus_elastica_leaf_texture_2014_02.jpg" },
-    { src: "/species/rubber-plant-2.jpg", author: "Alvesgaspar (talk)", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Ficus_November_2008-1.jpg" },
+    { src: "/species/rubber-plant-1.jpg", author: "Alvesgaspar (talk)", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Ficus_November_2008-1.jpg" },
+    { src: "/species/rubber-plant-2.jpg", author: "Julian Herzog (Website)", license: "CC BY 4.0", licenseUrl: "https://creativecommons.org/licenses/by/4.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Backlit_ficus_elastica_leaf_texture_2014_02.jpg" },
     { src: "/species/rubber-plant-3.jpg", author: "Cayambe", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Catania,_Villa_Bellini_2024f,_Ficus_elastica.jpg" },
   ],
   "schefflera": [
@@ -237,14 +237,14 @@ export const SPECIES_IMAGES: Record<string, SpeciesImage[]> = {
     { src: "/species/schefflera-3.jpg", author: "Dr. Alexey Yakovlev", license: "CC BY-SA 2.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/2.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Schefflera_arboricola_%3D_Heptapleurum_arboricola_(Araliaceae)_(50041889661).jpg" },
   ],
   "snake-plant": [
-    { src: "/species/snake-plant-1.jpg", author: "Fanti Salms", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Dracaena_Trifasciata_Plant.jpg" },
-    { src: "/species/snake-plant-2.jpg", author: "elawrey", license: "CC BY 4.0", licenseUrl: "https://creativecommons.org/licenses/by/4.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Dracaena_trifasciata_55523547.jpg" },
-    { src: "/species/snake-plant-3.jpg", author: "Juan Cruzado Cortés", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Dracaena_trifasciata_60105757.jpg" },
+    { src: "/species/snake-plant-1.jpg", author: "Mokkie", license: "CC BY-SA 3.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Snake_Plant_(Sansevieria_trifasciata_%27Laurentii%27)_2.jpg" },
+    { src: "/species/snake-plant-2.jpg", author: "Fanti Salms", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Dracaena_Trifasciata_Plant.jpg" },
+    { src: "/species/snake-plant-3.jpg", author: "elawrey", license: "CC BY 4.0", licenseUrl: "https://creativecommons.org/licenses/by/4.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Dracaena_trifasciata_55523547.jpg" },
   ],
   "spider-plant": [
-    { src: "/species/spider-plant-1.jpg", author: "Adrian Tync", license: "CC BY 4.0", licenseUrl: "https://creativecommons.org/licenses/by/4.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Chlorophytum_comosum_flos.jpg" },
-    { src: "/species/spider-plant-2.jpg", author: "Juan Carlos Fonseca Mata", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Malamadre_(Chlorophytum_comosum).jpg" },
-    { src: "/species/spider-plant-3.jpg", author: "Juan Carlos Fonseca Mata", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Chlorophytum_comosum,_flores.jpg" },
+    { src: "/species/spider-plant-1.jpg", author: "Sebastian Martin Dicke", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Chlorophytum_comosum_as_an_office_plant.jpg" },
+    { src: "/species/spider-plant-2.jpg", author: "Adrian Tync", license: "CC BY 4.0", licenseUrl: "https://creativecommons.org/licenses/by/4.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Chlorophytum_comosum_flos.jpg" },
+    { src: "/species/spider-plant-3.jpg", author: "Juan Carlos Fonseca Mata", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Malamadre_(Chlorophytum_comosum).jpg" },
   ],
   "string-of-hearts": [
     { src: "/species/string-of-hearts-1.jpg", author: "Agnieszka Kwiecień, Nova", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Ceropegia_woodii_Ceropegia_Wooda_2024-04-26_01.jpg" },

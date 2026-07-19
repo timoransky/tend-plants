@@ -14,9 +14,9 @@ Each is used under its stated license (CC0 / public domain / CC BY / CC BY-SA).
 - Godman Lloyd — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Tillandsia_Plant_screen.jpg
 
 ## aloe
+- User:Arjun01 — Public domain — https://commons.wikimedia.org/wiki/File:Potted_Aloe_vera_plant.jpg
 - H. Zell — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Aloe_vera_Lanzarote.jpg
 - Dietmar Rabich — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Cape_Town_(ZA),_Table_Mountain,_Aloe_vera_--_2024_--_2869.jpg
-- Ввласенко — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Aloe_Vera_in_January._Madeira,_Portugal.jpg
 
 ## anthurium
 - Taken by Fanghong — CC BY 2.5 — https://commons.wikimedia.org/wiki/File:AnthuriumAndraenum.jpg
@@ -24,9 +24,9 @@ Each is used under its stated license (CC0 / public domain / CC BY / CC BY-SA).
 - Diego Delso — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Anthurium_andraeanum,_jard%C3%ADn_bot%C3%A1nico_de_Tallinn,_Estonia,_2012-08-13,_DD_01.JPG
 
 ## areca-palm
+- Agnieszka Kwiecień, Nova — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Dypsis_lutescens_2024-01-20_Malaga_01.jpg
 - Jules Verne Times Two — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Golden_cane_palm_(Dypsis_lutescens)_trunk,_Estufa_Fria,_Lisbon,_Portugal_julesvernex2.jpg
 - KENPEI — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Dypsis_lutescens1.jpg
-- Juan Carlos Fonseca Mata — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Dypsis_lutescens_(Family_Arecaceae)_-_leaves.jpg
 
 ## bird-of-paradise
 - Scott Bauer, USDA — Public domain — https://commons.wikimedia.org/wiki/File:Strelitzia_larger.jpg
@@ -49,9 +49,9 @@ Each is used under its stated license (CC0 / public domain / CC BY / CC BY-SA).
 - Agnieszka Kwiecień, Nova — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Guzmania_%27Remembrance%27_2019-05-03_02.jpg
 
 ## calathea
+- Mokkie — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Zebra_Plant_(Calathea_zebrina)_1.jpg
 - H. Zell — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Calathea_warscewiczii_-_Wilhelma.jpg
 - 3steph14 — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Calathea_freddie.jpg
-- Jess255721 — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Calathea_Jerome.jpg
 
 ## cast-iron-plant
 - frau-doktor — Public domain — https://commons.wikimedia.org/wiki/File:Aspidistra-elatior-variegata.jpg
@@ -70,8 +70,8 @@ Each is used under its stated license (CC0 / public domain / CC BY / CC BY-SA).
 
 ## christmas-cactus
 - Agnes Monkelbaan — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Schlumbergera_(actm)_01.jpg
+- Agnes Monkelbaan — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Schlumbergera_(actm)_13.jpg
 - Agnes Monkelbaan — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Schlumbergera_(actm)_05.jpg
-- Agnes Monkelbaan — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Schlumbergera_(actm)_14.jpg
 
 ## croton
 - Louise Wolff --darina 23:22, 6 May 2005 (UTC) — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Colpfl05.jpg
@@ -79,14 +79,14 @@ Each is used under its stated license (CC0 / public domain / CC BY / CC BY-SA).
 - Photo by and (c)2006 Derek Ramsey (Ram-Man). Location credit to the Chanticleer Garden. — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Codiaeum_variegatum_var._pictum_Leaf_Closeup_2900px.jpg
 
 ## dieffenbachia
+- Grace789 — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Dieffenbachia_seguine_plant,_April_2023.jpg
 - Simon A. Eugster — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Dieffenbachia_inflorescence.jpg
 - Lessormore — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Dieffenbachia_(flower)_03.jpg
-- Lessormore — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Dieffenbachia_(flower)_05.jpg
 
 ## dracaena-marginata
+- Wikimedia Commons contributor — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Dracaena_marginata_IndoorPlant_0605k.jpg
 - H. Zell — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Dracaena_reflexa_var._angustifolia_-_Jard%C3%ADn_Bot%C3%A1nico_Canario_Viera_y_Clavijo_-_Gran_Canaria.jpg
 - H. Zell — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Dracaena_reflexa_-_Jard%C3%ADn_Bot%C3%A1nico_Canario_Viera_y_Clavijo_-_Gran_Canaria.jpg
-- Wikimedia Commons contributor — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Dracaena_marginata_IndoorPlant_0605k.jpg
 
 ## echeveria
 - Didier Descouens — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:(MHNT)_Echeveria_secunda.jpg
@@ -94,14 +94,14 @@ Each is used under its stated license (CC0 / public domain / CC BY / CC BY-SA).
 - H. Zell — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Echeveria_laui_01.JPG
 
 ## english-ivy
+- Photo by and (c)2006 Derek Ramsey (Ram-Man). Location credit to the Chanticleer Garden. — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Hedera_helix_%27Buttercup%27_Urn_2000px.JPG
 - Didier Descouens — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:(MHNT)_Hedera_helix_-_immature_inflorescences.jpg
 - kallerna — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Hedera_helix_Dover.jpg
-- Commonists — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Hedera_helix_with_fruits.jpg
 
 ## fiddle-leaf-fig
+- Forest and Kim Starr — CC BY 3.0 us — https://commons.wikimedia.org/wiki/File:Starr-120513-5858-Ficus_lyrata-leaves-Waihee_Coastal_Preserve-Maui_(25024431542).jpg
 - Forest & Kim Starr — CC BY 3.0 — https://commons.wikimedia.org/wiki/File:Starr_031108-0130_Ficus_lyrata.jpg
 - Smatu — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Ficus_lyrata_DSCN4457.jpg
-- Djibo Zanzot — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Ficus_lyrata_393081802.jpg
 
 ## haworthia
 - Abu Shawka — CC0 — https://commons.wikimedia.org/wiki/File:Haworthia_mirabilis_in_cultivation_6.jpg
@@ -119,8 +119,8 @@ Each is used under its stated license (CC0 / public domain / CC BY / CC BY-SA).
 - Acroterion — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Hoya_carnosa_buds_1.jpg
 
 ## jade-plant
-- W.carter — CC0 — https://commons.wikimedia.org/wiki/File:Among_the_branches_of_a_potted_jade_plant.jpg
 - JLPC — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Crassula_ovata_2012.jpg
+- W.carter — CC0 — https://commons.wikimedia.org/wiki/File:Among_the_branches_of_a_potted_jade_plant.jpg
 - JJ Harrison (https://www.jjharrison.com.au/) — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Crassula_ovata_RTBG.jpg
 
 ## kalanchoe
@@ -129,9 +129,9 @@ Each is used under its stated license (CC0 / public domain / CC BY / CC BY-SA).
 - Luis Miguel Bugallo Sánchez — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:2025_Kalanchoe_blossfeldiana_Poelin._Santiago_de_Compostela._Galiza-2.jpg
 
 ## lucky-bamboo
+- Bernard Ladenthin — CC0 — https://commons.wikimedia.org/wiki/File:Many_Dracaena_sanderiana.jpg
 - Just some student on the web — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:A_trio_of_plantae_%22Dracaena_Sanderiana%22.jpg
 - Beah Vega — CC BY 4.0 — https://commons.wikimedia.org/wiki/File:Dracaena_sanderiana_132157891.jpg
-- Beah Vega — CC BY 4.0 — https://commons.wikimedia.org/wiki/File:Dracaena_sanderiana_132158060.jpg
 
 ## maidenhair-fern
 - Vengolis — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Flora_of_Wayanad_0112.jpg
@@ -139,24 +139,24 @@ Each is used under its stated license (CC0 / public domain / CC BY / CC BY-SA).
 - Turini — Public domain — https://commons.wikimedia.org/wiki/File:Bermuda_Maidenhair_Fern-02.JPG
 
 ## majesty-palm
+- Forest & Kim Starr — CC BY 3.0 — https://commons.wikimedia.org/wiki/File:Starr_080103-1158_Ravenea_rivularis.jpg
 - Stickpen — Public domain — https://commons.wikimedia.org/wiki/File:Ravenearivularis.jpg
 - C T Johansson — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Ravenea_rivularis-IMG_0468.jpg
-- Krzysztof Ziarnek, Kenraiz — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Ravenea_rivularis_kz01.jpg
 
 ## money-tree
+- Mokkie — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Braided_Money_Tree_Plant_(Pachira_aquatica)_1.jpg
 - Hans Hillewaert, edited by Muhammad Mahdi Karim — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Pachira_aquatica_(fruit)_edit1.jpg
 - Hans Hillewaert — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Pachira_aquatica_(fruit).jpg
-- Hans Hillewaert — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Pachira_aquatica_(inflorescense).jpg
 
 ## monstera
+- Agnieszka Kwiecień, Nova — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Monstera_deliciosa_Monstera_dziurawa_2023-10-31_04.jpg
 - H. Zell — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Monstera_deliciosa_-_Wilhelma_01.jpg
 - H. Zell — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Monstera_deliciosa_002.jpg
-- H. Zell — CC BY 3.0 — https://commons.wikimedia.org/wiki/File:Monstera_deliciosa_001.jpg
 
 ## monstera-adansonii
+- Photo by David J. Stang — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Monstera_adansonii_2zz.jpg
 - Walter Hood Fitch — Public domain — https://commons.wikimedia.org/wiki/File:Monstera_adansonii_CBM.png
 - Jacob Rehage — CC0 — https://commons.wikimedia.org/wiki/File:Monstera_adansonii_112059118.jpg
-- Aitor — CC BY 4.0 — https://commons.wikimedia.org/wiki/File:Monstera_adansonii_46016108.jpg
 
 ## nerve-plant
 - Louise Wolff --darina 00:12, 7 May 2005 (UTC) — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Colpfl25.jpg
@@ -164,14 +164,14 @@ Each is used under its stated license (CC0 / public domain / CC BY / CC BY-SA).
 - Why can't i get a cow — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Potted_Fittonia_albivenis.jpg
 
 ## norfolk-island-pine
+- RANJEET2792 — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Ferns_in_pot.jpg
 - thinboyfatter — CC BY 2.0 — https://commons.wikimedia.org/wiki/File:Norfolk-Island-Pines.jpg
 - Rjcastillo — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Araucaria_heterophylla._02.01.2023.jpg
-- Jules Verne Times Two — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Norfolk_Island_pine_leaves_(Araucaria_heterophylla,_Jardim_da_Pra%C3%A7a_de_Londres,_Lisbon,_Portugal_julesvernex2.jpg
 
 ## parlor-palm
+- Agnieszka Kwiecień, Nova — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Chamaedorea_elegans_Chamedora_wytworna_2024-01-20_Malaga_04.jpg
 - Tequila 13:54, 24 June 2007 (UTC) — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Chamaedorea_elegans.jpg
 - Bachelot Pierre J-P — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Chamaedorea_elegans_Mart.JPG
-- Dinkun Chen — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Chamaedorea_elegans_in_China.jpg
 
 ## peace-lily
 - W.carter — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Peace_lily_-_2.jpg
@@ -194,9 +194,9 @@ Each is used under its stated license (CC0 / public domain / CC BY / CC BY-SA).
 - Vengolis — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Hypoestes_phyllostachya_0205.jpg
 
 ## ponytail-palm
+- Krzysztof Ziarnek, Kenraiz — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Beaucarnea_recurvata_kz02.jpg
 - juancruzado — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Beaucarnea_recurvata,_Ocampo,_Tamaulipas,_Mexico_1.jpg
 - juancruzado — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Beaucarnea_recurvata,_Sierra_del_Abra_Tanchipa,_San_Luis_Potos%C3%AD,_Mexico_2.jpg
-- juancruzado — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Beaucarnea_recurvata,_Llera,_Tamaulipas,_Mexico_3.jpg
 
 ## pothos
 - Joydeep — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Epipremnum_aureum_31082012.jpg
@@ -214,8 +214,8 @@ Each is used under its stated license (CC0 / public domain / CC BY / CC BY-SA).
 - Photo by David J. Stang — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Begonia_rex_5zz.jpg
 
 ## rubber-plant
-- Julian Herzog (Website) — CC BY 4.0 — https://commons.wikimedia.org/wiki/File:Backlit_ficus_elastica_leaf_texture_2014_02.jpg
 - Alvesgaspar (talk) — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Ficus_November_2008-1.jpg
+- Julian Herzog (Website) — CC BY 4.0 — https://commons.wikimedia.org/wiki/File:Backlit_ficus_elastica_leaf_texture_2014_02.jpg
 - Cayambe — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Catania,_Villa_Bellini_2024f,_Ficus_elastica.jpg
 
 ## schefflera
@@ -224,14 +224,14 @@ Each is used under its stated license (CC0 / public domain / CC BY / CC BY-SA).
 - Dr. Alexey Yakovlev — CC BY-SA 2.0 — https://commons.wikimedia.org/wiki/File:Schefflera_arboricola_%3D_Heptapleurum_arboricola_(Araliaceae)_(50041889661).jpg
 
 ## snake-plant
+- Mokkie — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Snake_Plant_(Sansevieria_trifasciata_%27Laurentii%27)_2.jpg
 - Fanti Salms — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Dracaena_Trifasciata_Plant.jpg
 - elawrey — CC BY 4.0 — https://commons.wikimedia.org/wiki/File:Dracaena_trifasciata_55523547.jpg
-- Juan Cruzado Cortés — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Dracaena_trifasciata_60105757.jpg
 
 ## spider-plant
+- Sebastian Martin Dicke — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Chlorophytum_comosum_as_an_office_plant.jpg
 - Adrian Tync — CC BY 4.0 — https://commons.wikimedia.org/wiki/File:Chlorophytum_comosum_flos.jpg
 - Juan Carlos Fonseca Mata — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Malamadre_(Chlorophytum_comosum).jpg
-- Juan Carlos Fonseca Mata — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Chlorophytum_comosum,_flores.jpg
 
 ## string-of-hearts
 - Agnieszka Kwiecień, Nova — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Ceropegia_woodii_Ceropegia_Wooda_2024-04-26_01.jpg
