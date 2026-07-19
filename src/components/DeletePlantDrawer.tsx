@@ -3,6 +3,7 @@
 import { useState } from "react";
 
 import { Drawer, DrawerDescription, DrawerTitle } from "@/components/Drawer";
+import { PlantAvatar } from "@/components/PlantAvatar";
 import type { PlantWithStatus } from "@/lib/plants";
 import { tapScale } from "@/lib/ui";
 
@@ -47,7 +48,11 @@ export function DeletePlantDrawer({
       <div className="flex flex-col gap-6">
         <div className="flex items-center gap-4">
           <span className="flex size-16 shrink-0 items-center justify-center rounded-full bg-surface-muted text-3xl">
-            <span aria-hidden>{plant.avatar ?? "🪴"}</span>
+            <PlantAvatar
+              avatar={plant.avatar}
+              imageUrl={plant.avatarUrl}
+              alt={plant.name}
+            />
           </span>
           <div className="min-w-0">
             <DrawerTitle className="text-xl font-semibold tracking-tight text-ink">

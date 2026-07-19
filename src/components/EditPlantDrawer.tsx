@@ -12,6 +12,8 @@ function valuesFromPlant(p: PlantWithStatus): PlantFormValues {
     name: p.name,
     room: p.room ?? "",
     avatar: p.avatar ?? "",
+    avatarImageKey: p.avatarImageKey,
+    avatarImageUrl: p.avatarUrl,
     waterIntervalDays:
       p.waterIntervalDays != null ? String(p.waterIntervalDays) : "",
     waterNote: p.waterNote ?? "",
@@ -33,12 +35,14 @@ function valuesFromPlant(p: PlantWithStatus): PlantFormValues {
 export function EditPlantDrawer({
   plant,
   token,
+  photoEnabled,
   open,
   onOpenChange,
   onSaved,
 }: {
   plant: PlantWithStatus;
   token: string;
+  photoEnabled: boolean;
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSaved: (updated: PlantWithStatus) => void;
@@ -82,6 +86,7 @@ export function EditPlantDrawer({
         name: values.name,
         room: values.room.trim() || null,
         avatar: values.avatar,
+        avatarImageKey: values.avatarImageKey,
         waterIntervalDays: Number(values.waterIntervalDays) || null,
         waterNote: values.waterNote.trim() || null,
         lightNote: values.lightNote.trim() || null,
@@ -104,6 +109,8 @@ export function EditPlantDrawer({
         key={plant.id}
         initial={valuesFromPlant(plant)}
         species={species}
+        token={token}
+        photoEnabled={photoEnabled}
         title="Edit plant"
         subtitle="Update name, room, care and notes"
         submitLabel="Save changes"

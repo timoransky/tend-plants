@@ -9,6 +9,7 @@ import { DeletePlantDrawer } from "@/components/DeletePlantDrawer";
 import { Drawer, DrawerDescription, DrawerTitle } from "@/components/Drawer";
 import { EditPlantDrawer } from "@/components/EditPlantDrawer";
 import { PlantDetail, type PlantDetailData } from "@/components/PlantDetail";
+import { PlantPhotoAvatar } from "@/components/PlantPhotoAvatar";
 import type { PlantWithStatus } from "@/lib/plants";
 import { tapScale } from "@/lib/ui";
 
@@ -45,11 +46,13 @@ export function PlantDrawer({
   plant,
   open,
   token,
+  photoEnabled,
   onOpenChange,
 }: {
   plant: PlantWithStatus | null;
   open: boolean;
   token: string;
+  photoEnabled: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
   const router = useRouter();
@@ -89,9 +92,12 @@ export function PlantDrawer({
       {view ? (
         <>
           <header className="flex items-center gap-4 pb-5">
-            <span className="flex size-20 shrink-0 items-center justify-center rounded-full bg-surface-muted text-4xl">
-              <span aria-hidden>{view.avatar ?? "🪴"}</span>
-            </span>
+            <PlantPhotoAvatar
+              avatar={view.avatar}
+              imageUrl={view.avatarUrl}
+              alt={view.name}
+              className="flex size-20 shrink-0 items-center justify-center rounded-full bg-surface-muted text-4xl"
+            />
             <div className="min-w-0 flex-1">
               <DrawerTitle className="truncate text-2xl font-semibold tracking-tight text-ink">
                 {view.name}
@@ -145,6 +151,7 @@ export function PlantDrawer({
           <EditPlantDrawer
             plant={view}
             token={token}
+            photoEnabled={photoEnabled}
             open={editOpen}
             onOpenChange={setEditOpen}
             onSaved={(updated) => {

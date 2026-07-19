@@ -1,5 +1,7 @@
 "use client";
 
+import { AiImageIcon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -9,11 +11,17 @@ import { createPortal } from "react-dom";
 import { AddedPlantDrawer } from "@/components/AddedPlantDrawer";
 import { Drawer } from "@/components/Drawer";
 import {
+  IdentifyDrawer,
+  type IdentifyCandidateView,
+} from "@/components/IdentifyDrawer";
+import {
   MANUAL_VALUES,
   PlantForm,
   type PlantFormValues,
   speciesToValues,
 } from "@/components/PlantForm";
+import type { IdentifyCandidate, IdentifyResult } from "@/lib/identify";
+import { downscaleImage } from "@/lib/image";
 import type { SpeciesDetail } from "@/lib/species";
 import { tapScale } from "@/lib/ui";
 
@@ -29,7 +37,15 @@ import { tapScale } from "@/lib/ui";
  * over the form to confirm, then offers "Add another plant" (back to the picker)
  * or "Done" (home) — so adding several plants in a row never round-trips home.
  */
-export function AddPlant({ token }: { token: string }) {
+export function AddPlant({
+  token,
+  identifyEnabled,
+  photoEnabled,
+}: {
+  token: string;
+  identifyEnabled: boolean;
+  photoEnabled: boolean;
+}) {
   const router = useRouter();
 
   // --- Picker (page) data ---
@@ -37,6 +53,20 @@ export function AddPlant({ token }: { token: string }) {
   // no extra round-trip (the dataset is small and local).
   const [list, setList] = useState<SpeciesDetail[] | null>(null);
   const [query, setQuery] = useState("");
+
+  // --- Photo identify (optional; only when identifyEnabled) ---
+  // The review sheet owns the lifecycle: `identifyOpen` drives it, `identifying`
+  // shows the loading state, `candidates` holds the ranked guesses (null while
+  // loading, [] when nothing matched), `identifyError` a failure, `photoUrl` a
+  // local preview of the picked photo.
+  const [identifyOpen, setIdentifyOpen] = useState(false);
+  const [identifying, setIdentifying] = useState(false);
+  const [candidates, setCandidates] = useState<IdentifyCandidate[] | null>(null);
+  const [identifyError, setIdentifyError] = useState<string | null>(null);
+  const [photoUrl, setPhotoUrl] = useState<string | null>(null);
+  // The downscaled photo the user identified from, kept so it can be reused as
+  // the new plant's avatar when they pick a candidate (or add manually).
+  const [photoBlob, setPhotoBlob] = useState<Blob | null>(null);
 
   useEffect(() => {
     let active = true;
@@ -59,6 +89,18 @@ export function AddPlant({ token }: { token: string }) {
       : list;
   }, [list, query]);
 
+  // Enrich each candidate with its avatar for display: a dataset match shows the
+  // species' emoji; an unlisted plant gets a neutral pot.
+  const displayCandidates = useMemo<IdentifyCandidateView[] | null>(() => {
+    if (!candidates) return null;
+    return candidates.map((c) => ({
+      ...c,
+      avatar: c.speciesKey
+        ? ((list ?? []).find((s) => s.key === c.speciesKey)?.avatar ?? "🪴")
+        : "🪴",
+    }));
+  }, [candidates, list]);
+
   // --- Form (drawer) data ---
   // `original` is the species the form was seeded from (null for manual entry);
   // `initial` holds the seed values. `formSeed` bumps on every open so the form
@@ -68,14 +110,19 @@ export function AddPlant({ token }: { token: string }) {
   const [original, setOriginal] = useState<SpeciesDetail | null>(null);
   const [initial, setInitial] = useState<PlantFormValues | null>(null);
   const [formSeed, setFormSeed] = useState(0);
+  // The photo (if any) to seed the next-opened form with — set when a plant is
+  // added straight from an identified photo, cleared for a plain picker choice.
+  const [formPhoto, setFormPhoto] = useState<Blob | null>(null);
 
   // --- Success (nested drawer) ---
   // After a save, this confirmation sheet stacks over the still-open form; it
   // holds the saved plant's name/avatar for the "{name} added" header.
   const [successOpen, setSuccessOpen] = useState(false);
-  const [added, setAdded] = useState<{ name: string; avatar: string } | null>(
-    null,
-  );
+  const [added, setAdded] = useState<{
+    name: string;
+    avatar: string;
+    imageUrl: string | null;
+  } | null>(null);
 
   // If the form drawer closes for any reason, drop the nested success sheet with
   // it (mirrors PlantDrawer's guard). Adjusting state during render is the
@@ -87,19 +134,90 @@ export function AddPlant({ token }: { token: string }) {
   }
 
   // Synchronous: the picker already holds full care detail, so opening the form
-  // is just a state swap — no fetch, no loading flash.
-  function pickSpecies(species: SpeciesDetail) {
+  // is just a state swap — no fetch, no loading flash. `photo` (from identify)
+  // seeds the form's avatar; a plain picker choice passes none.
+  function pickSpecies(species: SpeciesDetail, photo: Blob | null = null) {
     setOriginal(species);
     setInitial(speciesToValues(species));
+    setFormPhoto(photo);
     setFormSeed((s) => s + 1);
     setFormOpen(true);
   }
 
-  function startManual() {
+  function startManual(seedName?: string, photo: Blob | null = null) {
     setOriginal(null);
-    setInitial(MANUAL_VALUES);
+    setInitial(seedName ? { ...MANUAL_VALUES, name: seedName } : MANUAL_VALUES);
+    setFormPhoto(photo);
     setFormSeed((s) => s + 1);
     setFormOpen(true);
+  }
+
+  // Take a photo → open the review sheet with a loading state → fill it with
+  // Pl@ntNet's ranked guesses (or an error). Choosing a candidate lands on the
+  // same form the picker would open. Also runs on "try another photo" from
+  // inside the sheet, which just replaces the current result.
+  async function handleIdentifyFile(file: File) {
+    setPhotoUrl((prev) => {
+      if (prev) URL.revokeObjectURL(prev);
+      return URL.createObjectURL(file);
+    });
+    setCandidates(null);
+    setIdentifyError(null);
+    setIdentifyOpen(true);
+    setIdentifying(true);
+    try {
+      // Downscale client-side so the upload is small (faster round-trip, cheaper
+      // call); fall back to the original bytes if the browser can't. Keep the
+      // downscaled photo so it can double as the plant's avatar on confirm.
+      const image = await downscaleImage(file).catch(() => file);
+      setPhotoBlob(image);
+      const body = new FormData();
+      body.append("image", image, "plant.jpg");
+
+      const res = await fetch(`/api/h/${token}/identify`, {
+        method: "POST",
+        body,
+      });
+      if (!res.ok) {
+        setIdentifyError(
+          res.status === 429
+            ? "You’ve hit today’s identification limit. Try again tomorrow."
+            : res.status === 503
+              ? "Photo identification isn’t available right now."
+              : "Something went wrong identifying that photo.",
+        );
+        return;
+      }
+      const { result } = (await res.json()) as { result: IdentifyResult };
+      setCandidates(result.candidates ?? []);
+    } catch {
+      setIdentifyError("Something went wrong identifying that photo.");
+    } finally {
+      setIdentifying(false);
+    }
+  }
+
+  // Close the review sheet, then run `action` once it has slid down — so the two
+  // top-level drawers don't fight over vaul's background-scale in one frame.
+  function afterIdentifyClose(action: () => void) {
+    setIdentifyOpen(false);
+    window.setTimeout(action, 220);
+  }
+
+  // A chosen candidate opens its pre-filled form: a dataset match its species
+  // form, an unlisted plant manual entry with the name pre-filled. The photo
+  // they identified from is carried through as the plant's avatar (when photo
+  // uploads are enabled).
+  function chooseCandidate(candidate: IdentifyCandidateView) {
+    const photo = photoEnabled ? photoBlob : null;
+    const match = candidate.speciesKey
+      ? (list ?? []).find((s) => s.key === candidate.speciesKey)
+      : undefined;
+    afterIdentifyClose(() =>
+      match
+        ? pickSpecies(match, photo)
+        : startManual(candidate.commonName || undefined, photo),
+    );
   }
 
   async function addPlant(values: PlantFormValues) {
@@ -110,6 +228,7 @@ export function AddPlant({ token }: { token: string }) {
         name: values.name,
         room: values.room.trim() || null,
         avatar: values.avatar,
+        avatarImageKey: values.avatarImageKey,
         speciesKey: original?.key ?? null,
         commonName: original?.commonName ?? null,
         waterIntervalDays: Number(values.waterIntervalDays) || null,
@@ -124,7 +243,11 @@ export function AddPlant({ token }: { token: string }) {
     // Keep Home current for whenever they finish, but don't navigate yet: leave
     // the form open and stack the success sheet over it (which scales it back).
     router.refresh();
-    setAdded({ name: values.name, avatar: values.avatar });
+    setAdded({
+      name: values.name,
+      avatar: values.avatar,
+      imageUrl: values.avatarImageUrl,
+    });
     setSuccessOpen(true);
   }
 
@@ -163,6 +286,8 @@ export function AddPlant({ token }: { token: string }) {
         setQuery={setQuery}
         onPick={pickSpecies}
         onManual={startManual}
+        identifyEnabled={identifyEnabled}
+        onIdentifyFile={handleIdentifyFile}
       />
 
       <Drawer open={formOpen} onOpenChange={setFormOpen}>
@@ -171,6 +296,9 @@ export function AddPlant({ token }: { token: string }) {
             key={formSeed}
             initial={initial}
             species={original}
+            token={token}
+            photoEnabled={photoEnabled}
+            pendingPhoto={formPhoto}
             title={original ? original.commonName : "New plant"}
             subtitle="Set the name, room and care details"
             submitLabel="Add plant"
@@ -185,12 +313,33 @@ export function AddPlant({ token }: { token: string }) {
         <AddedPlantDrawer
           name={added?.name ?? ""}
           avatar={added?.avatar ?? ""}
+          imageUrl={added?.imageUrl ?? null}
           open={successOpen}
           onOpenChange={(open) => (open ? setSuccessOpen(true) : addAnother())}
           onAddAnother={addAnother}
           onDone={finish}
         />
       </Drawer>
+
+      {/* The photo-identify review sheet — a sibling top-level drawer, opened
+          from the picker's Identify button. Owns loading / candidates / error. */}
+      {identifyEnabled ? (
+        <IdentifyDrawer
+          open={identifyOpen}
+          onOpenChange={setIdentifyOpen}
+          photoUrl={photoUrl}
+          loading={identifying}
+          error={identifyError}
+          candidates={displayCandidates}
+          onChoose={chooseCandidate}
+          onManual={() =>
+            afterIdentifyClose(() =>
+              startManual(undefined, photoEnabled ? photoBlob : null),
+            )
+          }
+          onRetryFile={handleIdentifyFile}
+        />
+      ) : null}
     </>
   );
 }
@@ -259,6 +408,8 @@ function PickStage({
   setQuery,
   onPick,
   onManual,
+  identifyEnabled,
+  onIdentifyFile,
 }: {
   token: string;
   list: SpeciesDetail[] | null;
@@ -266,13 +417,17 @@ function PickStage({
   query: string;
   setQuery: (v: string) => void;
   onPick: (species: SpeciesDetail) => void;
-  onManual: () => void;
+  onManual: (seedName?: string) => void;
+  identifyEnabled: boolean;
+  onIdentifyFile: (file: File) => void;
 }) {
   return (
     <>
       {/* The list scrolls; pad the bottom so the last row clears the pinned
-          manual-entry bar instead of hiding under it. */}
-      <div className="flex flex-col gap-4 pb-36">
+          action bar instead of hiding under it — taller when identify is on. */}
+      <div
+        className={`flex flex-col gap-4 ${identifyEnabled ? "pb-36" : "pb-24"}`}
+      >
         <input
           type="search"
           value={query}
@@ -283,38 +438,55 @@ function PickStage({
 
         {list === null ? (
           <PickSkeleton />
-        ) : filtered.length === 0 ? (
-          <p className="py-8 text-center text-sm text-cream-soft">
-            No matches. You can add it manually below.
-          </p>
         ) : (
-          <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-            {filtered.map((s) => (
-              <button
-                key={s.key}
-                type="button"
-                onClick={() => onPick(s)}
-                className={`fade-in flex h-[60px] items-center gap-3 rounded-2xl bg-canvas-soft p-3 text-left ${tapScale} hover:bg-canvas-soft/70`}
-              >
-                <SpeciesThumb src={s.images[0]} emoji={s.avatar} />
-                <span className="flex min-w-0 flex-col">
-                  <span className="truncate text-sm font-medium text-cream">
-                    {s.commonName}
-                  </span>
-                  <span className="text-xs tabular-nums text-cream-soft">
-                    water · every {s.waterIntervalDays}d
-                  </span>
-                </span>
-              </button>
-            ))}
-          </div>
+          <>
+            {filtered.length === 0 ? (
+              <p className="pt-6 text-center text-sm text-cream-soft">
+                No matches{query.trim() ? ` for “${query.trim()}”` : ""}.
+              </p>
+            ) : (
+              <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+                {filtered.map((s) => (
+                  <button
+                    key={s.key}
+                    type="button"
+                    onClick={() => onPick(s)}
+                    className={`fade-in flex h-[60px] items-center gap-3 rounded-2xl bg-canvas-soft p-3 text-left ${tapScale} hover:bg-canvas-soft/70`}
+                  >
+                    <SpeciesThumb src={s.images[0]} emoji={s.avatar} />
+                    <span className="flex min-w-0 flex-col">
+                      <span className="truncate text-sm font-medium text-cream">
+                        {s.commonName}
+                      </span>
+                      <span className="text-xs tabular-nums text-cream-soft">
+                        water · every {s.waterIntervalDays}d
+                      </span>
+                    </span>
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {/* Add-manually lives at the end of the list: reachable by scrolling
+                to the bottom of the full list, and right there when a search
+                finds nothing. Kept out of the pinned bar so Identify stays the
+                hero; seeds the new plant's name from the current search. */}
+            <button
+              type="button"
+              onClick={() => onManual(query.trim() || undefined)}
+              className={`rounded-2xl border border-dashed border-cream-soft/40 px-4 py-3 text-sm font-medium text-cream-soft ${tapScale} hover:border-cream-soft hover:text-cream`}
+            >
+              Can&apos;t find it? Add manually
+            </button>
+          </>
         )}
       </div>
 
-      {/* Manual-entry stays reachable, pinned to the bottom; the gradient lets
-          the list dissolve into the canvas behind it as it scrolls under.
-          pointer-events-none on the fade so it never blocks the chips it overlaps;
-          re-enabled on the inner controls.
+      {/* The pinned action bar: identify (primary, always reachable) → back
+          link. "Add manually" lives at the end of the list instead. The gradient
+          lets the list dissolve into the canvas behind it as it scrolls under.
+          pointer-events-none on the fade so it never blocks the chips it
+          overlaps; re-enabled on the inner controls.
 
           Portaled to <body> so it escapes the [data-vaul-drawer-wrapper] element,
           which vaul transforms (scale/translate) while the drawer is open. A
@@ -325,13 +497,34 @@ function PickStage({
       <BodyPortal>
         <div className="pointer-events-none fixed inset-x-0 bottom-0 z-30 bg-linear-to-t from-canvas via-canvas to-transparent pt-16">
           <div className="pointer-events-auto mx-auto flex max-w-2xl flex-col gap-3 px-4 pb-6">
-            <button
-              type="button"
-              onClick={onManual}
-              className={`rounded-2xl border border-dashed border-cream-soft/40 px-4 py-3 text-sm font-medium text-cream-soft ${tapScale} hover:border-cream-soft hover:text-cream`}
-            >
-              Can&apos;t find it? Add manually
-            </button>
+            {/* Primary action: take/choose a photo → the review sheet opens and
+                owns all feedback (loading, results, errors). Only shown when the
+                feature is configured server-side; the <input> is nested in the
+                <label> so a tap opens the picker with no ref wiring. */}
+            {identifyEnabled ? (
+              <label
+                className={`flex cursor-pointer items-center justify-center gap-2 rounded-2xl border border-healthy/40 bg-healthy/10 px-4 py-3 text-sm font-medium text-cream ${tapScale} hover:bg-healthy/15`}
+              >
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    // Reset so re-picking the same file still fires onChange.
+                    e.target.value = "";
+                    if (file) onIdentifyFile(file);
+                  }}
+                />
+                <HugeiconsIcon
+                  icon={AiImageIcon}
+                  size={18}
+                  strokeWidth={1.9}
+                  aria-hidden
+                />
+                Identify from a photo
+              </label>
+            ) : null}
 
             <Link
               href={`/h/${token}`}
@@ -354,7 +547,7 @@ function PickStage({
 }
 
 /** Renders children into document.body (after mount, so SSR stays clean). Used
- * to lift the pinned manual-entry bar out of vaul's scaled drawer wrapper. */
+ * to lift the pinned action bar out of vaul's scaled drawer wrapper. */
 function BodyPortal({ children }: { children: React.ReactNode }) {
   // false during SSR, true once hydrated — document.body only exists client-side.
   const mounted = useSyncExternalStore(

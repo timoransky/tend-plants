@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 
 import { AddPlant } from "@/components/AddPlant";
 import { findHousehold } from "@/lib/api";
+import { isIdentifyEnabled } from "@/lib/identify";
+import { isStorageEnabled } from "@/lib/storage";
 import { tapScale } from "@/lib/ui";
 
 export const dynamic = "force-dynamic";
@@ -42,7 +44,11 @@ export default async function AddPlantPage({ params }: Props) {
         manually.
       </p>
 
-      <AddPlant token={token} />
+      <AddPlant
+        token={token}
+        identifyEnabled={isIdentifyEnabled()}
+        photoEnabled={isStorageEnabled()}
+      />
     </main>
   );
 }

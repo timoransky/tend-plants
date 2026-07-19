@@ -5,6 +5,7 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { motion, useReducedMotion } from "motion/react";
 
 import { Drawer, DrawerDescription, DrawerTitle } from "@/components/Drawer";
+import { PlantAvatar } from "@/components/PlantAvatar";
 import { tapScale } from "@/lib/ui";
 
 /**
@@ -19,6 +20,7 @@ import { tapScale } from "@/lib/ui";
 export function AddedPlantDrawer({
   name,
   avatar,
+  imageUrl,
   open,
   onOpenChange,
   onAddAnother,
@@ -26,6 +28,7 @@ export function AddedPlantDrawer({
 }: {
   name: string;
   avatar: string;
+  imageUrl?: string | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onAddAnother: () => void;
@@ -38,7 +41,7 @@ export function AddedPlantDrawer({
       <div className="flex flex-col gap-6">
         <div className="flex items-center gap-4">
           <span className="relative flex size-16 shrink-0 items-center justify-center rounded-full bg-surface-muted text-3xl">
-            <span aria-hidden>{avatar || "🪴"}</span>
+            <PlantAvatar avatar={avatar || "🪴"} imageUrl={imageUrl ?? null} />
             <motion.span
               aria-hidden
               initial={reduce ? false : { scale: 0, opacity: 0 }}

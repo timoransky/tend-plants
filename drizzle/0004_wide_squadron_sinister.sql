@@ -1,0 +1,1 @@
+ALTER TABLE "plants" ADD COLUMN "avatar_image_key" text;

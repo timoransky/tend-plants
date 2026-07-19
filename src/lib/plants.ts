@@ -9,14 +9,18 @@ import {
   type CareState,
   type CareStatus,
 } from "@/lib/status";
+import { publicUrl } from "@/lib/storage";
 
 export type PlantWithStatus = Plant & {
   water: CareState;
   feed: CareState;
   status: CareStatus | null;
+  // Public URL for the avatar photo, derived from `avatarImageKey`, or null.
+  // Clients render this when present and fall back to the emoji otherwise.
+  avatarUrl: string | null;
 };
 
-/** Attach derived water/feed/overall status to a plant row. */
+/** Attach derived water/feed/overall status (and the avatar URL) to a plant. */
 export function withStatus(plant: Plant, now: Date): PlantWithStatus {
   const water = computeCareState(
     plant.lastWatered,
@@ -24,7 +28,13 @@ export function withStatus(plant: Plant, now: Date): PlantWithStatus {
     now,
   );
   const feed = computeCareState(plant.lastFed, plant.feedIntervalDays, now);
-  return { ...plant, water, feed, status: overallStatus(water, feed) };
+  return {
+    ...plant,
+    water,
+    feed,
+    status: overallStatus(water, feed),
+    avatarUrl: plant.avatarImageKey ? publicUrl(plant.avatarImageKey) : null,
+  };
 }
 
 /** Most urgent care need first; nulls (no schedule) last. */
