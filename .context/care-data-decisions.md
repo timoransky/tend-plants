@@ -64,12 +64,21 @@ One thing PlantSolve tracks that we don't: **pet safety** (`pet-safe` /
 `toxic-to-pets`). Genuinely useful for a houseplant app, but out of the v1
 schema — noted as a possible future field, not adopted here.
 
-## Plant photos — parked 2026-07-18 (revisit later)
+## Plant photos — implemented 2026-07-19 (Wikimedia)
 
 Real product need: show plant **photos** in the add-plant flow (people recognize
-plants visually, not by name). Decision for now: **keep emoji avatars** (matches
-v1 scope); photos are a fast-follow whenever someone picks it up. This section is
-the turnkey record so it doesn't need re-deriving.
+plants visually, not by name). **Shipped** via Wikimedia Commons — chosen once
+the goal was reframed as *visual confirmation* (is this the right plant?), where
+taxonomic accuracy matters more than stock polish, attribution is normal, and no
+API key is needed. `scripts/fetch-species-images.mjs` pulls up to 3 licensed
+photos per species (CC0/PD/CC BY/CC BY-SA) into `public/species/`, generating
+`src/data/species-images.ts` + `CREDITS.md`; the picker shows a lead photo, the
+form drawer shows an "Is this your plant?" strip, and `/credits` attributes each.
+Emoji remain the fallback. Known limitation: Wikimedia framing varies — a few
+species (e.g. Monstera) surface a flower/fruit or outdoor close-up rather than
+the potted houseplant; every photo is the correct species. Retune via the
+script's per-species titles / `--max`, or hand-pick leads. The sourcing notes
+below are kept as the record of why Wikimedia over Unsplash/Pexels.
 
 **Where it slots in (don't guess again):**
 - Target is the **species picker**, not the home grid. `AddPlant.tsx` renders
