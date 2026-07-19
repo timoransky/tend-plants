@@ -2,12 +2,12 @@
 
 import { CameraAdd01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
-import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 
 import { DrawerDescription, DrawerTitle } from "@/components/Drawer";
 import { PlantAvatar } from "@/components/PlantAvatar";
+import { SpeciesPhotos } from "@/components/SpeciesPhotos";
 import { SHOW_FEED } from "@/lib/features";
 import { downscaleImage } from "@/lib/image";
 import type { SpeciesDetail } from "@/lib/species";
@@ -289,18 +289,7 @@ export function PlantForm({
               Photo credits
             </Link>
           </div>
-          <div className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1">
-            {species.images.map((src, i) => (
-              <Image
-                key={src}
-                src={src}
-                alt={`${species.commonName} — reference photo ${i + 1}`}
-                width={112}
-                height={112}
-                className="size-24 shrink-0 rounded-xl object-cover"
-              />
-            ))}
-          </div>
+          <SpeciesPhotos images={species.images} alt={species.commonName} />
         </section>
       ) : null}
 
