@@ -1,4 +1,5 @@
 import { FALLBACK_SPECIES } from "@/data/fallback-species";
+import { SPECIES_IMAGES } from "@/data/species-images";
 
 /**
  * Local-only species lookup over the curated dataset (`@/data/fallback-species`).
@@ -21,6 +22,14 @@ export type SpeciesDetail = SpeciesSummary & {
   waterNote: string;
   feedIntervalDays: number;
   feedNote: string;
+  /**
+   * Reference photo URLs (self-hosted under /public/species), so the picker can
+   * show what the plant looks like — a name alone doesn't tell someone
+   * unfamiliar with it whether they picked the right plant. Empty when we have
+   * no photo for the species (the UI falls back to the emoji avatar). The lead
+   * photo is `images[0]`. Attribution lives in `@/data/species-images`.
+   */
+  images: string[];
 };
 
 function toDetail(s: (typeof FALLBACK_SPECIES)[number]): SpeciesDetail {
@@ -33,6 +42,7 @@ function toDetail(s: (typeof FALLBACK_SPECIES)[number]): SpeciesDetail {
     waterNote: s.waterNote,
     feedIntervalDays: s.feedIntervalDays,
     feedNote: s.feedNote,
+    images: (SPECIES_IMAGES[s.key] ?? []).map((i) => i.src),
   };
 }
 

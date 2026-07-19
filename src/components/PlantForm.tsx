@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+import Link from "next/link";
 import { useMemo, useState } from "react";
 
 import { DrawerDescription, DrawerTitle } from "@/components/Drawer";
@@ -159,6 +161,37 @@ export function PlantForm({
           </DrawerDescription>
         </div>
       </header>
+
+      {/* Reference photos so someone unfamiliar with the name can confirm this
+          is the plant they have before adding it. Only for the add-from-species
+          flow (manual/edit have no species photos). */}
+      {species && species.images.length > 0 ? (
+        <section className="pb-5" aria-label={`${species.commonName} reference photos`}>
+          <div className="mb-1.5 flex items-baseline justify-between gap-2">
+            <p className="text-xs font-medium uppercase tracking-wide text-ink-soft">
+              Is this your plant?
+            </p>
+            <Link
+              href="/credits"
+              className="text-xs text-ink-soft/70 underline-offset-2 hover:text-ink-soft hover:underline"
+            >
+              Photo credits
+            </Link>
+          </div>
+          <div className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1">
+            {species.images.map((src, i) => (
+              <Image
+                key={src}
+                src={src}
+                alt={`${species.commonName} — reference photo ${i + 1}`}
+                width={112}
+                height={112}
+                className="size-24 shrink-0 rounded-xl object-cover"
+              />
+            ))}
+          </div>
+        </section>
+      ) : null}
 
       <div className="flex flex-col gap-4">
         <Field label="Name">

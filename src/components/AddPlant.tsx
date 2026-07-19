@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
@@ -195,6 +196,33 @@ export function AddPlant({ token }: { token: string }) {
 }
 
 /**
+ * A species' avatar in the picker: its lead reference photo (so people can
+ * recognize the plant by sight, not just an unfamiliar name), falling back to
+ * the emoji when we have no photo for that species.
+ */
+function SpeciesThumb({ src, emoji }: { src?: string; emoji: string }) {
+  if (src) {
+    return (
+      <Image
+        src={src}
+        alt=""
+        width={40}
+        height={40}
+        className="size-9 shrink-0 rounded-full object-cover"
+      />
+    );
+  }
+  return (
+    <span
+      className="flex size-9 shrink-0 items-center justify-center rounded-full bg-cream/5 text-xl"
+      aria-hidden
+    >
+      {emoji}
+    </span>
+  );
+}
+
+/**
  * Placeholder grid shown while the species list loads. Mirrors the real chip
  * grid (same columns, gap, chip shape) so the layout doesn't jump when data
  * arrives — replacing the old centered "Loading…" line.
@@ -212,7 +240,7 @@ function PickSkeleton() {
           aria-hidden
           className="flex h-[60px] animate-pulse items-center gap-3 rounded-2xl bg-canvas-soft p-3"
         >
-          <span className="size-7 shrink-0 rounded-full bg-cream/10" />
+          <span className="size-9 shrink-0 rounded-full bg-cream/10" />
           <span className="flex min-w-0 flex-1 flex-col gap-1.5">
             <span className="h-3 w-3/4 rounded bg-cream/10" />
             <span className="h-2.5 w-1/2 rounded bg-cream/5" />
@@ -268,9 +296,7 @@ function PickStage({
                 onClick={() => onPick(s)}
                 className={`fade-in flex h-[60px] items-center gap-3 rounded-2xl bg-canvas-soft p-3 text-left ${tapScale} hover:bg-canvas-soft/70`}
               >
-                <span className="text-2xl" aria-hidden>
-                  {s.avatar}
-                </span>
+                <SpeciesThumb src={s.images[0]} emoji={s.avatar} />
                 <span className="flex min-w-0 flex-col">
                   <span className="truncate text-sm font-medium text-cream">
                     {s.commonName}
@@ -312,6 +338,13 @@ function PickStage({
               className="self-center text-sm text-cream-soft hover:text-cream"
             >
               Back to my plants
+            </Link>
+
+            <Link
+              href="/credits"
+              className="self-center text-xs text-cream-soft/60 hover:text-cream-soft"
+            >
+              Plant photos via Wikimedia Commons
             </Link>
           </div>
         </div>
