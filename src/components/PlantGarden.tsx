@@ -3,11 +3,24 @@
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useState } from "react";
 
+import { GridSizeToggle } from "@/components/GridSizeToggle";
 import { PlantBubble } from "@/components/PlantBubble";
 import { PlantDrawer } from "@/components/PlantDrawer";
 import { WaterDropBadge } from "@/components/WaterDropBadge";
 import type { RoomGroup } from "@/lib/group-rooms";
+import { useGridSize, type GridSize } from "@/lib/grid-size";
 import type { PlantWithStatus } from "@/lib/plants";
+
+/**
+ * Thumbnail size → grid columns (mobile / desktop) and gap. Fewer columns means
+ * bigger tiles. Full literal class strings (not interpolated fragments) so
+ * Tailwind sees every variant at build time.
+ */
+const GRID_COLS: Record<GridSize, string> = {
+  compact: "grid-cols-4 gap-2 sm:grid-cols-6",
+  comfortable: "grid-cols-3 gap-2.5 sm:grid-cols-5",
+  large: "grid-cols-2 gap-3 sm:grid-cols-4",
+};
 
 /** Plants needing water now — the calm count shown on each room header. */
 function thirstyCount(plants: PlantWithStatus[]): number {
@@ -32,6 +45,7 @@ export function PlantGarden({
   photoEnabled: boolean;
 }) {
   const reduce = useReducedMotion();
+  const size = useGridSize();
   const [collapsed, setCollapsed] = useState<Set<string>>(() => new Set());
   const [drawerPlant, setDrawerPlant] = useState<PlantWithStatus | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -52,7 +66,7 @@ export function PlantGarden({
 
   function bubbleGrid(plants: PlantWithStatus[]) {
     return (
-      <div className="grid grid-cols-3 gap-2 px-1 pb-3 pt-2 sm:grid-cols-5">
+      <div className={`grid px-1 pb-3 pt-2 ${GRID_COLS[size]}`}>
         {plants.map((plant, i) => (
           <PlantBubble
             key={plant.id}
@@ -71,6 +85,9 @@ export function PlantGarden({
   if (!hasRooms) {
     return (
       <>
+        <div className="flex items-center justify-end px-1 pt-1">
+          <GridSizeToggle />
+        </div>
         <div className="pt-1">{bubbleGrid(groups.flatMap((g) => g.plants))}</div>
         <PlantDrawer
           plant={drawerPlant}
@@ -85,6 +102,9 @@ export function PlantGarden({
 
   return (
     <>
+      <div className="flex items-center justify-end px-1 pt-1">
+        <GridSizeToggle />
+      </div>
       <div className="flex flex-col gap-1 pt-1">
         {groups.map((group) => {
           const isOpen = !collapsed.has(group.key);

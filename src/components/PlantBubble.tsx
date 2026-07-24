@@ -7,22 +7,27 @@ import { WaterDropBadge } from "@/components/WaterDropBadge";
 import type { PlantWithStatus } from "@/lib/plants";
 
 /**
- * Hover/press feedback for the bubble. The whole button is one target: hovering
- * anywhere (avatar or label) lifts the bubble toward the viewer with a gentle
+ * Hover/press feedback for the tile. The whole button is one target: hovering
+ * anywhere (thumbnail or label) lifts the tile toward the viewer with a gentle
  * scale, like picking the pot up off the dim canvas. Calm ease-out, no bounce.
  */
 const bubbleMotion = {
   rest: { y: 0, scale: 1 },
-  hover: { y: -5, scale: 1.05 },
-  tap: { y: -1, scale: 0.96 },
+  hover: { y: -5, scale: 1.04 },
+  tap: { y: -1, scale: 0.97 },
 };
 
 /**
- * A plant in the grid: a uniform circular avatar with its name, that opens the
- * detail drawer. A small water-blue droplet badge sits in the corner when the
- * plant needs water — it pings when due now (overdue / due today) and is static
- * when due soon. Healthy plants show no badge. Feeding is hidden, so this is
- * water-only.
+ * A plant in the grid: a generously-rounded square tile with its name, that
+ * opens the detail drawer. When the plant has a photo it fills the tile
+ * edge-to-edge (no circular crop — the photo *is* the tile); an emoji plant
+ * shows its glyph centred on the warm cream surface. Both the thumbnail size
+ * and the emoji scale with the tile (container queries), so the grid-size
+ * control resizes everything in one move.
+ *
+ * A small water-blue droplet badge sits in the corner when the plant needs
+ * water — it pings when due now (overdue / due today) and is static when due
+ * soon. Healthy plants show no badge. Feeding is hidden, so this is water-only.
  */
 export function PlantBubble({
   plant,
@@ -55,28 +60,29 @@ export function PlantBubble({
       <motion.span
         variants={bubbleMotion}
         transition={{ type: "tween", duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
-        className="relative"
+        className="relative block w-full @container"
       >
-        <span className="flex size-20 items-center justify-center rounded-full bg-surface text-4xl shadow-[0_1px_2px_0_rgb(20_16_8_/_0.4),0_4px_8px_-2px_rgb(20_16_8_/_0.28)] transition-shadow duration-200 ease-out group-hover:shadow-[0_2px_5px_-1px_rgb(20_16_8_/_0.4),0_16px_30px_-6px_rgb(20_16_8_/_0.45)]">
+        <span className="flex aspect-square w-full items-center justify-center overflow-hidden rounded-[clamp(1rem,16cqw,1.75rem)] bg-surface leading-none text-[45cqw] shadow-[0_1px_2px_0_rgb(20_16_8_/_0.4),0_4px_8px_-2px_rgb(20_16_8_/_0.28)] transition-shadow duration-200 ease-out group-hover:shadow-[0_2px_5px_-1px_rgb(20_16_8_/_0.4),0_16px_30px_-6px_rgb(20_16_8_/_0.45)]">
           <PlantAvatar
             avatar={plant.avatar}
             imageUrl={plant.avatarUrl}
             alt={plant.name}
+            imgClassName=""
           />
         </span>
         {needsWater ? (
-          <span className="absolute bottom-0.5 right-0.5 size-[1.15rem]">
+          <span className="absolute bottom-[6%] right-[6%] size-[clamp(1rem,20cqw,1.5rem)]">
             {thirsty && !reduce ? (
               <WaterDropBadge
                 solid
                 className="absolute inset-0 size-full animate-ping opacity-75 [animation-duration:1.8s]"
               />
             ) : null}
-            <WaterDropBadge className="relative size-full" />
+            <WaterDropBadge className="relative size-full drop-shadow-[0_1px_2px_rgb(20_16_8_/_0.55)]" />
           </span>
         ) : null}
       </motion.span>
-      <span className="max-w-[6.5rem] truncate text-xs font-medium text-cream">
+      <span className="w-full truncate px-0.5 text-xs font-medium text-cream">
         {plant.name}
       </span>
     </motion.button>
