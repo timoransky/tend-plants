@@ -487,7 +487,7 @@ export function PlantForm({
           ) : null}
         </div>
 
-        <Field label="Watering interval (days)" accent="text-water-ink">
+        <Field label="Watering interval (approx. days)" accent="text-water-ink">
           <input
             type="number"
             min={1}
@@ -518,7 +518,7 @@ export function PlantForm({
 
         {SHOW_FEED ? (
           <>
-            <Field label="Feeding interval (days)" accent="text-feed-ink">
+            <Field label="Feeding interval (approx. days)" accent="text-feed-ink">
               <input
                 type="number"
                 min={1}

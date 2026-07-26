@@ -80,7 +80,11 @@ export default async function PlantDetailPage({ params }: Props) {
         </div>
       </header>
 
-      <PlantDetail token={token} initial={data} />
+      {/* The detail body is styled for the cream care sheet (ink on surface),
+          so give it the same surface here as the drawer does. */}
+      <div className="rounded-4xl bg-surface p-5">
+        <PlantDetail token={token} initial={data} />
+      </div>
     </main>
   );
 }
