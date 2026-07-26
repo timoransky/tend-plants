@@ -3,7 +3,7 @@
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 
 import { BodyPortal } from "@/components/BodyPortal";
-import { tapScale } from "@/lib/ui";
+import { neutralButton, tapScale } from "@/lib/ui";
 
 export type BulkBarState = "selecting" | "pending" | "undo" | null;
 
@@ -70,7 +70,7 @@ export function BulkSelectBar({
                   <button
                     type="button"
                     onClick={onCancel}
-                    className={`h-12 rounded-full bg-canvas-soft px-6 text-base font-semibold text-cream ${tapScale} hover:bg-canvas-soft/70`}
+                    className={`h-12 rounded-full ${neutralButton} px-6 text-base font-semibold text-cream ${tapScale}`}
                   >
                     Cancel
                   </button>

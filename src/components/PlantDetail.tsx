@@ -245,8 +245,9 @@ function CareCard({
  * The pill action that records a care event (Mark watered / Mark fed). Pulled
  * out of CareCard as a self-contained control for the cream care sheet. Sits at
  * h-10 with a leading icon; swaps to a pending then green-check done label after
- * a tap. (The home room-header "water all" is a separate pill, RoomWaterPill —
- * this one is built for the solid-blue cream surface and isn't reused there.)
+ * a tap. (The home room-header "select all" is a separate control,
+ * RoomSelectButton — this one is built for the solid-blue cream surface and
+ * isn't reused there.)
  *
  * Width is pinned by an invisible sizer rendering the (widest) default label,
  * with the live states stacked over it, so the pill never resizes between

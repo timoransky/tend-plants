@@ -30,7 +30,7 @@ export default async function HomePage({ params }: Props) {
     <div className="mx-auto flex min-h-dvh w-full max-w-2xl flex-col">
       <header className="flex items-center justify-between px-5 pb-3 pt-5">
         <div className="flex items-center gap-2">
-          <Logo />
+          <Logo wordmark={false} />
           <HouseholdSwitcher
             token={token}
             name={household.name}
@@ -43,9 +43,15 @@ export default async function HomePage({ params }: Props) {
           <Link
             href={`/h/${token}/add`}
             aria-label="Add a plant"
-            className={`flex size-10 items-center justify-center rounded-full bg-healthy text-canvas ${tapScale} hover:bg-healthy/90`}
+            className={`flex size-9 items-center justify-center rounded-full bg-healthy text-canvas ${tapScale} hover:bg-healthy/90`}
           >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              aria-hidden
+            >
               <path
                 d="M12 5v14M5 12h14"
                 stroke="currentColor"
@@ -84,7 +90,7 @@ function EmptyState({ token }: { token: string }) {
       </p>
       <Link
         href={`/h/${token}/add`}
-        className={`rounded-full bg-healthy px-5 py-2.5 text-sm font-semibold text-canvas ${tapScale} hover:bg-healthy/90`}
+        className={`rounded-full bg-healthy px-5 py-2 text-sm font-semibold text-canvas ${tapScale} hover:bg-healthy/90`}
       >
         Add a plant
       </Link>
