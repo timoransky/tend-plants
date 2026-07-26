@@ -2,13 +2,6 @@ import type { CareState, CareStatus } from "@/lib/status";
 import { CARE_STATUS_RANK } from "@/lib/status";
 import type { CareKind } from "@/lib/tasks";
 
-export const STATUS_LABEL: Record<CareStatus, string> = {
-  overdue: "Overdue",
-  due_today: "Due today",
-  upcoming: "Upcoming",
-  fine: "Fine",
-};
-
 /** Tailwind background classes for a care kind (the status-dot / task accent). */
 export const KIND_BG: Record<CareKind | "healthy", string> = {
   water: "bg-water",
