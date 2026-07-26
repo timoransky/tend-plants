@@ -431,13 +431,8 @@ function PickStage({
                     <span className="text-2xl" aria-hidden>
                       {s.avatar}
                     </span>
-                    <span className="flex min-w-0 flex-col">
-                      <span className="truncate text-sm font-medium text-cream">
-                        {s.commonName}
-                      </span>
-                      <span className="text-xs tabular-nums text-cream-soft">
-                        water · every {s.waterIntervalDays}d
-                      </span>
+                    <span className="line-clamp-2 min-w-0 text-sm font-medium leading-tight text-cream">
+                      {s.commonName}
                     </span>
                   </button>
                 ))}
