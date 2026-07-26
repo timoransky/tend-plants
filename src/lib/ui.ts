@@ -17,3 +17,18 @@
  */
 export const tapScale =
   "transition-[background-color,border-color,color,box-shadow,opacity,scale] duration-150 ease-out motion-safe:active:scale-[0.96]";
+
+/**
+ * The app's neutral / secondary button surface on the DARK canvas: a quiet
+ * frosted pill — a hairline cream border over a faint cream tint that lifts on
+ * hover. It stays legible whether it sits on the base `canvas` or on a hovered
+ * `canvas-soft` row (a plain `canvas-soft` fill dissolves into the latter).
+ *
+ * Surface only — pair it with your own shape (e.g. `rounded-full`), size, text
+ * colour, and press feedback (`tapScale`, which also supplies the colour
+ * transition). Reserve it for SECONDARY actions: primary CTAs stay solid
+ * `bg-healthy` / `bg-water`, destructive stays `bg-danger`. Dark-canvas only —
+ * the cream tints are invisible on the cream drawer surfaces.
+ */
+export const neutralButton =
+  "border border-cream/10 bg-cream/[0.08] hover:bg-cream/[0.14]";

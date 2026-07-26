@@ -8,7 +8,8 @@ import { useEffect, useRef, useState } from "react";
 import { BulkSelectBar, type BulkBarState } from "@/components/BulkSelectBar";
 import { PlantBubble } from "@/components/PlantBubble";
 import { PlantDrawer } from "@/components/PlantDrawer";
-import { RoomWaterPill } from "@/components/RoomWaterPill";
+import { RoomSelectButton } from "@/components/RoomSelectButton";
+import { WaterDropBadge } from "@/components/WaterDropBadge";
 import type { RoomGroup } from "@/lib/group-rooms";
 import type { PlantWithStatus } from "@/lib/plants";
 import { roomIcon } from "@/lib/room-icon";
@@ -38,9 +39,11 @@ const UNDO_MS = 6000;
  * The selected plant is held in state so it persists through the drawer's close
  * animation.
  *
- * Each room header carries a "Water all" pill (slice 4): one tap resets every
- * plant in the room to watered, then offers a ~6s Undo before the change is
- * committed and Home re-sorted. During that window the grid renders from
+ * Each room header carries a quiet "Select all" button: idle, it enters
+ * multi-select with that whole room preselected; while selecting, it toggles the
+ * room in or out of the selection (so a selection can span rooms). Watering is
+ * always confirmed in the bottom bar, then offers a ~6s Undo before the change
+ * is committed and Home re-sorted. During that window the grid renders from
  * `overrides` (fresh rows keyed by id) laid over the original group order, so
  * badges clear instantly with NO reshuffle. Undo restores the captured prior
  * timestamps (including never-watered → null).
@@ -101,6 +104,21 @@ export function PlantGarden({
     if (batch?.phase === "undoable") commit();
     setSelected(new Set(group.plants.map((p) => p.id)));
     setSelecting(true);
+  }
+
+  // While selecting: add a whole room to the selection, or (if it's already
+  // fully selected) remove it. Deselecting down to nothing exits select mode,
+  // matching the per-plant rule in `toggleSelect`.
+  function toggleRoomSelect(group: RoomGroup) {
+    const ids = group.plants.map((p) => p.id);
+    const next = new Set(selected);
+    const allSelected = ids.length > 0 && ids.every((id) => next.has(id));
+    for (const id of ids) {
+      if (allSelected) next.delete(id);
+      else next.add(id);
+    }
+    setSelected(next);
+    if (next.size === 0) setSelecting(false);
   }
 
   // Clear overrides only when the `groups` prop identity changes — i.e. a
@@ -171,7 +189,9 @@ export function PlantGarden({
   async function waterPlants(scope: string, plants: PlantWithStatus[]) {
     if (batch?.phase === "undoable") commit();
     const ids = plants.map((p) => p.id);
-    const prev = new Map(plants.map((p) => [p.id, p.water.lastDoneAt] as const));
+    const prev = new Map(
+      plants.map((p) => [p.id, p.water.lastDoneAt] as const),
+    );
     setBatch({ scope, ids, prev, phase: "pending" });
     try {
       const updated = await postWater(ids.map((id) => ({ id })));
@@ -294,9 +314,11 @@ export function PlantGarden({
           const thirsty = thirstyCount(group.plants);
           const label = group.room ?? "Everywhere else";
           const panelId = `room-panel-${group.key}`;
-          // The pill enters select mode; disable it while a selection or water
-          // is already in progress.
-          const pillDisabled = selecting || batch?.phase === "pending";
+          // Is every plant in this room already in the selection? Drives the
+          // Select all ↔ Deselect all toggle while selecting.
+          const allSelected =
+            group.plants.length > 0 &&
+            group.plants.every((p) => selected.has(p.id));
           return (
             <section key={group.key}>
               <div className="flex w-full items-center gap-2 rounded-2xl py-1 pl-3 pr-1.5 transition-colors hover:bg-canvas-soft">
@@ -332,17 +354,32 @@ export function PlantGarden({
                     className="shrink-0 text-cream-soft"
                     aria-hidden
                   />
-                  <span className="text-sm font-medium text-cream">{label}</span>
-                  <span className="text-xs tabular-nums text-cream-soft">
-                    {group.plants.length}
+                  <span className="text-sm font-medium text-cream">
+                    {label}
                   </span>
+                  {thirsty > 0 ? (
+                    <span
+                      className="inline-flex shrink-0 items-center gap-0.5 rounded-full bg-water/15 pr-1.5 pl-1 py-0.5 text-[0.65rem] font-medium tabular-nums text-water"
+                      aria-label={`${thirsty} of ${group.plants.length} need water`}
+                    >
+                      <WaterDropBadge className="size-2.5 shrink-0" />
+                      {thirsty}/{group.plants.length}
+                    </span>
+                  ) : (
+                    <span className="text-xs tabular-nums text-cream-soft">
+                      {group.plants.length}
+                    </span>
+                  )}
                 </button>
 
-                <RoomWaterPill
-                  thirsty={thirsty}
+                <RoomSelectButton
+                  selecting={selecting}
+                  allSelected={allSelected}
                   room={label}
-                  disabled={pillDisabled}
-                  onSelect={() => startRoomSelect(group)}
+                  disabled={batch?.phase === "pending"}
+                  onClick={() =>
+                    selecting ? toggleRoomSelect(group) : startRoomSelect(group)
+                  }
                 />
               </div>
 

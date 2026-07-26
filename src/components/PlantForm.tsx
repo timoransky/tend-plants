@@ -202,7 +202,11 @@ export function PlantForm({
         const { key, url } = (await res.json()) as { key: string; url: string };
         if (active) {
           setPhoto({ key, url });
-          setValues((v) => ({ ...v, avatarImageKey: key, avatarImageUrl: url }));
+          setValues((v) => ({
+            ...v,
+            avatarImageKey: key,
+            avatarImageUrl: url,
+          }));
         }
       } catch {
         if (active) {
@@ -556,7 +560,7 @@ export function PlantForm({
         type="button"
         onClick={submit}
         disabled={submitting || uploading || !values.name.trim()}
-        className={`mt-4 h-12 w-full rounded-full bg-healthy text-base font-semibold text-canvas ${tapScale} hover:bg-healthy/90 disabled:opacity-60`}
+        className={`mt-4 h-11 w-full rounded-full bg-healthy text-base font-semibold text-canvas ${tapScale} hover:bg-healthy/90 disabled:opacity-60`}
       >
         {submitting ? submittingLabel : submitLabel}
       </button>

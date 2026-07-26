@@ -10,7 +10,7 @@ import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useRef, useState, useSyncExternalStore } from "react";
 
 import { Drawer, DrawerDescription, DrawerTitle } from "@/components/Drawer";
-import { tapScale } from "@/lib/ui";
+import { neutralButton, tapScale } from "@/lib/ui";
 
 // These reads never change after mount, so the store never emits.
 const noopSubscribe = () => () => {};
@@ -90,7 +90,7 @@ export function ShareButton({ token }: { token: string }) {
         type="button"
         onClick={() => setOpen(true)}
         aria-label="Share this garden"
-        className={`flex size-10 items-center justify-center rounded-full bg-canvas-soft text-cream ${tapScale} hover:bg-canvas-soft/70`}
+        className={`flex size-9 items-center justify-center rounded-full ${neutralButton} text-cream ${tapScale}`}
       >
         <HugeiconsIcon
           icon={Share08Icon}

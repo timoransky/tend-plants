@@ -6,7 +6,7 @@ import { findHousehold } from "@/lib/api";
 import { isIdentifyEnabled } from "@/lib/identify";
 import { listRooms } from "@/lib/rooms";
 import { isStorageEnabled } from "@/lib/storage";
-import { tapScale } from "@/lib/ui";
+import { neutralButton, tapScale } from "@/lib/ui";
 
 export const dynamic = "force-dynamic";
 
@@ -25,9 +25,15 @@ export default async function AddPlantPage({ params }: Props) {
         <Link
           href={`/h/${token}`}
           aria-label="Back home"
-          className={`flex size-10 items-center justify-center rounded-full bg-canvas-soft text-cream ${tapScale} hover:bg-canvas-soft/70`}
+          className={`flex size-9 items-center justify-center rounded-full ${neutralButton} text-cream ${tapScale}`}
         >
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden
+          >
             <path
               d="M15 6l-6 6 6 6"
               stroke="currentColor"

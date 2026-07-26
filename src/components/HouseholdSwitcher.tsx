@@ -23,7 +23,7 @@ import {
   updateVisited,
   type VisitedHousehold,
 } from "@/lib/household-storage";
-import { tapScale } from "@/lib/ui";
+import { neutralButton, tapScale } from "@/lib/ui";
 
 /**
  * Human label for a household: its user-set name, else its friendly word-pair
@@ -133,16 +133,19 @@ export function HouseholdSwitcher({
         onClick={() => setOpen((v) => !v)}
         aria-haspopup="menu"
         aria-expanded={open}
-        className={`flex items-center gap-1 rounded-full px-2 py-1 text-xs text-cream-soft ${tapScale} hover:bg-canvas-soft hover:text-cream`}
+        aria-label={`Current garden: ${triggerLabel}. Switch garden`}
+        className={`flex h-9 items-center gap-1 rounded-full ${neutralButton} px-3 text-cream-soft ${tapScale} hover:text-cream`}
       >
-        <span className="max-w-[9rem] truncate">{triggerLabel}</span>
+        <span className="max-w-[9rem] truncate text-sm font-semibold text-cream">
+          {triggerLabel}
+        </span>
         <svg
           width="12"
           height="12"
           viewBox="0 0 24 24"
           fill="none"
           aria-hidden
-          className={`transition-transform ${open ? "rotate-180" : ""}`}
+          className={`shrink-0 transition-transform ${open ? "rotate-180" : ""}`}
         >
           <path
             d="M6 9l6 6 6-6"
@@ -176,6 +179,10 @@ export function HouseholdSwitcher({
               transition={{ duration: 0.16, ease: [0.2, 0.7, 0.3, 1] }}
               className="absolute left-0 top-full z-50 mt-2 flex w-64 origin-top-left flex-col gap-1 rounded-2xl bg-surface p-1 text-ink shadow-xl shadow-scrim/50"
             >
+              <div className="px-2 pb-0.5 pt-1.5 text-[0.7rem] font-semibold uppercase tracking-wide text-ink-soft">
+                Your gardens
+              </div>
+
               {ordered.map((h) => {
                 const isCurrent = h.token === token;
                 const isDefault = primary === h.token;
