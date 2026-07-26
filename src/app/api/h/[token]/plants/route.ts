@@ -2,6 +2,7 @@ import { db } from "@/db";
 import { plants } from "@/db/schema";
 import { apiError, findHousehold, json, readJson } from "@/lib/api";
 import { listPlantsWithStatus, withStatus } from "@/lib/plants";
+import { normalizeRoom } from "@/lib/rooms";
 
 type Params = { params: Promise<{ token: string }> };
 
@@ -61,12 +62,14 @@ export async function POST(request: Request, { params }: Params) {
   const name = optString(body.name);
   if (!name) return apiError(400, "`name` is required");
 
+  const room = await normalizeRoom(household.id, body.room);
+
   const [plant] = await db
     .insert(plants)
     .values({
       householdId: household.id,
       name,
-      room: optString(body.room),
+      room,
       speciesKey: optString(body.speciesKey),
       commonName: optString(body.commonName),
       avatar: optString(body.avatar),

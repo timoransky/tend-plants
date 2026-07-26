@@ -35,6 +35,7 @@ function valuesFromPlant(p: PlantWithStatus): PlantFormValues {
 export function EditPlantDrawer({
   plant,
   token,
+  rooms,
   photoEnabled,
   open,
   onOpenChange,
@@ -42,6 +43,7 @@ export function EditPlantDrawer({
 }: {
   plant: PlantWithStatus;
   token: string;
+  rooms: string[];
   photoEnabled: boolean;
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -110,6 +112,7 @@ export function EditPlantDrawer({
         initial={valuesFromPlant(plant)}
         species={species}
         token={token}
+        rooms={rooms}
         photoEnabled={photoEnabled}
         title="Edit plant"
         subtitle="Update name, room, care and notes"
