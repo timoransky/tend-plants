@@ -496,7 +496,7 @@ export function PlantForm({
             className="input tabular-nums"
           />
         </Field>
-        <Field label="Watering note" accent="text-water-ink">
+        <Field label="Watering guidance" accent="text-water-ink">
           <textarea
             value={values.waterNote}
             onChange={(e) => set({ waterNote: e.target.value })}
@@ -506,7 +506,7 @@ export function PlantForm({
           />
         </Field>
 
-        <Field label="Light" accent="text-light-ink">
+        <Field label="Light guidance" accent="text-light-ink">
           <textarea
             value={values.lightNote}
             onChange={(e) => set({ lightNote: e.target.value })}
