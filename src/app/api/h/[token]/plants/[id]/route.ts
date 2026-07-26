@@ -4,6 +4,7 @@ import { db } from "@/db";
 import { plants } from "@/db/schema";
 import { apiError, findHousehold, json, readJson } from "@/lib/api";
 import { withStatus } from "@/lib/plants";
+import { normalizeRoom } from "@/lib/rooms";
 import { deleteObject } from "@/lib/storage";
 
 type Params = { params: Promise<{ token: string; id: string }> };
@@ -53,7 +54,7 @@ export async function PATCH(request: Request, { params }: Params) {
     if (!name) return apiError(400, "`name` cannot be empty");
     updates.name = name;
   }
-  if ("room" in body) updates.room = optString(body.room);
+  if ("room" in body) updates.room = await normalizeRoom(household.id, body.room);
   if ("avatar" in body) updates.avatar = optString(body.avatar);
   if ("avatarImageKey" in body)
     updates.avatarImageKey = optString(body.avatarImageKey);

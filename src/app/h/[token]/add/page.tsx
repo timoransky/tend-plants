@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { AddPlant } from "@/components/AddPlant";
 import { findHousehold } from "@/lib/api";
 import { isIdentifyEnabled } from "@/lib/identify";
+import { listRooms } from "@/lib/rooms";
 import { isStorageEnabled } from "@/lib/storage";
 import { tapScale } from "@/lib/ui";
 
@@ -15,6 +16,8 @@ export default async function AddPlantPage({ params }: Props) {
   const { token } = await params;
   const household = await findHousehold(token);
   if (!household) notFound();
+
+  const rooms = await listRooms(household.id);
 
   return (
     <main className="mx-auto flex min-h-dvh w-full max-w-2xl flex-col px-4 pb-10">
@@ -46,6 +49,7 @@ export default async function AddPlantPage({ params }: Props) {
 
       <AddPlant
         token={token}
+        rooms={rooms}
         identifyEnabled={isIdentifyEnabled()}
         photoEnabled={isStorageEnabled()}
       />

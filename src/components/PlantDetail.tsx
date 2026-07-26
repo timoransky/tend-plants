@@ -152,7 +152,7 @@ export function PlantDetail({
             className="shrink-0 text-ink-soft"
             aria-hidden
           />
-          Your notes
+          Additional notes
         </h2>
         <p className="mt-2 text-pretty text-base leading-relaxed text-ink">
           {data.notes ?? (
@@ -243,9 +243,10 @@ function CareCard({
 
 /**
  * The pill action that records a care event (Mark watered / Mark fed). Pulled
- * out of CareCard so the same control can be reused elsewhere, e.g. a
- * "water all" action per room in the home listing. Sits at h-10 with a leading
- * icon; swaps to a pending then green-check done label after a tap.
+ * out of CareCard as a self-contained control for the cream care sheet. Sits at
+ * h-10 with a leading icon; swaps to a pending then green-check done label after
+ * a tap. (The home room-header "water all" is a separate pill, RoomWaterPill —
+ * this one is built for the solid-blue cream surface and isn't reused there.)
  *
  * Width is pinned by an invisible sizer rendering the (widest) default label,
  * with the live states stacked over it, so the pill never resizes between

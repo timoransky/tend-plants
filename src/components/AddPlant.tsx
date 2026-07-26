@@ -4,10 +4,10 @@ import { AiImageIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
-import { createPortal } from "react-dom";
+import { useEffect, useMemo, useState } from "react";
 
 import { AddedPlantDrawer } from "@/components/AddedPlantDrawer";
+import { BodyPortal } from "@/components/BodyPortal";
 import { Drawer } from "@/components/Drawer";
 import {
   IdentifyDrawer,
@@ -38,10 +38,12 @@ import { tapScale } from "@/lib/ui";
  */
 export function AddPlant({
   token,
+  rooms,
   identifyEnabled,
   photoEnabled,
 }: {
   token: string;
+  rooms: string[];
   identifyEnabled: boolean;
   photoEnabled: boolean;
 }) {
@@ -296,6 +298,7 @@ export function AddPlant({
             initial={initial}
             species={original}
             token={token}
+            rooms={rooms}
             photoEnabled={photoEnabled}
             pendingPhoto={formPhoto}
             title={original ? original.commonName : "New plant"}
@@ -511,16 +514,4 @@ function PickStage({
       </BodyPortal>
     </>
   );
-}
-
-/** Renders children into document.body (after mount, so SSR stays clean). Used
- * to lift the pinned action bar out of vaul's scaled drawer wrapper. */
-function BodyPortal({ children }: { children: React.ReactNode }) {
-  // false during SSR, true once hydrated — document.body only exists client-side.
-  const mounted = useSyncExternalStore(
-    () => () => {},
-    () => true,
-    () => false,
-  );
-  return mounted ? createPortal(children, document.body) : null;
 }

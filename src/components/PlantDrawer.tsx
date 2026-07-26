@@ -46,12 +46,14 @@ export function PlantDrawer({
   plant,
   open,
   token,
+  rooms,
   photoEnabled,
   onOpenChange,
 }: {
   plant: PlantWithStatus | null;
   open: boolean;
   token: string;
+  rooms: string[];
   photoEnabled: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
@@ -151,6 +153,7 @@ export function PlantDrawer({
           <EditPlantDrawer
             plant={view}
             token={token}
+            rooms={rooms}
             photoEnabled={photoEnabled}
             open={editOpen}
             onOpenChange={setEditOpen}

@@ -1,6 +1,6 @@
 "use client";
 
-import { CameraAdd01Icon } from "@hugeicons/core-free-icons";
+import { CameraAdd01Icon, PlusSignIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useEffect, useMemo, useState } from "react";
 
@@ -8,6 +8,7 @@ import { DrawerDescription, DrawerTitle } from "@/components/Drawer";
 import { PlantAvatar } from "@/components/PlantAvatar";
 import { SHOW_FEED } from "@/lib/features";
 import { downscaleImage } from "@/lib/image";
+import { roomIcon } from "@/lib/room-icon";
 import type { SpeciesDetail } from "@/lib/species";
 import { tapScale } from "@/lib/ui";
 
@@ -93,6 +94,7 @@ export function PlantForm({
   initial,
   species,
   token,
+  rooms,
   photoEnabled,
   pendingPhoto,
   title,
@@ -104,6 +106,9 @@ export function PlantForm({
   initial: PlantFormValues;
   species: SpeciesDetail | null;
   token: string;
+  // Existing room names, shown as tappable chips; empty falls back to a plain
+  // free-text input (no regression when a household has no rooms yet).
+  rooms: string[];
   photoEnabled: boolean;
   // A photo handed in from the identify flow to become this plant's avatar.
   // Previewed instantly (local blob) and uploaded in the background, so it's
@@ -131,6 +136,19 @@ export function PlantForm({
 
   const set = (patch: Partial<PlantFormValues>) =>
     setValues((v) => ({ ...v, ...patch }));
+
+  // Room chips: the household's existing rooms, plus the plant's own saved room
+  // if it isn't among them (so an edited plant's room still shows + highlights).
+  // "+ New room" opens a free-text input for a genuinely new one.
+  const [customRoom, setCustomRoom] = useState(false);
+  const chipRooms = useMemo(() => {
+    const base = [...rooms];
+    const own = initial.room.trim();
+    if (own && !base.some((r) => r.toLowerCase() === own.toLowerCase())) {
+      base.unshift(own);
+    }
+    return base;
+  }, [rooms, initial.room]);
 
   // Take/choose a photo → downscale → upload → use it as this plant's avatar.
   // The photo overrides the emoji; picking an emoji below deactivates it (but
@@ -281,14 +299,85 @@ export function PlantForm({
           />
         </Field>
 
-        <Field label="Room">
-          <input
-            value={values.room}
-            onChange={(e) => set({ room: e.target.value })}
-            placeholder="e.g. Living Room"
-            className="input"
-          />
-        </Field>
+        {chipRooms.length === 0 ? (
+          <Field label="Room">
+            <input
+              value={values.room}
+              onChange={(e) => set({ room: e.target.value })}
+              placeholder="e.g. Living Room"
+              className="input"
+            />
+          </Field>
+        ) : (
+          // A plain <div>, NOT a <label>: a label wrapping several buttons
+          // forwards any inner click to its first control, which would flash the
+          // first chip whenever another was tapped.
+          <div className="flex flex-col gap-1.5">
+            <span className="text-xs font-medium uppercase tracking-wide text-ink-soft">
+              Room
+            </span>
+            <div className="flex flex-wrap gap-1.5">
+              {chipRooms.map((room) => {
+                const selected =
+                  !customRoom &&
+                  values.room.trim().toLowerCase() === room.toLowerCase();
+                return (
+                  <button
+                    key={room}
+                    type="button"
+                    aria-pressed={selected}
+                    onClick={() => {
+                      setCustomRoom(false);
+                      set({ room: selected ? "" : room });
+                    }}
+                    className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm ${tapScale} ${
+                      selected
+                        ? "bg-healthy/20 text-ink ring-2 ring-healthy"
+                        : "bg-surface-muted text-ink hover:bg-surface-muted/70"
+                    }`}
+                  >
+                    <HugeiconsIcon
+                      icon={roomIcon(room)}
+                      size={15}
+                      strokeWidth={1.9}
+                      aria-hidden
+                    />
+                    {room}
+                  </button>
+                );
+              })}
+              <button
+                type="button"
+                onClick={() => {
+                  setCustomRoom(true);
+                  set({ room: "" });
+                }}
+                className={`inline-flex items-center gap-1.5 rounded-full border border-dashed px-3 py-1.5 text-sm ${tapScale} ${
+                  customRoom
+                    ? "border-ink/50 text-ink"
+                    : "border-ink/30 text-ink-soft hover:border-ink/50 hover:text-ink"
+                }`}
+              >
+                <HugeiconsIcon
+                  icon={PlusSignIcon}
+                  size={15}
+                  strokeWidth={1.9}
+                  aria-hidden
+                />
+                New room
+              </button>
+            </div>
+            {customRoom ? (
+              <input
+                autoFocus
+                value={values.room}
+                onChange={(e) => set({ room: e.target.value })}
+                placeholder="e.g. Conservatory"
+                className="input"
+              />
+            ) : null}
+          </div>
+        )}
 
         <Field label="Avatar">
           <div className="flex flex-wrap gap-1.5">
@@ -398,7 +487,7 @@ export function PlantForm({
           ) : null}
         </div>
 
-        <Field label="Water — every (days)" accent="text-water-ink">
+        <Field label="Watering interval (days)" accent="text-water-ink">
           <input
             type="number"
             min={1}
@@ -429,7 +518,7 @@ export function PlantForm({
 
         {SHOW_FEED ? (
           <>
-            <Field label="Feed — every (days)" accent="text-feed-ink">
+            <Field label="Feeding interval (days)" accent="text-feed-ink">
               <input
                 type="number"
                 min={1}
@@ -450,7 +539,7 @@ export function PlantForm({
           </>
         ) : null}
 
-        <Field label="Your notes">
+        <Field label="Additional notes">
           <textarea
             value={values.notes}
             onChange={(e) => set({ notes: e.target.value })}
