@@ -55,7 +55,8 @@ export default function Home() {
       {error ? (
         <>
           <p className="max-w-xs text-sm text-cream-soft">
-            Couldn&apos;t open your garden. Check your connection and try again.
+            Couldn&apos;t open your household. Check your connection and try
+            again.
           </p>
           <button
             type="button"
@@ -70,7 +71,7 @@ export default function Home() {
         </>
       ) : (
         <p className="animate-pulse text-sm text-cream-soft">
-          Growing your garden…
+          Getting things ready…
         </p>
       )}
     </main>

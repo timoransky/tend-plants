@@ -43,11 +43,11 @@ export function FirstRunWelcome() {
             id="welcome-heading"
             className="text-balance text-base font-semibold text-ink"
           >
-            Welcome to your garden
+            Welcome to Tend
           </h2>
           <p className="mt-1.5 text-pretty text-sm text-ink-soft">
-            There&apos;s no login. This link is your garden, so bookmark it to
-            find your way back.
+            There&apos;s no login. This link is your household, so bookmark it
+            to find your way back.
           </p>
           <p className="mt-1 text-pretty text-sm text-ink-soft">
             Share the link with your household and you&apos;ll all tend the same

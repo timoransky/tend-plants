@@ -24,7 +24,7 @@ export default async function AddPlantPage({ params }: Props) {
       <div className="flex items-center gap-3 pt-5">
         <Link
           href={`/h/${token}`}
-          aria-label="Back home"
+          aria-label="Back to plants"
           className={`${buttonIcon} ${neutralButton} text-cream ${tapScale}`}
         >
           <svg
