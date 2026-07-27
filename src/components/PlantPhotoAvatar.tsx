@@ -1,5 +1,7 @@
 "use client";
 
+import { FullScreenIcon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useState } from "react";
@@ -22,6 +24,15 @@ import { tapScale } from "@/lib/ui";
  * portalling (escaping the drawer's transform), the modal `pointer-events`
  * dance, and focus restore for free. Framer Motion drives the enter/exit via
  * forceMount + AnimatePresence, matching the app's reduced-motion handling.
+ *
+ * A small viewfinder chip marks the photo as enlargeable. It has to be there
+ * without a pointer — `cursor-zoom-in` alone leaves the feature invisible on a
+ * phone — so it's persistent, and hover only deepens it. It sits *inside* the
+ * circle rather than straddling the edge: the two call sites live on opposite
+ * surfaces (dark canvas on the plant page, cream in the drawer), and a chip that
+ * pokes out would need a ring in the parent's background colour. Staying on the
+ * photo keeps it surface-agnostic. Top-right also keeps it clear of the status
+ * dot the plant page hangs at bottom-right.
  */
 export function PlantPhotoAvatar({
   avatar,
@@ -49,11 +60,35 @@ export function PlantPhotoAvatar({
 
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
+      {/* The group is named because `className` is caller-supplied — a bare
+          `group` could be captured by an ancestor that already uses one. The
+          hint layers carry their own transition-colors; `tapScale` owns the
+          trigger's transition-property and must not share it. */}
       <Dialog.Trigger
         aria-label={`Enlarge photo of ${alt}`}
-        className={`${className} cursor-zoom-in outline-none focus-visible:ring-2 focus-visible:ring-water ${tapScale}`}
+        className={`${className} group/zoom relative cursor-zoom-in outline-none focus-visible:ring-2 focus-visible:ring-water ${tapScale}`}
       >
         <PlantAvatar avatar={avatar} imageUrl={imageUrl} alt={alt} />
+
+        <span
+          aria-hidden
+          className="pointer-events-none absolute inset-0 rounded-full bg-scrim/0 transition-colors duration-200 ease-out group-hover/zoom:bg-scrim/25"
+        />
+
+        {/* 12% keeps the 20px chip wholly inside the circle at both avatar
+            sizes in use (80px and 96px); a fixed inset would clip out of one. */}
+        <span
+          aria-hidden
+          className="pointer-events-none absolute right-[12%] top-[12%] flex size-5 items-center justify-center rounded-full bg-scrim/60 ring-1 ring-inset ring-cream/25 backdrop-blur-[2px] transition-colors duration-200 ease-out group-hover/zoom:bg-scrim/75"
+        >
+          <HugeiconsIcon
+            icon={FullScreenIcon}
+            size={12}
+            strokeWidth={2.2}
+            className="text-cream"
+            aria-hidden
+          />
+        </span>
       </Dialog.Trigger>
 
       <AnimatePresence>
