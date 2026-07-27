@@ -7,7 +7,7 @@ import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useState } from "react";
 
 import { PlantAvatar } from "@/components/PlantAvatar";
-import { tapScale } from "@/lib/ui";
+import { buttonIcon, tapScale } from "@/lib/ui";
 
 /**
  * A plant avatar that enlarges its photo when tapped. With an uploaded photo it
@@ -151,7 +151,7 @@ export function PlantPhotoAvatar({
 
                 <Dialog.Close
                   aria-label="Close photo"
-                  className={`absolute right-4 top-4 flex size-10 items-center justify-center rounded-full bg-canvas-soft/80 text-cream outline-none backdrop-blur-sm focus-visible:ring-2 focus-visible:ring-cream hover:bg-canvas-soft ${tapScale}`}
+                  className={`${buttonIcon} absolute right-4 top-4 bg-canvas-soft/80 text-cream outline-none backdrop-blur-sm focus-visible:ring-2 focus-visible:ring-cream hover:bg-canvas-soft ${tapScale}`}
                 >
                   <svg
                     width="18"

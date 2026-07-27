@@ -9,7 +9,7 @@ import {
   setOnboarded,
   subscribe,
 } from "@/lib/household-storage";
-import { tapScale } from "@/lib/ui";
+import { buttonSm, tapScale } from "@/lib/ui";
 
 /**
  * First-run welcome. Tend has no accounts — the URL token is the only key — so a
@@ -56,7 +56,7 @@ export function FirstRunWelcome() {
           <button
             type="button"
             onClick={setOnboarded}
-            className={`mt-3 rounded-full bg-healthy px-4 py-2 text-sm font-semibold text-canvas outline-none ${tapScale} hover:bg-healthy/90 focus-visible:ring-2 focus-visible:ring-healthy/50`}
+            className={`${buttonSm} mt-3 bg-healthy text-canvas outline-none ${tapScale} hover:bg-healthy/90 focus-visible:ring-2 focus-visible:ring-healthy/50`}
           >
             Got it
           </button>

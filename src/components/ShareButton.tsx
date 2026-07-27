@@ -10,7 +10,7 @@ import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useRef, useState, useSyncExternalStore } from "react";
 
 import { Drawer, DrawerDescription, DrawerTitle } from "@/components/Drawer";
-import { neutralButton, tapScale } from "@/lib/ui";
+import { buttonIcon, buttonLg, neutralButton, tapScale } from "@/lib/ui";
 
 // These reads never change after mount, so the store never emits.
 const noopSubscribe = () => () => {};
@@ -90,11 +90,11 @@ export function ShareButton({ token }: { token: string }) {
         type="button"
         onClick={() => setOpen(true)}
         aria-label="Share this garden"
-        className={`flex size-9 items-center justify-center rounded-full ${neutralButton} text-cream ${tapScale}`}
+        className={`${buttonIcon} ${neutralButton} text-cream ${tapScale}`}
       >
         <HugeiconsIcon
           icon={Share08Icon}
-          size={17}
+          size={18}
           strokeWidth={1.7}
           aria-hidden
         />
@@ -152,7 +152,7 @@ export function ShareButton({ token }: { token: string }) {
               type="button"
               onClick={share}
               whileTap={reduce ? undefined : { scale: 0.96 }}
-              className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-healthy text-base font-semibold text-canvas transition-colors hover:bg-healthy/90"
+              className={`${buttonLg} w-full bg-healthy text-canvas transition-colors hover:bg-healthy/90`}
             >
               <HugeiconsIcon
                 icon={Share08Icon}
@@ -167,7 +167,7 @@ export function ShareButton({ token }: { token: string }) {
               type="button"
               onClick={copy}
               whileTap={reduce ? undefined : { scale: 0.96 }}
-              className="relative flex h-12 w-full items-center justify-center rounded-full bg-healthy text-base font-semibold text-canvas transition-colors hover:bg-healthy/90"
+              className={`${buttonLg} relative w-full bg-healthy text-canvas transition-colors hover:bg-healthy/90`}
             >
               {/* Invisible sizer pins the width to the widest label, so the pill
                   never resizes when "Copy link" swaps to "Copied!". */}

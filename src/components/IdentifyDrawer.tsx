@@ -1,7 +1,7 @@
 "use client";
 
 import { Drawer, DrawerDescription, DrawerTitle } from "@/components/Drawer";
-import { tapScale } from "@/lib/ui";
+import { buttonLg, tapScale } from "@/lib/ui";
 
 /**
  * The photo-identify review sheet: a bottom drawer that owns the whole moment
@@ -117,7 +117,7 @@ export function IdentifyDrawer({
             <button
               type="button"
               onClick={onManual}
-              className={`h-11 w-full rounded-full bg-surface-muted text-sm font-semibold text-ink ${tapScale} hover:bg-surface-muted/70`}
+              className={`${buttonLg} w-full bg-surface-muted text-ink ${tapScale} hover:bg-surface-muted/70`}
             >
               None of these - add manually
             </button>
@@ -132,7 +132,7 @@ export function IdentifyDrawer({
           <button
             type="button"
             onClick={onManual}
-            className={`h-12 w-full rounded-full bg-surface-muted text-base font-semibold text-ink ${tapScale} hover:bg-surface-muted/70`}
+            className={`${buttonLg} w-full bg-surface-muted text-ink ${tapScale} hover:bg-surface-muted/70`}
           >
             Add manually
           </button>
@@ -198,7 +198,7 @@ function RetryButton({
 }) {
   return (
     <label
-      className={`flex h-12 w-full cursor-pointer items-center justify-center rounded-full bg-healthy text-base font-semibold text-canvas ${tapScale} hover:bg-healthy/90`}
+      className={`${buttonLg} w-full cursor-pointer bg-healthy text-canvas ${tapScale} hover:bg-healthy/90`}
     >
       <RetryInput onRetryFile={onRetryFile} />
       Try another photo

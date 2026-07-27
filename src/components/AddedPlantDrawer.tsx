@@ -6,7 +6,7 @@ import { motion, useReducedMotion } from "motion/react";
 
 import { Drawer, DrawerDescription, DrawerTitle } from "@/components/Drawer";
 import { PlantAvatar } from "@/components/PlantAvatar";
-import { tapScale } from "@/lib/ui";
+import { buttonLg, tapScale } from "@/lib/ui";
 
 /**
  * Success confirmation as a nested drawer over the add-plant form: once a plant
@@ -75,14 +75,14 @@ export function AddedPlantDrawer({
           <button
             type="button"
             onClick={onAddAnother}
-            className={`h-12 w-full rounded-full bg-healthy text-base font-semibold text-canvas ${tapScale} hover:bg-healthy/90`}
+            className={`${buttonLg} w-full bg-healthy text-canvas ${tapScale} hover:bg-healthy/90`}
           >
             Add another plant
           </button>
           <button
             type="button"
             onClick={onDone}
-            className={`h-12 w-full rounded-full bg-surface-muted text-base font-semibold text-ink ${tapScale} hover:bg-surface-muted/70`}
+            className={`${buttonLg} w-full bg-surface-muted text-ink ${tapScale} hover:bg-surface-muted/70`}
           >
             Done
           </button>
