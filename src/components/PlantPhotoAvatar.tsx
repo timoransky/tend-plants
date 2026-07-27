@@ -1,6 +1,6 @@
 "use client";
 
-import { ZoomInAreaIcon } from "@hugeicons/core-free-icons";
+import { SearchAddIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
@@ -78,11 +78,21 @@ export function PlantPhotoAvatar({
               back): size-9, hairline cream border, cream glyph at 17/1.7. The
               fill is inverted, though — `neutralButton`'s faint cream tint is
               documented dark-canvas-only, and here the backdrop is a photo of
-              any brightness. 60% scrim is what holds the glyph past the 3:1
-              graphical floor on a blown-out shot. */}
-          <span className="flex size-9 items-center justify-center rounded-full border border-cream/15 bg-scrim/60 text-cream backdrop-blur-md transition-colors duration-200 ease-out group-hover/zoom:bg-scrim/75">
+              any brightness.
+
+              It darkens rather than covers: `backdrop-brightness` scales the
+              photo down *proportionally*, so the photo keeps showing through
+              while the glyph stays legible over any of it. A flat scrim can't do
+              both — the opacity that survives white is an opaque disc over
+              everything else. 0.4 is chosen so even a blown-out white pixel
+              directly behind a stroke lands near 5:1, which is also why there's
+              no backdrop-blur: at 36px even a 4px blur smears the photo into a
+              flat disc, and the contrast is already guaranteed without it. The
+              tint is a floor for when backdrop-filter is unsupported, and the
+              one thing hover animates (transition-colors can't tween a filter). */}
+          <span className="flex size-9 items-center justify-center rounded-full border border-cream/20 bg-scrim/10 text-cream backdrop-brightness-[0.4] transition-colors duration-200 ease-out group-hover/zoom:bg-scrim/30">
             <HugeiconsIcon
-              icon={ZoomInAreaIcon}
+              icon={SearchAddIcon}
               size={17}
               strokeWidth={1.7}
               aria-hidden
