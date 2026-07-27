@@ -1,5 +1,7 @@
 "use client";
 
+import { SearchAddIcon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useState } from "react";
@@ -22,6 +24,15 @@ import { tapScale } from "@/lib/ui";
  * portalling (escaping the drawer's transform), the modal `pointer-events`
  * dance, and focus restore for free. Framer Motion drives the enter/exit via
  * forceMount + AnimatePresence, matching the app's reduced-motion handling.
+ *
+ * A zoom button marks the photo as enlargeable. It has to be there without a
+ * pointer — `cursor-zoom-in` alone leaves the feature invisible on a phone — so
+ * it's persistent, and hover only deepens it. Centred, not tucked in a corner: a
+ * corner badge reads as a sticker and lands wherever the photo's subject happens
+ * to be, while the middle is symmetric at any avatar size and stays clear of the
+ * status dot the plant page hangs at bottom-right. It carries its own contrast,
+ * so the photo never needs a permanent veil — a bare glyph would need a ~55%
+ * scrim over the whole circle to stay legible on a bright photo.
  */
 export function PlantPhotoAvatar({
   avatar,
@@ -49,11 +60,45 @@ export function PlantPhotoAvatar({
 
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
+      {/* The group is named because `className` is caller-supplied — a bare
+          `group` could be captured by an ancestor that already uses one. The
+          hint layers carry their own transition-colors; `tapScale` owns the
+          trigger's transition-property and must not share it. */}
       <Dialog.Trigger
         aria-label={`Enlarge photo of ${alt}`}
-        className={`${className} cursor-zoom-in outline-none focus-visible:ring-2 focus-visible:ring-water ${tapScale}`}
+        className={`${className} group/zoom relative cursor-zoom-in outline-none focus-visible:ring-2 focus-visible:ring-water ${tapScale}`}
       >
         <PlantAvatar avatar={avatar} imageUrl={imageUrl} alt={alt} />
+
+        <span
+          aria-hidden
+          className="pointer-events-none absolute inset-0 flex items-center justify-center rounded-full bg-scrim/0 transition-colors duration-200 ease-out group-hover/zoom:bg-scrim/25"
+        >
+          {/* Sized and shaped like the header's circular icon buttons (share,
+              back): size-9, hairline cream border, cream glyph at 17/1.7. The
+              fill is inverted, though — `neutralButton`'s faint cream tint is
+              documented dark-canvas-only, and here the backdrop is a photo of
+              any brightness.
+
+              It darkens rather than covers: `backdrop-brightness` scales the
+              photo down *proportionally*, so the photo keeps showing through
+              while the glyph stays legible over any of it. A flat scrim can't do
+              both — the opacity that survives white is an opaque disc over
+              everything else. 0.4 is chosen so even a blown-out white pixel
+              directly behind a stroke lands near 5:1, which is also why there's
+              no backdrop-blur: at 36px even a 4px blur smears the photo into a
+              flat disc, and the contrast is already guaranteed without it. The
+              tint is a floor for when backdrop-filter is unsupported, and the
+              one thing hover animates (transition-colors can't tween a filter). */}
+          <span className="flex size-9 items-center justify-center rounded-full border border-cream/20 bg-scrim/10 text-cream backdrop-brightness-[0.4] transition-colors duration-200 ease-out group-hover/zoom:bg-scrim/30">
+            <HugeiconsIcon
+              icon={SearchAddIcon}
+              size={17}
+              strokeWidth={1.7}
+              aria-hidden
+            />
+          </span>
+        </span>
       </Dialog.Trigger>
 
       <AnimatePresence>
