@@ -34,7 +34,7 @@ function labelFor(h: {
   name: string | null;
   code?: string | null;
 }): string {
-  return h.name ?? h.code ?? `House ·${h.token.slice(-4)}`;
+  return h.name ?? h.code ?? `Household ·${h.token.slice(-4)}`;
 }
 
 /**
@@ -133,7 +133,7 @@ export function HouseholdSwitcher({
         onClick={() => setOpen((v) => !v)}
         aria-haspopup="menu"
         aria-expanded={open}
-        aria-label={`Current garden: ${triggerLabel}. Switch garden`}
+        aria-label={`Current household: ${triggerLabel}. Switch household`}
         className={`flex h-9 items-center gap-1 rounded-full ${neutralButton} px-3 text-cream-soft ${tapScale} hover:text-cream`}
       >
         <span className="max-w-[9rem] truncate text-sm font-semibold text-cream">
@@ -180,7 +180,7 @@ export function HouseholdSwitcher({
               className="absolute left-0 top-full z-50 mt-2 flex w-64 origin-top-left flex-col gap-1 rounded-2xl bg-surface p-1 text-ink shadow-xl shadow-scrim/50"
             >
               <div className="px-2 pb-0.5 pt-1.5 text-[0.7rem] font-semibold uppercase tracking-wide text-ink-soft">
-                Your gardens
+                Your households
               </div>
 
               {ordered.map((h) => {
@@ -194,7 +194,7 @@ export function HouseholdSwitcher({
                     }`}
                   >
                     <span
-                      title={isDefault ? "Your default home" : undefined}
+                      title={isDefault ? "Your default household" : undefined}
                       className="flex size-7 shrink-0 items-center justify-center text-healthy"
                       aria-hidden
                     >
@@ -221,7 +221,7 @@ export function HouseholdSwitcher({
                         {labelFor(h)}
                       </span>
                       {isDefault ? (
-                        <span className="sr-only"> (default home)</span>
+                        <span className="sr-only"> (default household)</span>
                       ) : null}
                     </button>
 
@@ -260,7 +260,7 @@ export function HouseholdSwitcher({
                   />
                 </span>
                 <span className="py-2 pr-2">
-                  {creating ? "Creating…" : "Create new house"}
+                  {creating ? "Creating…" : "Create new household"}
                 </span>
               </button>
             </motion.div>

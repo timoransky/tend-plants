@@ -18,7 +18,7 @@ export type ManagedHousehold = {
 };
 
 function labelFor(h: ManagedHousehold): string {
-  return h.name ?? h.code ?? `House ·${h.token.slice(-4)}`;
+  return h.name ?? h.code ?? `Household ·${h.token.slice(-4)}`;
 }
 
 /**
@@ -123,7 +123,7 @@ function ManageBody({
             {labelFor(entry)}
           </DrawerTitle>
           <DrawerDescription className="text-pretty text-sm text-ink-soft">
-            Give this home a name, or manage it on this device.
+            Give this household a name, or manage it on this device.
           </DrawerDescription>
         </div>
       </header>
@@ -143,7 +143,7 @@ function ManageBody({
           type="text"
           value={draftName}
           onChange={(e) => setDraftName(e.target.value)}
-          placeholder={entry.code ?? "Name this home"}
+          placeholder={entry.code ?? "Name this household"}
           maxLength={60}
           className="no-ios-zoom w-full rounded-xl bg-surface-muted px-3.5 py-3 text-sm text-ink outline-none focus-visible:ring-2 focus-visible:ring-healthy/50"
         />
@@ -167,7 +167,7 @@ function ManageBody({
       {isDefault ? (
         <div className={`${buttonLg} w-full bg-healthy/10 text-healthy-ink`}>
           <HugeiconsIcon icon={HouseHeartIcon} size={18} strokeWidth={2} aria-hidden />
-          Your default home
+          Your default household
         </div>
       ) : (
         <button
@@ -182,7 +182,7 @@ function ManageBody({
             strokeWidth={1.8}
             aria-hidden
           />
-          Set as default home
+          Set as default household
         </button>
       )}
 
