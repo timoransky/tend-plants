@@ -1,6 +1,6 @@
 "use client";
 
-import { FullScreenIcon } from "@hugeicons/core-free-icons";
+import { ZoomInAreaIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
@@ -25,14 +25,14 @@ import { tapScale } from "@/lib/ui";
  * dance, and focus restore for free. Framer Motion drives the enter/exit via
  * forceMount + AnimatePresence, matching the app's reduced-motion handling.
  *
- * A small viewfinder chip marks the photo as enlargeable. It has to be there
- * without a pointer — `cursor-zoom-in` alone leaves the feature invisible on a
- * phone — so it's persistent, and hover only deepens it. Centred, not tucked in
- * a corner: a corner badge reads as a sticker and lands wherever the photo's
- * subject happens to be, while the middle is symmetric at any avatar size and
- * stays clear of the status dot the plant page hangs at bottom-right. The chip
- * carries its own contrast, so the photo never needs a permanent veil — a bare
- * glyph would need a ~55% scrim to stay legible on a bright photo.
+ * A zoom button marks the photo as enlargeable. It has to be there without a
+ * pointer — `cursor-zoom-in` alone leaves the feature invisible on a phone — so
+ * it's persistent, and hover only deepens it. Centred, not tucked in a corner: a
+ * corner badge reads as a sticker and lands wherever the photo's subject happens
+ * to be, while the middle is symmetric at any avatar size and stays clear of the
+ * status dot the plant page hangs at bottom-right. It carries its own contrast,
+ * so the photo never needs a permanent veil — a bare glyph would need a ~55%
+ * scrim over the whole circle to stay legible on a bright photo.
  */
 export function PlantPhotoAvatar({
   avatar,
@@ -74,14 +74,17 @@ export function PlantPhotoAvatar({
           aria-hidden
           className="pointer-events-none absolute inset-0 flex items-center justify-center rounded-full bg-scrim/0 transition-colors duration-200 ease-out group-hover/zoom:bg-scrim/25"
         >
-          {/* 65% is what keeps the cream glyph past the 3:1 graphical floor on a
-              blown-out photo; on a dark one the extra opacity barely registers. */}
-          <span className="flex size-6 items-center justify-center rounded-full bg-scrim/65 ring-1 ring-inset ring-cream/25 backdrop-blur-[2px] transition-colors duration-200 ease-out group-hover/zoom:bg-scrim/80">
+          {/* Sized and shaped like the header's circular icon buttons (share,
+              back): size-9, hairline cream border, cream glyph at 17/1.7. The
+              fill is inverted, though — `neutralButton`'s faint cream tint is
+              documented dark-canvas-only, and here the backdrop is a photo of
+              any brightness. 60% scrim is what holds the glyph past the 3:1
+              graphical floor on a blown-out shot. */}
+          <span className="flex size-9 items-center justify-center rounded-full border border-cream/15 bg-scrim/60 text-cream backdrop-blur-md transition-colors duration-200 ease-out group-hover/zoom:bg-scrim/75">
             <HugeiconsIcon
-              icon={FullScreenIcon}
-              size={14}
-              strokeWidth={2}
-              className="text-cream"
+              icon={ZoomInAreaIcon}
+              size={17}
+              strokeWidth={1.7}
               aria-hidden
             />
           </span>
