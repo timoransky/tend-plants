@@ -89,7 +89,7 @@ export function ShareButton({ token }: { token: string }) {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        aria-label="Share this garden"
+        aria-label="Share this household"
         className={`${buttonIcon} ${neutralButton} text-cream ${tapScale}`}
       >
         <HugeiconsIcon
@@ -112,7 +112,7 @@ export function ShareButton({ token }: { token: string }) {
           </span>
           <div className="min-w-0">
             <DrawerTitle className="text-2xl font-semibold tracking-tight text-ink">
-              Share this garden
+              Share this household
             </DrawerTitle>
             <DrawerDescription className="text-pretty text-sm text-ink-soft">
               There&rsquo;s no login, so anyone with this link can view and edit

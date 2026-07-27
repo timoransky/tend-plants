@@ -109,7 +109,7 @@ function GardenLoading() {
   return (
     <div className="flex flex-1 items-center justify-center py-16">
       <p className="animate-pulse text-sm text-cream-soft">
-        Growing your garden…
+        Getting things ready…
       </p>
     </div>
   );
