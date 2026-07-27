@@ -32,3 +32,42 @@ export const tapScale =
  */
 export const neutralButton =
   "border border-cream/10 bg-cream/[0.08] hover:bg-cream/[0.14]";
+
+/**
+ * The app's three button sizes. Every control lands on one of three rungs:
+ *
+ *   36px  `buttonSm` / `buttonIcon` — header controls and inline pill CTAs
+ *   40px  (hand-rolled) — the care-sheet Mark watered/fed pill, avatar tiles
+ *   44px  `buttonLg` — every primary / footer action
+ *
+ * Like `neutralButton`, these are ONE ASPECT ONLY: size, shape, and type
+ * scale. No colour, no surface, no motion — pair them with a fill (`bg-healthy`
+ * / `bg-surface-muted` / `neutralButton`), a text colour, and `tapScale`.
+ *
+ * They also carry `inline-flex items-center justify-center`, which a `<button>`
+ * gets for free but an `<a>`/`<Link>`/`<label>` does not — without it a fixed
+ * height leaves the label sitting on the top edge.
+ */
+
+/**
+ * Primary / footer action, 44px — drawer footers, both pinned bottom bars, form
+ * submits. Deliberately has no horizontal padding: nearly every site is
+ * `w-full` or `flex-1`, and the one auto-width case adds its own `px-*`.
+ */
+export const buttonLg =
+  "inline-flex h-11 items-center justify-center gap-2 rounded-full text-base font-semibold";
+
+/**
+ * Compact pill CTA, 36px — a call to action sitting inline in a body or card
+ * (empty states, the welcome note) rather than anchored to the bottom of a
+ * sheet. Matches the header row's height so the two never fight.
+ */
+export const buttonSm =
+  "inline-flex h-9 items-center justify-center gap-1.5 rounded-full px-5 text-sm font-semibold";
+
+/**
+ * Circular icon-only control, 36px — the header row (back / share / add) and
+ * the photo lightbox's close. Icon glyphs inside these render at 18px.
+ */
+export const buttonIcon =
+  "inline-flex size-9 shrink-0 items-center justify-center rounded-full";

@@ -3,7 +3,7 @@
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 
 import { BodyPortal } from "@/components/BodyPortal";
-import { neutralButton, tapScale } from "@/lib/ui";
+import { buttonLg, neutralButton, tapScale } from "@/lib/ui";
 
 export type BulkBarState = "selecting" | "pending" | "undo" | null;
 
@@ -52,7 +52,7 @@ export function BulkSelectBar({
                 <button
                   type="button"
                   onClick={onUndo}
-                  className={`flex h-12 flex-1 items-center justify-center gap-1 rounded-full bg-healthy text-base font-semibold text-canvas ${tapScale}`}
+                  className={`${buttonLg} flex-1 gap-1 bg-healthy text-canvas ${tapScale}`}
                 >
                   <span aria-hidden>✓</span> Watered {count} ·{" "}
                   <span className="underline">Undo</span>
@@ -61,7 +61,7 @@ export function BulkSelectBar({
                 <button
                   type="button"
                   disabled
-                  className="h-12 flex-1 rounded-full bg-water text-base font-semibold text-canvas opacity-80"
+                  className={`${buttonLg} flex-1 bg-water text-canvas opacity-80`}
                 >
                   Watering…
                 </button>
@@ -70,7 +70,7 @@ export function BulkSelectBar({
                   <button
                     type="button"
                     onClick={onCancel}
-                    className={`h-12 rounded-full ${neutralButton} px-6 text-base font-semibold text-cream ${tapScale}`}
+                    className={`${buttonLg} ${neutralButton} px-6 text-cream ${tapScale}`}
                   >
                     Cancel
                   </button>
@@ -78,7 +78,7 @@ export function BulkSelectBar({
                     type="button"
                     onClick={onWater}
                     disabled={count === 0}
-                    className={`h-12 flex-1 rounded-full bg-water text-base font-semibold text-canvas ${tapScale} hover:bg-water/90 disabled:opacity-60`}
+                    className={`${buttonLg} flex-1 bg-water text-canvas ${tapScale} hover:bg-water/90 disabled:opacity-60`}
                   >
                     Mark watered ({count})
                   </button>

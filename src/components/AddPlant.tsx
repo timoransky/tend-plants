@@ -22,7 +22,7 @@ import {
 import type { IdentifyCandidate, IdentifyResult } from "@/lib/identify";
 import { downscaleImage } from "@/lib/image";
 import type { SpeciesDetail } from "@/lib/species";
-import { tapScale } from "@/lib/ui";
+import { buttonLg, tapScale } from "@/lib/ui";
 
 /**
  * The add-plant screen: the species picker stays on the page, and tapping a
@@ -442,11 +442,15 @@ function PickStage({
             {/* Add-manually lives at the end of the list: reachable by scrolling
                 to the bottom of the full list, and right there when a search
                 finds nothing. Kept out of the pinned bar so Identify stays the
-                hero; seeds the new plant's name from the current search. */}
+                hero; seeds the new plant's name from the current search.
+
+                Opts out of `buttonLg`'s pill shape: sitting directly under the
+                rounded-2xl species grid, it stays concentric with the tiles it
+                terminates. Only the 44px height is shared. */}
             <button
               type="button"
               onClick={() => onManual(query.trim() || undefined)}
-              className={`rounded-2xl border border-dashed border-cream-soft/40 px-4 py-3 text-sm font-medium text-cream-soft ${tapScale} hover:border-cream-soft hover:text-cream`}
+              className={`inline-flex h-11 items-center justify-center rounded-2xl border border-dashed border-cream-soft/40 px-4 text-sm font-medium text-cream-soft ${tapScale} hover:border-cream-soft hover:text-cream`}
             >
               Can&apos;t find it? Add manually
             </button>
@@ -475,7 +479,7 @@ function PickStage({
                 <label> so a tap opens the picker with no ref wiring. */}
             {identifyEnabled ? (
               <label
-                className={`flex cursor-pointer items-center justify-center gap-2 rounded-2xl border border-healthy/40 bg-healthy/10 px-4 py-3 text-sm font-medium text-cream ${tapScale} hover:bg-healthy/15`}
+                className={`${buttonLg} cursor-pointer border border-healthy/40 bg-healthy/10 text-cream ${tapScale} hover:bg-healthy/15`}
               >
                 <input
                   type="file"

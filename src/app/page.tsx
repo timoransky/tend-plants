@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 
 import { Logo } from "@/components/Logo";
 import { getPrimary, recordVisit, setPrimary } from "@/lib/household-storage";
+import { buttonSm, tapScale } from "@/lib/ui";
 
 /**
  * Entry point. No landing screen: reuse this browser's saved household, or
@@ -62,7 +63,7 @@ export default function Home() {
               started.current = false;
               location.reload();
             }}
-            className="rounded-full bg-healthy px-5 py-2.5 text-sm font-semibold text-canvas transition-colors hover:bg-healthy/90"
+            className={`${buttonSm} bg-healthy text-canvas ${tapScale} hover:bg-healthy/90`}
           >
             Try again
           </button>

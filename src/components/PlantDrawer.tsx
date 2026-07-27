@@ -11,7 +11,7 @@ import { EditPlantDrawer } from "@/components/EditPlantDrawer";
 import { PlantDetail, type PlantDetailData } from "@/components/PlantDetail";
 import { PlantPhotoAvatar } from "@/components/PlantPhotoAvatar";
 import type { PlantWithStatus } from "@/lib/plants";
-import { tapScale } from "@/lib/ui";
+import { buttonLg, tapScale } from "@/lib/ui";
 
 function toDetailData(p: PlantWithStatus): PlantDetailData {
   return {
@@ -125,11 +125,11 @@ export function PlantDrawer({
             <button
               type="button"
               onClick={() => setEditOpen(true)}
-              className={`flex h-12 flex-1 items-center justify-center gap-2 rounded-full bg-surface-muted text-base font-semibold text-ink ${tapScale} hover:bg-surface-muted/70`}
+              className={`${buttonLg} flex-1 bg-surface-muted text-ink ${tapScale} hover:bg-surface-muted/70`}
             >
               <HugeiconsIcon
                 icon={PencilEdit02Icon}
-                size={20}
+                size={18}
                 strokeWidth={1.9}
                 aria-hidden
               />
@@ -138,11 +138,11 @@ export function PlantDrawer({
             <button
               type="button"
               onClick={() => setDeleteOpen(true)}
-              className={`flex h-12 flex-1 items-center justify-center gap-2 rounded-full bg-surface-muted text-base font-semibold text-danger-ink ${tapScale} hover:bg-danger/10`}
+              className={`${buttonLg} flex-1 bg-surface-muted text-danger-ink ${tapScale} hover:bg-danger/10`}
             >
               <HugeiconsIcon
                 icon={Delete02Icon}
-                size={20}
+                size={18}
                 strokeWidth={1.9}
                 aria-hidden
               />

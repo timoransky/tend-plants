@@ -6,7 +6,7 @@ import { PlantPhotoAvatar } from "@/components/PlantPhotoAvatar";
 import { StatusDot } from "@/components/StatusDot";
 import { findHousehold } from "@/lib/api";
 import { getPlantWithStatus } from "@/lib/plants";
-import { neutralButton, tapScale } from "@/lib/ui";
+import { buttonIcon, neutralButton, tapScale } from "@/lib/ui";
 
 // Live tracker — always read fresh from the DB, never cache.
 export const dynamic = "force-dynamic";
@@ -41,7 +41,7 @@ export default async function PlantDetailPage({ params }: Props) {
         <Link
           href={`/h/${token}`}
           aria-label="Back home"
-          className={`flex size-9 items-center justify-center rounded-full ${neutralButton} text-cream ${tapScale}`}
+          className={`${buttonIcon} ${neutralButton} text-cream ${tapScale}`}
         >
           <svg
             width="18"

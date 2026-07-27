@@ -5,7 +5,7 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { useState } from "react";
 
 import { Drawer, DrawerDescription, DrawerTitle } from "@/components/Drawer";
-import { tapScale } from "@/lib/ui";
+import { buttonLg, tapScale } from "@/lib/ui";
 
 export type ManagedHousehold = {
   token: string;
@@ -156,7 +156,7 @@ function ManageBody({
         <button
           type="submit"
           disabled={!dirty || saving}
-          className={`mt-2 h-12 w-full rounded-full bg-healthy text-base font-semibold text-canvas ${tapScale} hover:bg-healthy/90 disabled:opacity-60`}
+          className={`${buttonLg} mt-2 w-full bg-healthy text-canvas ${tapScale} hover:bg-healthy/90 disabled:opacity-60`}
         >
           {saving ? "Saving…" : "Save name"}
         </button>
@@ -165,7 +165,7 @@ function ManageBody({
       <div className="my-5 h-px bg-ink/10" />
 
       {isDefault ? (
-        <div className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-healthy/10 text-base font-semibold text-healthy-ink">
+        <div className={`${buttonLg} w-full bg-healthy/10 text-healthy-ink`}>
           <HugeiconsIcon icon={HouseHeartIcon} size={18} strokeWidth={2} aria-hidden />
           Your default home
         </div>
@@ -174,7 +174,7 @@ function ManageBody({
           type="button"
           onClick={onSetDefault}
           disabled={saving}
-          className={`flex h-12 w-full items-center justify-center gap-2 rounded-full bg-surface-muted text-base font-semibold text-ink ${tapScale} hover:bg-surface-muted/70 disabled:opacity-60`}
+          className={`${buttonLg} w-full bg-surface-muted text-ink ${tapScale} hover:bg-surface-muted/70 disabled:opacity-60`}
         >
           <HugeiconsIcon
             icon={HouseHeartIcon}
@@ -193,7 +193,7 @@ function ManageBody({
             type="button"
             onClick={onRemoved}
             disabled={saving}
-            className={`flex h-12 w-full items-center justify-center gap-2 rounded-full bg-surface-muted text-base font-semibold text-danger-ink ${tapScale} hover:bg-danger/10 disabled:opacity-60`}
+            className={`${buttonLg} w-full bg-surface-muted text-danger-ink ${tapScale} hover:bg-danger/10 disabled:opacity-60`}
           >
             <HugeiconsIcon icon={Delete02Icon} size={18} strokeWidth={1.9} aria-hidden />
             Remove from this device

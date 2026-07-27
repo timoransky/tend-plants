@@ -10,7 +10,7 @@ import { SHOW_FEED } from "@/lib/features";
 import { downscaleImage } from "@/lib/image";
 import { roomIcon } from "@/lib/room-icon";
 import type { SpeciesDetail } from "@/lib/species";
-import { tapScale } from "@/lib/ui";
+import { buttonLg, tapScale } from "@/lib/ui";
 
 const AVATAR_CHOICES = ["🌿", "🪴", "🌵", "🌱", "🌴", "🍃", "🌸", "🌼", "🌺"];
 
@@ -560,7 +560,7 @@ export function PlantForm({
         type="button"
         onClick={submit}
         disabled={submitting || uploading || !values.name.trim()}
-        className={`mt-4 h-11 w-full rounded-full bg-healthy text-base font-semibold text-canvas ${tapScale} hover:bg-healthy/90 disabled:opacity-60`}
+        className={`${buttonLg} mt-4 w-full bg-healthy text-canvas ${tapScale} hover:bg-healthy/90 disabled:opacity-60`}
       >
         {submitting ? submittingLabel : submitLabel}
       </button>

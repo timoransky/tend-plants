@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import { buttonSm, tapScale } from "@/lib/ui";
+
 export default function NotFound() {
   return (
     <main className="mx-auto flex h-dvh w-full max-w-2xl flex-col items-center justify-center gap-4 px-6 text-center">
@@ -15,7 +17,7 @@ export default function NotFound() {
       </p>
       <Link
         href="/"
-        className="rounded-full bg-healthy px-5 py-2.5 text-sm font-semibold text-canvas transition-colors hover:bg-healthy/90"
+        className={`${buttonSm} bg-healthy text-canvas ${tapScale} hover:bg-healthy/90`}
       >
         Go to start
       </Link>

@@ -11,7 +11,7 @@ import { groupByRoom } from "@/lib/group-rooms";
 import { listPlantsWithStatus } from "@/lib/plants";
 import { seedEnabled } from "@/lib/seed";
 import { isStorageEnabled } from "@/lib/storage";
-import { tapScale } from "@/lib/ui";
+import { buttonIcon, buttonSm, tapScale } from "@/lib/ui";
 
 // Live tracker — always read fresh from the DB, never cache.
 export const dynamic = "force-dynamic";
@@ -43,7 +43,7 @@ export default async function HomePage({ params }: Props) {
           <Link
             href={`/h/${token}/add`}
             aria-label="Add a plant"
-            className={`flex size-9 items-center justify-center rounded-full bg-healthy text-canvas ${tapScale} hover:bg-healthy/90`}
+            className={`${buttonIcon} bg-healthy text-canvas ${tapScale} hover:bg-healthy/90`}
           >
             <svg
               width="18"
@@ -90,7 +90,7 @@ function EmptyState({ token }: { token: string }) {
       </p>
       <Link
         href={`/h/${token}/add`}
-        className={`rounded-full bg-healthy px-5 py-2 text-sm font-semibold text-canvas ${tapScale} hover:bg-healthy/90`}
+        className={`${buttonSm} bg-healthy text-canvas ${tapScale} hover:bg-healthy/90`}
       >
         Add a plant
       </Link>
