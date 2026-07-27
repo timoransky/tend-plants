@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
 
 import { FirstRunWelcome } from "@/components/FirstRunWelcome";
 import { HouseholdSwitcher } from "@/components/HouseholdSwitcher";
@@ -20,11 +21,19 @@ type Props = { params: Promise<{ token: string }> };
 
 export default async function HomePage({ params }: Props) {
   const { token } = await params;
-  const household = await findHousehold(token);
-  if (!household) notFound();
 
-  const plants = await listPlantsWithStatus(household.id);
-  const groups = groupByRoom(plants);
+  // A household's id *is* its token, so the plant query needs nothing from the
+  // household lookup — start it now and let the two share one round trip rather
+  // than paying for two.
+  const plantsPromise = listPlantsWithStatus(token);
+
+  const household = await findHousehold(token);
+  if (!household) {
+    // Nothing will consume the in-flight query; mark it handled so a failure
+    // can't surface as an unhandled rejection.
+    void plantsPromise.catch(() => {});
+    notFound();
+  }
 
   return (
     <div className="mx-auto flex min-h-dvh w-full max-w-2xl flex-col">
@@ -65,16 +74,43 @@ export default async function HomePage({ params }: Props) {
 
       <main className="flex flex-1 flex-col px-4 pb-4">
         <FirstRunWelcome />
-        {plants.length === 0 ? (
-          <EmptyState token={token} />
-        ) : (
-          <PlantGarden
-            groups={groups}
-            token={token}
-            photoEnabled={isStorageEnabled()}
-          />
-        )}
+        {/* Everything above this point is the static shell: it paints while the
+            DB is still answering, which is most of the wait on a cold Neon. Only
+            the grid streams in. The notFound() above stays outside the boundary
+            on purpose — once a fallback renders, the response has committed to
+            200 and the real 404 is no longer available. */}
+        <Suspense fallback={<GardenLoading />}>
+          {plantsPromise.then((plants) =>
+            plants.length === 0 ? (
+              <EmptyState token={token} />
+            ) : (
+              <PlantGarden
+                groups={groupByRoom(plants)}
+                token={token}
+                photoEnabled={isStorageEnabled()}
+              />
+            ),
+          )}
+        </Suspense>
       </main>
+    </div>
+  );
+}
+
+/**
+ * Shown while the plants stream in. Deliberately *not* a skeleton grid: we don't
+ * know yet how many plants there are or which rooms they're in, so any mock grid
+ * would predict the wrong shape and lurch when the real one replaced it. A calm,
+ * honest "still loading" line makes no promises about the layout — and it's the
+ * same affordance the entry screen uses, so the wait reads as one continuous
+ * moment rather than two different loading states.
+ */
+function GardenLoading() {
+  return (
+    <div className="flex flex-1 items-center justify-center py-16">
+      <p className="animate-pulse text-sm text-cream-soft">
+        Getting things ready…
+      </p>
     </div>
   );
 }

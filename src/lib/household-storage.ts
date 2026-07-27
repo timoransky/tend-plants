@@ -13,7 +13,14 @@
  * on local changes, including writes from other tabs (the `storage` event).
  */
 
-const PRIMARY_KEY = "tend:household";
+/**
+ * Exported because `/` also reads this key from an inline `<script>` that runs
+ * during HTML parsing — before React exists — to redirect a returning visitor
+ * without waiting on the bundle. That script builds its source from this
+ * constant so the two can never drift apart.
+ */
+export const PRIMARY_STORAGE_KEY = "tend:household";
+
 const VISITED_KEY = "tend:visited";
 
 export type VisitedHousehold = {
@@ -75,7 +82,7 @@ function writeString(key: string, value: string): void {
 
 /** The household `/` redirects to, or null if this browser has none yet. */
 export function getPrimary(): string | null {
-  return readString(PRIMARY_KEY);
+  return readString(PRIMARY_STORAGE_KEY);
 }
 
 /** There is no localStorage on the server. */
@@ -85,7 +92,7 @@ export function getPrimaryServerSnapshot(): null {
 
 /** Adopt a household as this browser's home. The only way primary changes. */
 export function setPrimary(token: string): void {
-  writeString(PRIMARY_KEY, token);
+  writeString(PRIMARY_STORAGE_KEY, token);
   notify();
 }
 

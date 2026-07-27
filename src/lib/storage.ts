@@ -1,8 +1,10 @@
-import {
-  DeleteObjectCommand,
-  PutObjectCommand,
-  S3Client,
-} from "@aws-sdk/client-s3";
+// Type-only, so the SDK is erased at compile time rather than pulled into every
+// module that imports this file. `publicUrl` lives here and is used by
+// `lib/plants.ts`, so a value import would drag the whole S3 client into the
+// module graph of every page that lists plants — parsed and initialised on each
+// cold start just to read some env vars and concatenate a URL. The real import
+// happens inside the two functions that actually talk to the bucket.
+import type { S3Client } from "@aws-sdk/client-s3";
 
 /**
  * Provider-agnostic object storage for plant avatar photos.
@@ -49,8 +51,9 @@ export function isStorageEnabled(): boolean {
 // is required for S3-compatible providers like Supabase/MinIO (which don't do
 // virtual-hosted-style bucket subdomains).
 let client: S3Client | null = null;
-function s3(): S3Client {
+async function s3(): Promise<S3Client> {
   if (!client) {
+    const { S3Client } = await import("@aws-sdk/client-s3");
     client = new S3Client({
       region: REGION,
       endpoint: ENDPOINT,
@@ -73,7 +76,9 @@ export async function putObject(
   if (!isStorageEnabled()) {
     throw new Error("Object storage is not configured.");
   }
-  await s3().send(
+  const { PutObjectCommand } = await import("@aws-sdk/client-s3");
+  const s3Client = await s3();
+  await s3Client.send(
     new PutObjectCommand({
       Bucket: BUCKET,
       Key: key,
@@ -94,7 +99,9 @@ export async function putObject(
 export async function deleteObject(key: string): Promise<void> {
   if (!isStorageEnabled()) return;
   try {
-    await s3().send(new DeleteObjectCommand({ Bucket: BUCKET, Key: key }));
+    const { DeleteObjectCommand } = await import("@aws-sdk/client-s3");
+    const s3Client = await s3();
+    await s3Client.send(new DeleteObjectCommand({ Bucket: BUCKET, Key: key }));
   } catch (err) {
     console.error("Failed to delete storage object", key, err);
   }

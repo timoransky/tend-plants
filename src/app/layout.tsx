@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Fredoka, Geist, Geist_Mono } from "next/font/google";
+import { Fredoka, Geist } from "next/font/google";
 import "./globals.css";
 
 import { ScrollReset } from "@/components/ScrollReset";
@@ -9,16 +9,14 @@ const geistSans = Geist({
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
 // Display face for the "Tend" wordmark (navbar + OG image). Variable font, so no
 // explicit weight; rounded and friendly to match the warm cream-on-charcoal UI.
+// Not preloaded: the wordmark is hidden on the garden screen, so preloading it
+// would cost a font fetch on the one page that never draws a glyph with it.
 const fredoka = Fredoka({
   variable: "--font-fredoka",
   subsets: ["latin"],
+  preload: false,
 });
 
 export const metadata: Metadata = {
@@ -42,7 +40,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${fredoka.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${fredoka.variable} h-full antialiased`}
     >
       <body className="h-full overflow-hidden">
         {/* The app shell — not the document — is the scroll container. Keeping

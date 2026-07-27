@@ -266,7 +266,10 @@ export function PlantGarden({
           <PlantBubble
             key={plant.id}
             plant={plant}
-            delayMs={Math.min(i, 12) * 35}
+            // Capped and kept short on purpose: `rise` fills backwards, so a
+            // card stays invisible until its delay elapses, and a long tail
+            // reads as the page still loading rather than as a flourish.
+            delayMs={Math.min(i, 8) * 20}
             onSelect={selectPlant}
             selectMode={selecting}
             selected={selected.has(plant.id)}

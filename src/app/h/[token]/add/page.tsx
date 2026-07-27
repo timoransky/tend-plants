@@ -14,10 +14,17 @@ type Props = { params: Promise<{ token: string }> };
 
 export default async function AddPlantPage({ params }: Props) {
   const { token } = await params;
-  const household = await findHousehold(token);
-  if (!household) notFound();
 
-  const rooms = await listRooms(household.id);
+  // A household's id *is* its token, so both queries can share one round trip.
+  const roomsPromise = listRooms(token);
+
+  const household = await findHousehold(token);
+  if (!household) {
+    void roomsPromise.catch(() => {});
+    notFound();
+  }
+
+  const rooms = await roomsPromise;
 
   return (
     <main className="mx-auto flex min-h-dvh w-full max-w-2xl flex-col px-4 pb-10">
