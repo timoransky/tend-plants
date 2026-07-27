@@ -27,12 +27,12 @@ import { tapScale } from "@/lib/ui";
  *
  * A small viewfinder chip marks the photo as enlargeable. It has to be there
  * without a pointer — `cursor-zoom-in` alone leaves the feature invisible on a
- * phone — so it's persistent, and hover only deepens it. It sits *inside* the
- * circle rather than straddling the edge: the two call sites live on opposite
- * surfaces (dark canvas on the plant page, cream in the drawer), and a chip that
- * pokes out would need a ring in the parent's background colour. Staying on the
- * photo keeps it surface-agnostic. Top-right also keeps it clear of the status
- * dot the plant page hangs at bottom-right.
+ * phone — so it's persistent, and hover only deepens it. Centred, not tucked in
+ * a corner: a corner badge reads as a sticker and lands wherever the photo's
+ * subject happens to be, while the middle is symmetric at any avatar size and
+ * stays clear of the status dot the plant page hangs at bottom-right. The chip
+ * carries its own contrast, so the photo never needs a permanent veil — a bare
+ * glyph would need a ~55% scrim to stay legible on a bright photo.
  */
 export function PlantPhotoAvatar({
   avatar,
@@ -72,22 +72,19 @@ export function PlantPhotoAvatar({
 
         <span
           aria-hidden
-          className="pointer-events-none absolute inset-0 rounded-full bg-scrim/0 transition-colors duration-200 ease-out group-hover/zoom:bg-scrim/25"
-        />
-
-        {/* 12% keeps the 20px chip wholly inside the circle at both avatar
-            sizes in use (80px and 96px); a fixed inset would clip out of one. */}
-        <span
-          aria-hidden
-          className="pointer-events-none absolute right-[12%] top-[12%] flex size-5 items-center justify-center rounded-full bg-scrim/60 ring-1 ring-inset ring-cream/25 backdrop-blur-[2px] transition-colors duration-200 ease-out group-hover/zoom:bg-scrim/75"
+          className="pointer-events-none absolute inset-0 flex items-center justify-center rounded-full bg-scrim/0 transition-colors duration-200 ease-out group-hover/zoom:bg-scrim/25"
         >
-          <HugeiconsIcon
-            icon={FullScreenIcon}
-            size={12}
-            strokeWidth={2.2}
-            className="text-cream"
-            aria-hidden
-          />
+          {/* 65% is what keeps the cream glyph past the 3:1 graphical floor on a
+              blown-out photo; on a dark one the extra opacity barely registers. */}
+          <span className="flex size-6 items-center justify-center rounded-full bg-scrim/65 ring-1 ring-inset ring-cream/25 backdrop-blur-[2px] transition-colors duration-200 ease-out group-hover/zoom:bg-scrim/80">
+            <HugeiconsIcon
+              icon={FullScreenIcon}
+              size={14}
+              strokeWidth={2}
+              className="text-cream"
+              aria-hidden
+            />
+          </span>
         </span>
       </Dialog.Trigger>
 
