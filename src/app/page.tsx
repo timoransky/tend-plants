@@ -1,78 +1,36 @@
-"use client";
-
-import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
-
-import { Logo } from "@/components/Logo";
-import { getPrimary, recordVisit, setPrimary } from "@/lib/household-storage";
-import { buttonSm, tapScale } from "@/lib/ui";
+import { EntryFallback } from "@/components/EntryFallback";
+import { InlineScript } from "@/components/InlineScript";
+import { PRIMARY_STORAGE_KEY } from "@/lib/household-storage";
 
 /**
  * Entry point. No landing screen: reuse this browser's saved household, or
  * auto-create one, then redirect to it. The token is the only credential, so
  * remembering it locally is what keeps a returning visitor on their own plants.
+ *
+ * The redirect happens in an inline script rather than an effect. localStorage is
+ * readable the instant the browser parses this page, but an effect can't run
+ * until the bundle has downloaded, parsed and hydrated — three steps of pure
+ * waiting on the most common path into the app (typing the domain, or launching
+ * the installed PWA, which starts here). Redirecting during parse also turns the
+ * hop into a real document navigation instead of a client-side one, so the
+ * garden can stream its shell.
+ *
+ * This page reads no request data, so it stays statically prerendered and is
+ * served straight from the CDN. Keep it that way — no `cookies()`/`headers()`.
  */
 export default function Home() {
-  const router = useRouter();
-  const started = useRef(false);
-  const [error, setError] = useState(false);
-
-  useEffect(() => {
-    // Guard against React StrictMode's double-invoke so we never POST twice.
-    if (started.current) return;
-    started.current = true;
-    void enter();
-
-    async function enter() {
-      setError(false);
-      const existing = getPrimary();
-      if (existing) {
-        router.replace(`/h/${existing}`);
-        return;
-      }
-      try {
-        const res = await fetch("/api/household", { method: "POST" });
-        if (!res.ok) throw new Error();
-        const { household } = await res.json();
-        setPrimary(household.id);
-        recordVisit(
-          household.id,
-          household.name ?? null,
-          household.displayCode ?? null,
-          household.avatar ?? null,
-        );
-        router.replace(`/h/${household.id}`);
-      } catch {
-        started.current = false;
-        setError(true);
-      }
-    }
-  }, [router]);
-
   return (
-    <main className="flex flex-1 flex-col items-center justify-center gap-6 px-6 py-16 text-center">
-      <Logo className="scale-125" />
-      {error ? (
-        <>
-          <p className="max-w-xs text-sm text-cream-soft">
-            Couldn&apos;t open your garden. Check your connection and try again.
-          </p>
-          <button
-            type="button"
-            onClick={() => {
-              started.current = false;
-              location.reload();
-            }}
-            className={`${buttonSm} bg-healthy text-canvas ${tapScale} hover:bg-healthy/90`}
-          >
-            Try again
-          </button>
-        </>
-      ) : (
-        <p className="animate-pulse text-sm text-cream-soft">
-          Growing your garden…
-        </p>
-      )}
-    </main>
+    <>
+      {/* First child, so it executes before the rest of the body is parsed.
+          `encodeURIComponent` keeps a poisoned localStorage value from breaking
+          out of the /h/ path; `replace` adds no history entry, so Back still
+          skips past this page as it did before. */}
+      <InlineScript
+        html={`(function(){try{var t=localStorage.getItem(${JSON.stringify(
+          PRIMARY_STORAGE_KEY,
+        )});if(t)location.replace("/h/"+encodeURIComponent(t))}catch(e){}})()`}
+      />
+      <EntryFallback />
+    </>
   );
 }

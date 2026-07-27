@@ -15,10 +15,17 @@ type Props = { params: Promise<{ token: string; id: string }> };
 
 export default async function PlantDetailPage({ params }: Props) {
   const { token, id } = await params;
-  const household = await findHousehold(token);
-  if (!household) notFound();
 
-  const plant = await getPlantWithStatus(household.id, id);
+  // A household's id *is* its token, so both queries can share one round trip.
+  const plantPromise = getPlantWithStatus(token, id);
+
+  const household = await findHousehold(token);
+  if (!household) {
+    void plantPromise.catch(() => {});
+    notFound();
+  }
+
+  const plant = await plantPromise;
   if (!plant) notFound();
 
   const data: PlantDetailData = {
