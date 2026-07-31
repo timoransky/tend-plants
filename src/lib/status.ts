@@ -50,7 +50,7 @@ function startOfDay(d: Date): number {
 }
 
 /**
- * How many days ahead of the due date the "coming up" heads-up starts.
+ * How many days ahead of the due date a plant counts as `upcoming`.
  *
  * Proportional to the interval (~20%) rather than a flat two days: two days
  * ahead of a 5-day plant is day 3 — barely past watering it — while two days
@@ -59,6 +59,11 @@ function startOfDay(d: Date): number {
  *
  *   5 → 1 (day 4)   7 → 1 (day 6)   9 → 2 (day 7)
  *  14 → 3 (day 11) 21 → 3 (day 18)
+ *
+ * Note this no longer shows up as a badge — `upcoming` earns no mark in the
+ * grid (see `waterBadge`). What it still does is sort: upcoming plants rank
+ * above `fine` ones, so the grid drifts toward what needs attention next. Keep
+ * the window honest anyway; the planned Today/Upcoming timeline reads it too.
  */
 export function upcomingWindowDays(intervalDays: number): number {
   return Math.min(3, Math.max(1, Math.round(intervalDays * 0.2)));
@@ -71,8 +76,8 @@ export function upcomingWindowDays(intervalDays: number): number {
  * you ask the morning after, and a same-day-only mark answers it for nobody
  * except whoever tapped it.
  *
- * For any interval above 2 this stays clear of the `upcoming` window; below
- * that the two overlap, and `waterBadge` resolves the precedence.
+ * On a 1- or 2-day interval this window can still be open when the plant comes
+ * due again; `waterBadge` gives `due` precedence there.
  */
 function freshWindowDays(intervalDays: number): number {
   return Math.min(3, Math.max(2, Math.round(intervalDays * 0.15)));

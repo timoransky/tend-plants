@@ -24,10 +24,14 @@ const bubbleMotion = {
 const LONG_PRESS_MS = 500;
 const MOVE_CANCEL_PX = 8;
 
-/** Spoken equivalent of the corner badge, for the button's accessible name. */
+/**
+ * Spoken equivalent of the corner badge, for the button's accessible name.
+ * Tracks the badge exactly, including its silences: a plant that's due in a day
+ * or two shows no mark and says nothing extra here either. The precise wording
+ * ("Water in 2 days") lives in the care sheet, which is a tap away for everyone.
+ */
 const STATE_LABEL: Record<WaterBadge | "none", string> = {
   due: "needs water",
-  soon: "water soon",
   fresh: "recently watered",
   none: "healthy",
 };

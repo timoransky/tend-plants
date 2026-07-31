@@ -16,18 +16,24 @@ export const KIND_TEXT: Record<CareKind | "healthy", string> = {
 };
 
 /**
- * Which of the three water badges a plant shows in the grid, or null for
- * "nothing to say". Resolved here (rather than in the bubble) so every surface
- * agrees on precedence: actually being due always outranks having just been
- * watered, which in turn outranks the heads-up — the two can only overlap on a
- * degenerate 1-day interval, where "someone did this today" is the useful read.
+ * Which water badge a plant shows in the grid, or null for "nothing to say".
+ *
+ * Two badges, not three. `upcoming` deliberately shows nothing: it isn't
+ * actionable, and any mark for it competes for attention with the plants that
+ * genuinely need water now. The grid answers two questions — what needs doing,
+ * and what's already been done — and "due in a day or two" is neither. It's
+ * still a real status (it orders the grid, and the care sheet says "Water in
+ * 2 days" when you open a plant); it just doesn't earn a badge.
+ *
+ * Resolved here rather than in the bubble so every surface agrees on
+ * precedence: being due outranks having just been watered. Those overlap only
+ * on a 1-day interval, where "it's due again" is the useful read.
  */
-export type WaterBadge = "due" | "fresh" | "soon";
+export type WaterBadge = "due" | "fresh";
 
 export function waterBadge(water: CareState): WaterBadge | null {
   if (water.status === "overdue" || water.status === "due_today") return "due";
   if (water.fresh) return "fresh";
-  if (water.status === "upcoming") return "soon";
   return null;
 }
 

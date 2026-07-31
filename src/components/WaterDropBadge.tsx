@@ -8,22 +8,10 @@ import { DropletIcon } from "@/lib/icons";
  * cream avatar, and the fill is `--color-water` (≈ #17A3F9).
  *
  * Variants:
- * - `filled` — the default badge: water-blue drop, brown outline. "Needs water
- *   now."
- * - `soft`   — the same drop in `--color-water-soft`: the heads-up state. A
- *   second *full*-blue drop would be indistinguishable from an actually-due one
- *   at grid size, so this turns the fill down rather than the outline up. An
- *   earlier pass inverted it instead (cream fill, blue outline), which read as
- *   a different kind of thing entirely — every other badge in the app is a
- *   coloured fill behind a brown outline, and that one alone wasn't.
- * - `glow`   — fill only, no outline or accent arc; the pulse behind a due
- *   badge.
- *
- * Turning the fill down is also the honest encoding: "coming up" really is a
- * quieter version of "due" — same need, later — so it should look like one.
- * "Freshly watered" is not, which is why that badge changes shape instead.
+ * - `filled` — the badge itself: water-blue drop, brown outline.
+ * - `glow`   — fill only, no outline or accent arc; the pulse behind it.
  */
-export type DropVariant = "filled" | "soft" | "glow";
+export type DropVariant = "filled" | "glow";
 
 export function WaterDropBadge({
   className = "",
@@ -46,9 +34,7 @@ export function WaterDropBadge({
   return (
     <SolidGlyph
       icon={DropletIcon}
-      fill={
-        variant === "soft" ? "var(--color-water-soft)" : "var(--color-water)"
-      }
+      fill="var(--color-water)"
       stroke="var(--color-canvas)"
       className={className}
     />

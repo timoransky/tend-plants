@@ -4,25 +4,23 @@ import type { WaterBadge } from "@/lib/care-display";
 import { TickCircleIcon } from "@/lib/icons";
 
 /**
- * The corner mark on a plant avatar in the grid. Three faces, deliberately
- * ordered so a glance across the garden ranks them without reading anything:
+ * The corner mark on a plant avatar in the grid. Two faces, and an avatar most
+ * of the time carries neither:
  *
- * - `due`   — full-blue droplet, with a pulse behind it: water this now.
- * - `soon`  — the same droplet in the soft blue, no pulse: coming up.
- * - `fresh` — a green tick, not a droplet at all: someone just watered this.
+ * - `due`   — blue droplet with a pulse behind it: water this now.
+ * - `fresh` — a green tick: someone just watered this, leave it alone.
  *
- * Two axes, and they mean different things. SHAPE says which domain you're in:
- * a droplet is about watering, the tick disc is about it being handled. FILL
- * says how loud, within a domain: soft blue is the same need as full blue, just
- * later. So `soon` is a quieter `due` — correctly, because it is one — while
- * `fresh` changes silhouette, because "already done" is not a quiet kind of
- * thirsty. That distinction is what stops the household re-watering something a
- * housemate handled yesterday.
+ * The silhouettes differ because the meanings do. "Already done" is not a
+ * quieter kind of thirsty, so it doesn't get a quieter kind of droplet — and
+ * that difference is what stops the household re-watering something a housemate
+ * handled yesterday. A third "coming up" badge lived here for a while; it was
+ * dropped because it competed for attention with the plants that actually
+ * needed water (see `waterBadge`).
  *
- * All three are Hugeicons glyphs on the same 24×24 grid, filled in a state
- * colour behind a brown canvas outline. Same construction, so they read as one
- * set, and the same size in the same slot without per-icon tuning: the droplet
- * is 17×20 on that grid and the tick disc 20×20, both centred. (An earlier pass
+ * Both are Hugeicons glyphs on the same 24×24 grid, filled in a state colour
+ * behind a brown canvas outline. Same construction, so they read as one set,
+ * and the same size in the same slot without per-icon tuning: the droplet is
+ * 17×20 on that grid and the tick disc 20×20, both centred. (An earlier pass
  * drew the tick as a CSS `rounded-full` span, which filled the whole 24×24 box
  * and read a good fifth larger than the droplet beside it.)
  *
@@ -50,10 +48,6 @@ export function CareBadge({
         className={className}
       />
     );
-  }
-
-  if (badge === "soon") {
-    return <WaterDropBadge variant="soft" className={className} />;
   }
 
   // Two spans, not one: the outer takes the caller's classes verbatim (which
