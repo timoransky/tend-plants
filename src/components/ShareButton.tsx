@@ -3,7 +3,6 @@
 import {
   Copy01Icon,
   Share08Icon,
-  Tick02Icon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
@@ -11,6 +10,7 @@ import { useRef, useState, useSyncExternalStore } from "react";
 
 import { Drawer, DrawerDescription, DrawerTitle } from "@/components/Drawer";
 import { buttonIcon, buttonLg, neutralButton, tapScale } from "@/lib/ui";
+import { ICON_LG, ICON_MD, TickIcon } from "@/lib/icons";
 
 // These reads never change after mount, so the store never emits.
 const noopSubscribe = () => () => {};
@@ -94,7 +94,7 @@ export function ShareButton({ token }: { token: string }) {
       >
         <HugeiconsIcon
           icon={Share08Icon}
-          size={18}
+          size={ICON_MD}
           strokeWidth={1.7}
           aria-hidden
         />
@@ -105,7 +105,7 @@ export function ShareButton({ token }: { token: string }) {
           <span className="flex size-16 shrink-0 items-center justify-center rounded-full bg-surface-muted text-ink">
             <HugeiconsIcon
               icon={Share08Icon}
-              size={26}
+              size={ICON_LG}
               strokeWidth={1.7}
               aria-hidden
             />
@@ -156,7 +156,7 @@ export function ShareButton({ token }: { token: string }) {
             >
               <HugeiconsIcon
                 icon={Share08Icon}
-                size={18}
+                size={ICON_MD}
                 strokeWidth={1.8}
                 aria-hidden
               />
@@ -172,7 +172,7 @@ export function ShareButton({ token }: { token: string }) {
               {/* Invisible sizer pins the width to the widest label, so the pill
                   never resizes when "Copy link" swaps to "Copied!". */}
               <span className="invisible flex items-center gap-2" aria-hidden>
-                <HugeiconsIcon icon={Copy01Icon} size={18} strokeWidth={2} />
+                <HugeiconsIcon icon={Copy01Icon} size={ICON_MD} strokeWidth={2} />
                 Copy link
               </span>
               <span className="absolute inset-0 flex items-center justify-center gap-2">
@@ -219,8 +219,8 @@ function CopyMark({ copied, reduce }: { copied: boolean; reduce: boolean }) {
           }
         >
           <HugeiconsIcon
-            icon={Tick02Icon}
-            size={18}
+            icon={TickIcon}
+            size={ICON_MD}
             strokeWidth={2}
             aria-hidden
           />
@@ -234,7 +234,7 @@ function CopyMark({ copied, reduce }: { copied: boolean; reduce: boolean }) {
         >
           <HugeiconsIcon
             icon={Copy01Icon}
-            size={18}
+            size={ICON_MD}
             strokeWidth={2}
             aria-hidden
           />

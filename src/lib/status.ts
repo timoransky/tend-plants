@@ -65,13 +65,17 @@ export function upcomingWindowDays(intervalDays: number): number {
 }
 
 /**
- * How long after care a plant still reads as freshly cared for (~15% of the
- * interval, at minimum the rest of the day it was watered). Always shorter than
- * the gap to the next `upcoming`, so "just done" and "due soon" can't collide
- * for any sane interval.
+ * How long after care a plant still reads as freshly cared for: ~15% of the
+ * interval, floored at two days. The floor is what makes this useful to a
+ * household rather than to one person — "did anyone water this?" is a question
+ * you ask the morning after, and a same-day-only mark answers it for nobody
+ * except whoever tapped it.
+ *
+ * For any interval above 2 this stays clear of the `upcoming` window; below
+ * that the two overlap, and `waterBadge` resolves the precedence.
  */
 function freshWindowDays(intervalDays: number): number {
-  return Math.min(3, Math.max(1, Math.round(intervalDays * 0.15)));
+  return Math.min(3, Math.max(2, Math.round(intervalDays * 0.15)));
 }
 
 /**

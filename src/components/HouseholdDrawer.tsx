@@ -6,6 +6,7 @@ import { useState } from "react";
 
 import { Drawer, DrawerDescription, DrawerTitle } from "@/components/Drawer";
 import { buttonLg, tapScale } from "@/lib/ui";
+import { ICON_LG, ICON_MD } from "@/lib/icons";
 
 export type ManagedHousehold = {
   token: string;
@@ -116,7 +117,7 @@ function ManageBody({
     <div className="flex flex-col">
       <header className="flex items-center gap-4 pb-5">
         <span className="flex size-16 shrink-0 items-center justify-center rounded-full bg-surface-muted text-ink">
-          <HugeiconsIcon icon={HouseIcon} size={26} strokeWidth={1.7} aria-hidden />
+          <HugeiconsIcon icon={HouseIcon} size={ICON_LG} strokeWidth={1.7} aria-hidden />
         </span>
         <div className="min-w-0">
           <DrawerTitle className="truncate text-2xl font-semibold tracking-tight text-ink">
@@ -166,7 +167,7 @@ function ManageBody({
 
       {isDefault ? (
         <div className={`${buttonLg} w-full bg-healthy/10 text-healthy-ink`}>
-          <HugeiconsIcon icon={HouseHeartIcon} size={18} strokeWidth={2} aria-hidden />
+          <HugeiconsIcon icon={HouseHeartIcon} size={ICON_MD} strokeWidth={2} aria-hidden />
           Your default household
         </div>
       ) : (
@@ -178,7 +179,7 @@ function ManageBody({
         >
           <HugeiconsIcon
             icon={HouseHeartIcon}
-            size={18}
+            size={ICON_MD}
             strokeWidth={1.8}
             aria-hidden
           />
@@ -195,7 +196,7 @@ function ManageBody({
             disabled={saving}
             className={`${buttonLg} w-full bg-surface-muted text-danger-ink ${tapScale} hover:bg-danger/10 disabled:opacity-60`}
           >
-            <HugeiconsIcon icon={Delete02Icon} size={18} strokeWidth={1.9} aria-hidden />
+            <HugeiconsIcon icon={Delete02Icon} size={ICON_MD} strokeWidth={1.9} aria-hidden />
             Remove from this device
           </button>
           <p className="px-2 pt-2 text-center text-pretty text-xs text-ink-soft">

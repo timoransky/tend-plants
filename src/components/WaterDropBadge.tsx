@@ -1,24 +1,20 @@
-import { DropletIcon } from "@hugeicons/core-free-icons";
+import { SolidGlyph } from "@/components/SolidGlyph";
+import { DropletIcon } from "@/lib/icons";
 
 /**
- * Hugeicons ships the droplet as a two-path stroke icon: the closed teardrop
- * silhouette plus a small inner accent arc. We render both — exactly the glyph
- * used in the plant detail drawer — but recolored as a solid badge: water-blue
- * fill behind a dark-brown stroke. The stroke is `--color-canvas` (the warm
- * near-black brown of the dim background, ≈ #272019) so the drop reads cleanly
- * over a cream avatar, and the fill is `--color-water` (≈ #17A3F9).
+ * The water droplet as a solid badge (see SolidGlyph): water-blue fill behind a
+ * dark-brown outline. The outline is `--color-canvas` (the warm near-black
+ * brown of the dim background, ≈ #272019) so the drop reads cleanly over a
+ * cream avatar, and the fill is `--color-water` (≈ #17A3F9).
  *
  * Variants:
  * - `filled`  — the default badge: blue drop, dark outline. "Needs water now."
  * - `outline` — the same silhouette inverted: cream drop, blue outline. Used
  *   for the heads-up state, where a second filled blue drop would be
  *   indistinguishable from an actually-due one at grid size.
- * - `glow`    — fill only, no stroke or arc; the pulse behind a due badge.
+ * - `glow`    — fill only, no outline or accent arc; the pulse behind a due
+ *   badge.
  */
-const [DROP_BODY, DROP_ARC] = DropletIcon;
-const DROP_PATH = (DROP_BODY[1] as { d: string }).d;
-const ARC_PATH = (DROP_ARC[1] as { d: string }).d;
-
 export type DropVariant = "filled" | "outline" | "glow";
 
 export function WaterDropBadge({
@@ -28,28 +24,24 @@ export function WaterDropBadge({
   className?: string;
   variant?: DropVariant;
 }) {
-  const fill =
-    variant === "outline" ? "var(--color-surface)" : "var(--color-water)";
-  const stroke =
-    variant === "outline" ? "var(--color-water)" : "var(--color-canvas)";
-
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden className={className}>
-      <path
-        d={DROP_PATH}
-        fill={fill}
-        {...(variant === "glow" ? {} : { stroke, strokeWidth: 1.9 })}
+  if (variant === "glow") {
+    return (
+      <SolidGlyph
+        icon={DropletIcon}
+        fill="var(--color-water)"
+        silhouetteOnly
+        className={className}
       />
-      {variant === "glow" ? null : (
-        <path
-          d={ARC_PATH}
-          fill="none"
-          stroke={stroke}
-          strokeWidth={1.9}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      )}
-    </svg>
+    );
+  }
+
+  const inverted = variant === "outline";
+  return (
+    <SolidGlyph
+      icon={DropletIcon}
+      fill={inverted ? "var(--color-surface)" : "var(--color-water)"}
+      stroke={inverted ? "var(--color-water)" : "var(--color-canvas)"}
+      className={className}
+    />
   );
 }

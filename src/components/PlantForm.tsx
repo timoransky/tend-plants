@@ -11,6 +11,7 @@ import { downscaleImage } from "@/lib/image";
 import { roomIcon } from "@/lib/room-icon";
 import type { SpeciesDetail } from "@/lib/species";
 import { buttonLg, tapScale } from "@/lib/ui";
+import { ICON_MD, ICON_SM } from "@/lib/icons";
 
 const AVATAR_CHOICES = ["🌿", "🪴", "🌵", "🌱", "🌴", "🍃", "🌸", "🌼", "🌺"];
 
@@ -342,7 +343,7 @@ export function PlantForm({
                   >
                     <HugeiconsIcon
                       icon={roomIcon(room)}
-                      size={15}
+                      size={ICON_SM}
                       strokeWidth={1.9}
                       aria-hidden
                     />
@@ -364,7 +365,7 @@ export function PlantForm({
               >
                 <HugeiconsIcon
                   icon={PlusSignIcon}
-                  size={15}
+                  size={ICON_SM}
                   strokeWidth={1.9}
                   aria-hidden
                 />
@@ -413,7 +414,7 @@ export function PlantForm({
                 ) : (
                   <HugeiconsIcon
                     icon={CameraAdd01Icon}
-                    size={18}
+                    size={ICON_MD}
                     strokeWidth={1.9}
                     aria-hidden
                   />

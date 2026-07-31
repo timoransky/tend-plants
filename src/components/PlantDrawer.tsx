@@ -12,6 +12,7 @@ import { PlantDetail, type PlantDetailData } from "@/components/PlantDetail";
 import { PlantPhotoAvatar } from "@/components/PlantPhotoAvatar";
 import type { PlantWithStatus } from "@/lib/plants";
 import { buttonLg, tapScale } from "@/lib/ui";
+import { ICON_MD } from "@/lib/icons";
 
 function toDetailData(p: PlantWithStatus): PlantDetailData {
   return {
@@ -129,7 +130,7 @@ export function PlantDrawer({
             >
               <HugeiconsIcon
                 icon={PencilEdit02Icon}
-                size={18}
+                size={ICON_MD}
                 strokeWidth={1.9}
                 aria-hidden
               />
@@ -142,7 +143,7 @@ export function PlantDrawer({
             >
               <HugeiconsIcon
                 icon={Delete02Icon}
-                size={18}
+                size={ICON_MD}
                 strokeWidth={1.9}
                 aria-hidden
               />

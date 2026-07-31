@@ -1,11 +1,13 @@
 "use client";
 
+import { HugeiconsIcon } from "@hugeicons/react";
 import { motion, useReducedMotion } from "motion/react";
 import { useEffect, useRef } from "react";
 
 import { CareBadge } from "@/components/CareBadge";
 import { PlantAvatar } from "@/components/PlantAvatar";
 import { waterBadge, type WaterBadge } from "@/lib/care-display";
+import { TickIcon } from "@/lib/icons";
 import type { PlantWithStatus } from "@/lib/plants";
 
 /**
@@ -166,20 +168,12 @@ export function PlantBubble({
             }`}
           >
             {selected ? (
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
+              <HugeiconsIcon
+                icon={TickIcon}
                 className="size-[65%]"
+                strokeWidth={3}
                 aria-hidden
-              >
-                <path
-                  d="M5 13l4 4L19 7"
-                  stroke="currentColor"
-                  strokeWidth="3"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
+              />
             ) : null}
           </span>
         ) : null}
