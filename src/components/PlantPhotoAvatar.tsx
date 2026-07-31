@@ -8,6 +8,7 @@ import { useState } from "react";
 
 import { PlantAvatar } from "@/components/PlantAvatar";
 import { buttonIcon, tapScale } from "@/lib/ui";
+import { CloseIcon, ICON_MD } from "@/lib/icons";
 
 /**
  * A plant avatar that enlarges its photo when tapped. With an uploaded photo it
@@ -93,7 +94,7 @@ export function PlantPhotoAvatar({
           <span className="flex size-9 items-center justify-center rounded-full border border-cream/20 bg-scrim/10 text-cream backdrop-brightness-[0.4] transition-colors duration-200 ease-out group-hover/zoom:bg-scrim/30">
             <HugeiconsIcon
               icon={SearchAddIcon}
-              size={17}
+              size={ICON_MD}
               strokeWidth={1.7}
               aria-hidden
             />
@@ -153,20 +154,12 @@ export function PlantPhotoAvatar({
                   aria-label="Close photo"
                   className={`${buttonIcon} absolute right-4 top-4 bg-canvas-soft/80 text-cream outline-none backdrop-blur-sm focus-visible:ring-2 focus-visible:ring-cream hover:bg-canvas-soft ${tapScale}`}
                 >
-                  <svg
-                    width="18"
-                    height="18"
-                    viewBox="0 0 24 24"
-                    fill="none"
+                  <HugeiconsIcon
+                    icon={CloseIcon}
+                    size={ICON_MD}
+                    strokeWidth={2}
                     aria-hidden
-                  >
-                    <path
-                      d="M6 6l12 12M18 6L6 18"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                    />
-                  </svg>
+                  />
                 </Dialog.Close>
               </motion.div>
             </Dialog.Content>

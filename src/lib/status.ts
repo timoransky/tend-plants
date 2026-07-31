@@ -24,61 +24,134 @@ export type CareState = {
   /** The last time this care was performed, ISO string; null if never. */
   lastDoneAt: string | null;
   intervalDays: number | null;
+  /**
+   * True for a short window right after care was performed — "someone already
+   * did this". Purely derived; lets the household see at a glance that a plant
+   * was just watered instead of guessing and double-watering it.
+   */
+  fresh: boolean;
 };
+
+/**
+ * Start of the calendar day a moment falls in, as a UTC timestamp.
+ *
+ * Status is compared day-to-day rather than by raw elapsed hours, so a plant
+ * becomes due on a *date* rather than at whatever o'clock it was last watered.
+ * Without this, watering at 8pm pushes every later "due today" to 8pm too, and
+ * the app's notion of a day drifts with each tap.
+ *
+ * The boundary is UTC because status is computed on the server and shipped to
+ * every device in the household — a single shared boundary keeps them
+ * consistent. For European households that lands in the small hours of the
+ * morning, which is exactly when a day should roll over.
+ */
+function startOfDay(d: Date): number {
+  return Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate());
+}
+
+/**
+ * How many days ahead of the due date a plant counts as `upcoming`.
+ *
+ * Proportional to the interval (~20%) rather than a flat two days: two days
+ * ahead of a 5-day plant is day 3 — barely past watering it — while two days
+ * ahead of a 21-day plant is no warning at all. Clamped to 1–3 days so short
+ * intervals still get a day's notice and long ones don't nag for a week.
+ *
+ *   5 → 1 (day 4)   7 → 1 (day 6)   9 → 2 (day 7)
+ *  14 → 3 (day 11) 21 → 3 (day 18)
+ *
+ * Note this no longer shows up as a badge — `upcoming` earns no mark in the
+ * grid (see `waterBadge`). What it still does is sort: upcoming plants rank
+ * above `fine` ones, so the grid drifts toward what needs attention next. Keep
+ * the window honest anyway; the planned Today/Upcoming timeline reads it too.
+ */
+export function upcomingWindowDays(intervalDays: number): number {
+  return Math.min(3, Math.max(1, Math.round(intervalDays * 0.2)));
+}
+
+/**
+ * How long after care a plant still reads as freshly cared for: ~15% of the
+ * interval, floored at two days. The floor is what makes this useful to a
+ * household rather than to one person — "did anyone water this?" is a question
+ * you ask the morning after, and a same-day-only mark answers it for nobody
+ * except whoever tapped it.
+ *
+ * On a 1- or 2-day interval this window can still be open when the plant comes
+ * due again; `waterBadge` gives `due` precedence there.
+ */
+function freshWindowDays(intervalDays: number): number {
+  return Math.min(3, Math.max(2, Math.round(intervalDays * 0.15)));
+}
 
 /**
  * Derive a care state from the last time something was done and its interval.
  *
  * - No interval → no schedule (status null).
- * - Has interval but never done → treated as `overdue` (needs first care).
- * - Otherwise compare the due date (lastDone + interval) against `now`:
- *   - past due            → overdue
- *   - due within 24h      → due_today
- *   - due in the next 1–2 days → upcoming
- *   - further out         → fine
+ * - Never done → fall back to `since` (the plant's `createdAt`) as the schedule
+ *   anchor: tracking starts when the plant is added, so a plant added today is
+ *   `fine` for a full interval rather than urgent on day zero. `lastDoneAt`
+ *   still reports null, so the care sheet keeps saying "Never watered".
+ * - Otherwise compare the due *date* against today:
+ *   - past due                      → overdue
+ *   - due today                     → due_today
+ *   - due within the upcoming window → upcoming
+ *   - further out                   → fine
  */
 export function computeCareState(
   lastDone: Date | null,
   intervalDays: number | null,
   now: Date,
+  since: Date | null = null,
 ): CareState {
+  const lastDoneAt = lastDone ? lastDone.toISOString() : null;
+
   if (intervalDays == null) {
     return {
       status: null,
       dueAt: null,
-      lastDoneAt: lastDone ? lastDone.toISOString() : null,
+      lastDoneAt,
       intervalDays: null,
+      fresh: false,
     };
   }
 
-  if (lastDone == null) {
+  const anchor = lastDone ?? since;
+  if (anchor == null) {
+    // Scheduled but with nothing to schedule from — needs care by definition.
     return {
       status: "overdue",
       dueAt: null,
       lastDoneAt: null,
       intervalDays,
+      fresh: false,
     };
   }
 
-  const dueAt = new Date(lastDone.getTime() + intervalDays * DAY_MS);
-  const daysUntilDue = (dueAt.getTime() - now.getTime()) / DAY_MS;
+  const today = startOfDay(now);
+  const dueDay = startOfDay(new Date(anchor.getTime() + intervalDays * DAY_MS));
+  const daysUntilDue = Math.round((dueDay - today) / DAY_MS);
 
   let status: CareStatus;
   if (daysUntilDue < 0) {
     status = "overdue";
-  } else if (daysUntilDue < 1) {
+  } else if (daysUntilDue === 0) {
     status = "due_today";
-  } else if (daysUntilDue <= 2) {
+  } else if (daysUntilDue <= upcomingWindowDays(intervalDays)) {
     status = "upcoming";
   } else {
     status = "fine";
   }
 
+  const daysSinceDone =
+    lastDone == null ? null : Math.round((today - startOfDay(lastDone)) / DAY_MS);
+
   return {
     status,
-    dueAt: dueAt.toISOString(),
-    lastDoneAt: lastDone.toISOString(),
+    dueAt: new Date(dueDay).toISOString(),
+    lastDoneAt,
     intervalDays,
+    fresh:
+      daysSinceDone != null && daysSinceDone < freshWindowDays(intervalDays),
   };
 }
 

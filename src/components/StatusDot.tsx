@@ -8,6 +8,7 @@ const NO_CARE: CareState = {
   dueAt: null,
   lastDoneAt: null,
   intervalDays: null,
+  fresh: false,
 };
 
 /**

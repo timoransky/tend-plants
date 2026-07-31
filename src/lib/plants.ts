@@ -22,12 +22,20 @@ export type PlantWithStatus = Plant & {
 
 /** Attach derived water/feed/overall status (and the avatar URL) to a plant. */
 export function withStatus(plant: Plant, now: Date): PlantWithStatus {
+  // `createdAt` anchors the schedule for care that has never been performed —
+  // a freshly added plant is fine for a full interval, not overdue on day one.
   const water = computeCareState(
     plant.lastWatered,
     plant.waterIntervalDays,
     now,
+    plant.createdAt,
   );
-  const feed = computeCareState(plant.lastFed, plant.feedIntervalDays, now);
+  const feed = computeCareState(
+    plant.lastFed,
+    plant.feedIntervalDays,
+    now,
+    plant.createdAt,
+  );
   return {
     ...plant,
     water,

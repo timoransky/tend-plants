@@ -31,8 +31,14 @@ export async function markCare(
     plant.lastWatered,
     plant.waterIntervalDays,
     now,
+    plant.createdAt,
   );
-  const feed = computeCareState(plant.lastFed, plant.feedIntervalDays, now);
+  const feed = computeCareState(
+    plant.lastFed,
+    plant.feedIntervalDays,
+    now,
+    plant.createdAt,
+  );
   return json({
     plant: { ...plant, water, feed, status: overallStatus(water, feed) },
   });

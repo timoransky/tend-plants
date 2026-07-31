@@ -1,10 +1,13 @@
 "use client";
 
+import { HugeiconsIcon } from "@hugeicons/react";
 import { motion, useReducedMotion } from "motion/react";
 import { useEffect, useRef } from "react";
 
+import { CareBadge } from "@/components/CareBadge";
 import { PlantAvatar } from "@/components/PlantAvatar";
-import { WaterDropBadge } from "@/components/WaterDropBadge";
+import { waterBadge, type WaterBadge } from "@/lib/care-display";
+import { TickIcon } from "@/lib/icons";
 import type { PlantWithStatus } from "@/lib/plants";
 
 /**
@@ -22,11 +25,23 @@ const LONG_PRESS_MS = 500;
 const MOVE_CANCEL_PX = 8;
 
 /**
+ * Spoken equivalent of the corner badge, for the button's accessible name.
+ * Tracks the badge exactly, including its silences: a plant that's due in a day
+ * or two shows no mark and says nothing extra here either. The precise wording
+ * ("Water in 2 days") lives in the care sheet, which is a tap away for everyone.
+ */
+const STATE_LABEL: Record<WaterBadge | "none", string> = {
+  due: "needs water",
+  fresh: "recently watered",
+  none: "healthy",
+};
+
+/**
  * A plant in the grid: a uniform circular avatar with its name, that opens the
- * detail drawer. A small water-blue droplet badge sits in the corner when the
- * plant needs water — it pings when due now (overdue / due today) and is static
- * when due soon. Healthy plants show no badge. Feeding is hidden, so this is
- * water-only.
+ * detail drawer. A small badge sits in the corner carrying the plant's water
+ * state — a pinging blue droplet when due now, a static outlined one when it's
+ * coming up, a green check just after it was watered (see CareBadge). Plants
+ * with nothing to say show no badge. Feeding is hidden, so this is water-only.
  *
  * A 500ms long-press enters multi-select mode (framer has no long-press gesture,
  * so raw pointer handlers run alongside motion's). In select mode a tap toggles
@@ -52,11 +67,8 @@ export function PlantBubble({
   onToggleSelect?: () => void;
 }) {
   const reduce = useReducedMotion();
-  const status = plant.water.status;
-  const thirsty = status === "overdue" || status === "due_today";
-  const soon = status === "upcoming";
-  const needsWater = thirsty || soon;
-  const stateLabel = thirsty ? "needs water" : soon ? "water soon" : "healthy";
+  const badge = waterBadge(plant.water);
+  const stateLabel = STATE_LABEL[badge ?? "none"];
 
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const origin = useRef<{ x: number; y: number } | null>(null);
@@ -143,16 +155,12 @@ export function PlantBubble({
             alt={plant.name}
           />
         </span>
-        {needsWater ? (
-          <span className="absolute bottom-[4.5%] right-[4.5%] size-[22%]">
-            {thirsty && !reduce ? (
-              <WaterDropBadge
-                solid
-                className="absolute inset-0 size-full animate-ping opacity-75 [animation-duration:1.8s]"
-              />
-            ) : null}
-            <WaterDropBadge className="relative size-full" />
-          </span>
+        {badge ? (
+          <CareBadge
+            badge={badge}
+            pulse={!reduce}
+            className="absolute bottom-[4.5%] right-[4.5%] size-[22%]"
+          />
         ) : null}
         {selectMode ? (
           <span
@@ -164,20 +172,12 @@ export function PlantBubble({
             }`}
           >
             {selected ? (
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
+              <HugeiconsIcon
+                icon={TickIcon}
                 className="size-[65%]"
+                strokeWidth={3}
                 aria-hidden
-              >
-                <path
-                  d="M5 13l4 4L19 7"
-                  stroke="currentColor"
-                  strokeWidth="3"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
+              />
             ) : null}
           </span>
         ) : null}

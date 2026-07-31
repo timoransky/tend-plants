@@ -1,12 +1,12 @@
 "use client";
 
-import { Tick02Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { motion, useReducedMotion } from "motion/react";
 
 import { Drawer, DrawerDescription, DrawerTitle } from "@/components/Drawer";
 import { PlantAvatar } from "@/components/PlantAvatar";
 import { buttonLg, tapScale } from "@/lib/ui";
+import { ICON_SM, TickIcon } from "@/lib/icons";
 
 /**
  * Success confirmation as a nested drawer over the add-plant form: once a plant
@@ -54,8 +54,8 @@ export function AddedPlantDrawer({
               className="absolute -bottom-0.5 -right-0.5 flex size-7 items-center justify-center rounded-full bg-healthy text-canvas ring-2 ring-surface"
             >
               <HugeiconsIcon
-                icon={Tick02Icon}
-                size={16}
+                icon={TickIcon}
+                size={ICON_SM}
                 strokeWidth={2.5}
                 aria-hidden
               />

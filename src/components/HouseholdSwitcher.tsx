@@ -1,16 +1,13 @@
 "use client";
 
-import {
-  HouseHeartIcon,
-  MoreHorizontalIcon,
-  PlusSignIcon,
-} from "@hugeicons/core-free-icons";
+import { HouseHeartIcon, MoreHorizontalIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, useSyncExternalStore } from "react";
 
 import { HouseholdDrawer } from "@/components/HouseholdDrawer";
+import { AddIcon, ChevronDownIcon, ICON_MD, ICON_SM } from "@/lib/icons";
 import {
   getPrimary,
   getPrimaryServerSnapshot,
@@ -139,22 +136,13 @@ export function HouseholdSwitcher({
         <span className="max-w-[9rem] truncate text-sm font-semibold text-cream">
           {triggerLabel}
         </span>
-        <svg
-          width="12"
-          height="12"
-          viewBox="0 0 24 24"
-          fill="none"
+        <HugeiconsIcon
+          icon={ChevronDownIcon}
+          size={ICON_SM}
+          strokeWidth={2}
           aria-hidden
           className={`shrink-0 transition-transform ${open ? "rotate-180" : ""}`}
-        >
-          <path
-            d="M6 9l6 6 6-6"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
+        />
       </button>
 
       <AnimatePresence>
@@ -201,7 +189,7 @@ export function HouseholdSwitcher({
                       {isDefault ? (
                         <HugeiconsIcon
                           icon={HouseHeartIcon}
-                          size={16}
+                          size={ICON_SM}
                           strokeWidth={2}
                         />
                       ) : null}
@@ -234,7 +222,7 @@ export function HouseholdSwitcher({
                     >
                       <HugeiconsIcon
                         icon={MoreHorizontalIcon}
-                        size={18}
+                        size={ICON_MD}
                         strokeWidth={2}
                         aria-hidden
                       />
@@ -253,8 +241,8 @@ export function HouseholdSwitcher({
               >
                 <span className="flex size-7 px-0.5 shrink-0 items-center justify-center">
                   <HugeiconsIcon
-                    icon={PlusSignIcon}
-                    size={16}
+                    icon={AddIcon}
+                    size={ICON_SM}
                     strokeWidth={2}
                     aria-hidden
                   />

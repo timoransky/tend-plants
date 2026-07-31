@@ -1,10 +1,10 @@
 "use client";
 
-import { Tick01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { motion, useReducedMotion } from "motion/react";
 
 import { neutralButton } from "@/lib/ui";
+import { ICON_SM, TickIcon } from "@/lib/icons";
 
 /**
  * The room-header select control. NOT a watering action — it drives the
@@ -47,8 +47,8 @@ export function RoomSelectButton({
     >
       {deselect ? (
         <HugeiconsIcon
-          icon={Tick01Icon}
-          size={13}
+          icon={TickIcon}
+          size={ICON_SM}
           strokeWidth={2.2}
           className="shrink-0 text-water"
           aria-hidden

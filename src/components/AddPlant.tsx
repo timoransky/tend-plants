@@ -23,6 +23,7 @@ import type { IdentifyCandidate, IdentifyResult } from "@/lib/identify";
 import { downscaleImage } from "@/lib/image";
 import type { SpeciesDetail } from "@/lib/species";
 import { buttonLg, tapScale } from "@/lib/ui";
+import { ICON_MD } from "@/lib/icons";
 
 /**
  * The add-plant screen: the species picker stays on the page, and tapping a
@@ -494,7 +495,7 @@ function PickStage({
                 />
                 <HugeiconsIcon
                   icon={AiImageIcon}
-                  size={18}
+                  size={ICON_MD}
                   strokeWidth={1.9}
                   aria-hidden
                 />
