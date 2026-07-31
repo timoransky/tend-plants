@@ -8,14 +8,22 @@ import { DropletIcon } from "@/lib/icons";
  * cream avatar, and the fill is `--color-water` (≈ #17A3F9).
  *
  * Variants:
- * - `filled`  — the default badge: blue drop, dark outline. "Needs water now."
- * - `outline` — the same silhouette inverted: cream drop, blue outline. Used
- *   for the heads-up state, where a second filled blue drop would be
- *   indistinguishable from an actually-due one at grid size.
- * - `glow`    — fill only, no outline or accent arc; the pulse behind a due
+ * - `filled` — the default badge: water-blue drop, brown outline. "Needs water
+ *   now."
+ * - `soft`   — the same drop in `--color-water-soft`: the heads-up state. A
+ *   second *full*-blue drop would be indistinguishable from an actually-due one
+ *   at grid size, so this turns the fill down rather than the outline up. An
+ *   earlier pass inverted it instead (cream fill, blue outline), which read as
+ *   a different kind of thing entirely — every other badge in the app is a
+ *   coloured fill behind a brown outline, and that one alone wasn't.
+ * - `glow`   — fill only, no outline or accent arc; the pulse behind a due
  *   badge.
+ *
+ * Turning the fill down is also the honest encoding: "coming up" really is a
+ * quieter version of "due" — same need, later — so it should look like one.
+ * "Freshly watered" is not, which is why that badge changes shape instead.
  */
-export type DropVariant = "filled" | "outline" | "glow";
+export type DropVariant = "filled" | "soft" | "glow";
 
 export function WaterDropBadge({
   className = "",
@@ -35,12 +43,13 @@ export function WaterDropBadge({
     );
   }
 
-  const inverted = variant === "outline";
   return (
     <SolidGlyph
       icon={DropletIcon}
-      fill={inverted ? "var(--color-surface)" : "var(--color-water)"}
-      stroke={inverted ? "var(--color-water)" : "var(--color-canvas)"}
+      fill={
+        variant === "soft" ? "var(--color-water-soft)" : "var(--color-water)"
+      }
+      stroke="var(--color-canvas)"
       className={className}
     />
   );

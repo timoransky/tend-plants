@@ -42,6 +42,13 @@
   /* Icon variant: dark enough for graphical 3:1 on cream, but higher chroma than
      -ink (which is tuned for 4.5:1 text) so the mark stays vivid, not muddy. */
   --color-water-icon: oklch(0.54 0.185 244);
+  /* Water, turned down: the grid's "coming up" droplet. Same hue, lifted and
+     desaturated so it reads as the quiet version of the due badge sitting next
+     to it, while staying unmistakably blue rather than grey. Pulling less
+     chroma (~0.12) puts it too close to full water at badge size; pulling more
+     lightness (~0.86) washes it out against cream. It always carries the badge
+     stroke, so the fill itself doesn't have to clear a contrast floor. */
+  --color-water-soft: oklch(0.82 0.1 244);
 
   --color-feed: oklch(0.66 0.15 50);
   --color-feed-ink: oklch(0.47 0.12 50);

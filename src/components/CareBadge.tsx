@@ -7,20 +7,24 @@ import { TickCircleIcon } from "@/lib/icons";
  * The corner mark on a plant avatar in the grid. Three faces, deliberately
  * ordered so a glance across the garden ranks them without reading anything:
  *
- * - `due`   — solid blue droplet (with a pulse behind it): water this now.
- * - `soon`  — the same droplet inverted to an outline, no pulse: coming up.
+ * - `due`   — full-blue droplet, with a pulse behind it: water this now.
+ * - `soon`  — the same droplet in the soft blue, no pulse: coming up.
  * - `fresh` — a green tick, not a droplet at all: someone just watered this.
  *
- * The shape change on `fresh` is the point. A recently-watered plant is not a
- * quieter kind of thirsty, so it doesn't get a quieter kind of droplet — it
- * gets a different silhouette, which is what stops the household re-watering
- * something a housemate handled yesterday.
+ * Two axes, and they mean different things. SHAPE says which domain you're in:
+ * a droplet is about watering, the tick disc is about it being handled. FILL
+ * says how loud, within a domain: soft blue is the same need as full blue, just
+ * later. So `soon` is a quieter `due` — correctly, because it is one — while
+ * `fresh` changes silhouette, because "already done" is not a quiet kind of
+ * thirsty. That distinction is what stops the household re-watering something a
+ * housemate handled yesterday.
  *
- * All three are Hugeicons glyphs on the same 24×24 grid, which is what keeps
- * them the same size in the same slot: the droplet is 17×20 there and the tick
- * disc 20×20, both centred. (An earlier pass drew the tick as a CSS
- * `rounded-full` span, which filled the full 24×24 box and read a good fifth
- * larger than the droplet it was meant to sit alongside.)
+ * All three are Hugeicons glyphs on the same 24×24 grid, filled in a state
+ * colour behind a brown canvas outline. Same construction, so they read as one
+ * set, and the same size in the same slot without per-icon tuning: the droplet
+ * is 17×20 on that grid and the tick disc 20×20, both centred. (An earlier pass
+ * drew the tick as a CSS `rounded-full` span, which filled the whole 24×24 box
+ * and read a good fifth larger than the droplet beside it.)
  *
  * `pulse` is passed false for reduced-motion.
  */
@@ -49,7 +53,7 @@ export function CareBadge({
   }
 
   if (badge === "soon") {
-    return <WaterDropBadge variant="outline" className={className} />;
+    return <WaterDropBadge variant="soft" className={className} />;
   }
 
   // Two spans, not one: the outer takes the caller's classes verbatim (which
