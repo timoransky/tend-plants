@@ -60,12 +60,12 @@ export async function GET(request: Request, { params }: Params) {
     const sp = getSpecies(pool[i % pool.length].key);
     if (!sp) continue;
 
-    // Vary last-watered so the household shows a mix of fine / due / overdue;
-    // ~1 in 5 has never been watered (overdue from the start).
-    const lastWatered =
-      Math.random() < 0.2
-        ? null
-        : new Date(now - Math.random() * sp.waterIntervalDays * 1.4 * DAY);
+    // Vary last-watered so the household shows a mix of fresh / fine / due /
+    // overdue; ~1 in 5 has never been watered. Never-watered plants schedule
+    // from `createdAt`, so those rows are backdated by the same spread —
+    // otherwise a fresh seed would show them all as comfortably fine.
+    const offset = Math.random() * sp.waterIntervalDays * 1.4 * DAY;
+    const neverWatered = Math.random() < 0.2;
 
     rows.push({
       householdId: household.id,
@@ -74,7 +74,8 @@ export async function GET(request: Request, { params }: Params) {
       speciesKey: sp.key,
       commonName: sp.commonName,
       avatar: sp.avatar,
-      lastWatered,
+      lastWatered: neverWatered ? null : new Date(now - offset),
+      createdAt: new Date(now - offset),
       waterIntervalDays: sp.waterIntervalDays,
       waterNote: sp.waterNote,
       lightNote: sp.lightNote,

@@ -16,6 +16,22 @@ export const KIND_TEXT: Record<CareKind | "healthy", string> = {
 };
 
 /**
+ * Which of the three water badges a plant shows in the grid, or null for
+ * "nothing to say". Resolved here (rather than in the bubble) so every surface
+ * agrees on precedence: actually being due always outranks having just been
+ * watered, which in turn outranks the heads-up — the two can only overlap on a
+ * degenerate 1-day interval, where "someone did this today" is the useful read.
+ */
+export type WaterBadge = "due" | "fresh" | "soon";
+
+export function waterBadge(water: CareState): WaterBadge | null {
+  if (water.status === "overdue" || water.status === "due_today") return "due";
+  if (water.fresh) return "fresh";
+  if (water.status === "upcoming") return "soon";
+  return null;
+}
+
+/**
  * Which need drives the plant's status dot. Blue (water) / brown (feed) when
  * something is due, green (healthy) when nothing is. Water wins ties since it's
  * the primary urgent color in the spec.
